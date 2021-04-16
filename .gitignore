@@ -1,0 +1,10 @@
+/.gradle/
+/.idea/
+/api-gateway.iml
+/api-gateway.ipr
+/api-gateway.iws
+/logs/
+/server/build/
+/server/logs/
+/server/out/
+/server/src/main/dist/config/keystore.jks
