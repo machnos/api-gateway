@@ -15,5 +15,3 @@
  * under the License.
  */
 
-include 'server',
-        'documentation'
