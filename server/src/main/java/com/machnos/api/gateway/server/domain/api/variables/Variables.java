@@ -38,7 +38,9 @@ public class Variables {
      * @return This <code>Variables</code> instance
      */
     public Variables add(Variable<?,?> variable) {
-        this.variables.add(variable);
+        if (variable != null) {
+            this.variables.add(variable);
+        }
         return this;
     }
 

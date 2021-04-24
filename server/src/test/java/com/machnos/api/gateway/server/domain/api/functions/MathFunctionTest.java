@@ -42,6 +42,10 @@ public class MathFunctionTest {
         Result result = MathFunction.add(one, two, "threeToTest");
         assertFalse(result.hasExceptions());
         assertEquals(three.getValue(), result.getOutputVariables().getNumberVariable("threeToTest").getValue());
+
+        result = MathFunction.add(one, two, null);
+        assertFalse(result.hasExceptions());
+        assertEquals(three.getValue(), result.getOutputVariables().getNumberVariable(one.getName()).getValue());
     }
 
     /**
@@ -59,7 +63,7 @@ public class MathFunctionTest {
 
         result = MathFunction.subtract(one, two, null);
         assertFalse(result.hasExceptions());
-        assertEquals(minusOne.getValue(), result.getOutputVariables().getNumberVariable("one").getValue());
+        assertEquals(minusOne.getValue(), result.getOutputVariables().getNumberVariable(one.getName()).getValue());
     }
 
     /**
@@ -76,7 +80,7 @@ public class MathFunctionTest {
 
         result = MathFunction.multiply(two, two, null);
         assertFalse(result.hasExceptions());
-        assertEquals(four.getValue(), result.getOutputVariables().getNumberVariable("two").getValue());
+        assertEquals(four.getValue(), result.getOutputVariables().getNumberVariable(two.getName()).getValue());
     }
 
     /**
@@ -94,6 +98,57 @@ public class MathFunctionTest {
 
         result = MathFunction.divide(five, two, null);
         assertFalse(result.hasExceptions());
-        assertEquals(twoAndAHalf.getValue(), result.getOutputVariables().getNumberVariable("five").getValue());
+        assertEquals(twoAndAHalf.getValue(), result.getOutputVariables().getNumberVariable(five.getName()).getValue());
+    }
+
+    /**
+     * Test the absolute calculation of a <code>NumberVariables</code>.
+     */
+    @Test
+    public void testAbsolute() {
+        final var minusTwelvePointZeroThree = new NumberVariable().setName("minusTwelvePointZeroThree").setValue(new BigDecimal(-12.03));
+        final var twelvePointZeroThree = new NumberVariable().setName("twelvePointZeroThree").setValue(new BigDecimal(12.03));
+
+        var result = MathFunction.absolute(minusTwelvePointZeroThree,"numberToTest");
+        assertFalse(result.hasExceptions());
+        assertEquals(twelvePointZeroThree.getValue(), result.getOutputVariables().getNumberVariable("numberToTest").getValue());
+
+        result = MathFunction.absolute(minusTwelvePointZeroThree, null);
+        assertFalse(result.hasExceptions());
+        assertEquals(twelvePointZeroThree.getValue(), result.getOutputVariables().getNumberVariable(minusTwelvePointZeroThree.getName()).getValue());
+    }
+
+    /**
+     * Test retrieving the maximum of two <code>NumberVariables</code>.
+     */
+    @Test
+    public void testMaximum() {
+        final var five = new NumberVariable().setName("five").setValue(new BigDecimal(5));
+        final var two = new NumberVariable().setName("two").setValue(new BigDecimal(2));
+
+        var result = MathFunction.maximum(five, two, "fiveToTest");
+        assertFalse(result.hasExceptions());
+        assertEquals(five.getValue(), result.getOutputVariables().getNumberVariable("fiveToTest").getValue());
+
+        result = MathFunction.maximum(five, two, null);
+        assertFalse(result.hasExceptions());
+        assertEquals(five.getValue(), result.getOutputVariables().getNumberVariable(five.getName()).getValue());
+    }
+
+    /**
+     * Test retrieving the minimim of two <code>NumberVariables</code>.
+     */
+    @Test
+    public void testMinimum() {
+        final var five = new NumberVariable().setName("five").setValue(new BigDecimal(5));
+        final var two = new NumberVariable().setName("two").setValue(new BigDecimal(2));
+
+        var result = MathFunction.minimum(five, two, "twoToTest");
+        assertFalse(result.hasExceptions());
+        assertEquals(two.getValue(), result.getOutputVariables().getNumberVariable("twoToTest").getValue());
+
+        result = MathFunction.minimum(five, two, null);
+        assertFalse(result.hasExceptions());
+        assertEquals(two.getValue(), result.getOutputVariables().getNumberVariable(five.getName()).getValue());
     }
 }

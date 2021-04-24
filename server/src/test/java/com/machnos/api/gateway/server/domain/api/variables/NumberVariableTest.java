@@ -93,7 +93,7 @@ public class NumberVariableTest extends AbstractVariableTest<NumberVariable, Big
     @Test
     public void testAdd() {
         final var instance = getInstance();
-        final var oneAndAHalf = new NumberVariable().setPrecision(1).setValue(new BigDecimal("1.5"));
+        final var oneAndAHalf = getInstance().setPrecision(1).setValue(new BigDecimal("1.5"));
 
         instance.add(oneAndAHalf);
         assertEquals("1.50", instance.getValue().toString());
@@ -106,7 +106,7 @@ public class NumberVariableTest extends AbstractVariableTest<NumberVariable, Big
     @Test
     public void testSubtract() {
         final var instance = getInstance();
-        final var oneAndAHalf = new NumberVariable().setPrecision(1).setValue(new BigDecimal("1.5"));
+        final var oneAndAHalf = getInstance().setPrecision(1).setValue(new BigDecimal("1.5"));
 
         instance.subtract(oneAndAHalf);
         assertEquals("-1.50", instance.getValue().toString());
@@ -119,7 +119,7 @@ public class NumberVariableTest extends AbstractVariableTest<NumberVariable, Big
     @Test
     public void testMultiply() {
         final var instance = getInstance();
-        final var oneAndAHalf = new NumberVariable().setPrecision(1).setValue(new BigDecimal("1.5"));
+        final var oneAndAHalf = getInstance().setPrecision(1).setValue(new BigDecimal("1.5"));
 
         instance.add(oneAndAHalf).multiply(oneAndAHalf);
         assertEquals("2.25", instance.getValue().toString());
@@ -131,9 +131,44 @@ public class NumberVariableTest extends AbstractVariableTest<NumberVariable, Big
     @Test
     public void testDivide() {
         final var instance = getInstance();
-        final var ten = new NumberVariable().setValue(new BigDecimal("10"));
+        final var ten = getInstance().setValue(new BigDecimal("10"));
 
         instance.add(ten).divide(new NumberVariable().setValue(new BigDecimal("3")));
         assertEquals("3.33", instance.getValue().toString());
+    }
+
+    /**
+     * Test calculating the absolute value.
+     */
+    @Test
+    public void testAbsolute() {
+        final var instance = getInstance().setValue(new BigDecimal("-10.12"));
+
+        instance.absolute();
+        assertEquals("10.12", instance.getValue().toString());
+    }
+
+    /**
+     * Test calculating the maximum of two <code>NumberVariable</code>s.
+     */
+    @Test
+    public void testMaximum() {
+        final var instance = getInstance().setValue(new BigDecimal("2"));
+        final var oneAndAHalf = getInstance().setPrecision(1).setValue(new BigDecimal("1.5"));
+
+        instance.maximum(oneAndAHalf);
+        assertEquals("2.00", instance.getValue().toString());
+    }
+
+    /**
+     * Test calculating the minimum of two <code>NumberVariable</code>s.
+     */
+    @Test
+    public void testMinimum() {
+        final var instance = getInstance().setValue(new BigDecimal("2"));
+        final var oneAndAHalf = getInstance().setPrecision(1).setValue(new BigDecimal("1.5"));
+
+        instance.minimum(oneAndAHalf);
+        assertEquals("1.50", instance.getValue().toString());
     }
 }

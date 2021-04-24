@@ -81,6 +81,27 @@ public class MathFunction extends AbstractFunction {
      */
     public static final String FUNCTION_DIVIDE = "divide";
 
+    /**
+     * Function value representing an absolute calculation.
+     *
+     * @see #INPUT_KEY_FUNCTION
+     */
+    public static final String FUNCTION_ABSOLUTE = "absolute";
+
+    /**
+     * Function value representing a maximum calculation.
+     *
+     * @see #INPUT_KEY_FUNCTION
+     */
+    public static final String FUNCTION_MAXIMUM = "maximum";
+
+    /**
+     * Function value representing a minimum calculation.
+     *
+     * @see #INPUT_KEY_FUNCTION
+     */
+    public static final String FUNCTION_MINIMUM = "minimum";
+
     @Override
     public String getId() {
         return MACHNOS_FUNCTION_ID_PREFIX + NAME;
@@ -135,9 +156,9 @@ public class MathFunction extends AbstractFunction {
     public Result execute(Variables inputVariables, Map<String, String> functionConfiguration) {
         final var result = new Result();
         final String sourceKey = functionConfiguration.get(INPUT_KEY_SOURCE_VARIABLE_NAME);
-        final String targetKey = functionConfiguration.get(INPUT_KEY_TARGET_VARIABLE_NAME);
         final String function = functionConfiguration.get(INPUT_KEY_FUNCTION);
-        final String param1Key = functionConfiguration.get(INPUT_KEY_FUNCTION_PARAM1_VARIABLE_NAME);
+        final String targetKey = functionConfiguration.getOrDefault(INPUT_KEY_TARGET_VARIABLE_NAME, sourceKey);
+        final String param1Key = functionConfiguration.getOrDefault(INPUT_KEY_FUNCTION_PARAM1_VARIABLE_NAME, null);
 
         final var source = inputVariables.getNumberVariable(sourceKey);
         final var param1 = inputVariables.getNumberVariable(param1Key);
@@ -145,28 +166,52 @@ public class MathFunction extends AbstractFunction {
 
         // Input validation
         requireVariable(sourceKey, source, result);
-        requireVariableWithValue(param1Key, param1, result);
+        switch (function) {
+            case FUNCTION_ADD:
+            case FUNCTION_SUBTRACT:
+            case FUNCTION_MULTIPLY:
+            case FUNCTION_DIVIDE:
+            case FUNCTION_MAXIMUM:
+            case FUNCTION_MINIMUM:
+                requireVariableWithValue(param1Key, param1, result);
+                break;
+            default:
+                break;
+        }
+
         if (result.hasExceptions()) {
             return result;
         }
         if (target == null) {
             target = new NumberVariable().setName(targetKey);
         }
-        target
-                .setScale(source.getScale())
+        target.setScale(source.getScale())
                 .setPrecision(source.getPrecision())
                 .setRoundingMode(source.getRoundingMode())
                 .setValue(source.getValue());
 
-
-        if ("add".equals(function)) {
-            target.add(param1);
-        } else if ("subtract".equals(function)) {
-            target.subtract(param1);
-        } else if ("multiply".equals(function)) {
-            target.multiply(param1);
-        } else if ("divide".equals(function)) {
-            target.divide(param1);
+        switch (function) {
+            case FUNCTION_ADD:
+                target.add(param1);
+                break;
+            case FUNCTION_SUBTRACT:
+                target.subtract(param1);
+                break;
+            case FUNCTION_MULTIPLY:
+                target.multiply(param1);
+                break;
+            case FUNCTION_DIVIDE:
+                target.divide(param1);
+                break;
+            case FUNCTION_ABSOLUTE:
+                target.absolute();
+                break;
+            case FUNCTION_MAXIMUM:
+                target.maximum(param1);
+                break;
+            case FUNCTION_MINIMUM:
+                target.minimum(param1);
+                break;
         }
         return result.addOutputVariable(target);
     }
@@ -180,7 +225,7 @@ public class MathFunction extends AbstractFunction {
      * @return The <code>Result</code> of the addition.
      */
     public static Result add(NumberVariable source, NumberVariable by, String into) {
-        return prepareAndExecuteFunction(source, by, FUNCTION_ADD, into);
+        return prepareAndExecuteFunction(source, FUNCTION_ADD, into, by);
     }
 
     /**
@@ -192,7 +237,7 @@ public class MathFunction extends AbstractFunction {
      * @return The <code>Result</code> of the subtraction.
      */
     public static Result subtract(NumberVariable source, NumberVariable by, String into) {
-        return prepareAndExecuteFunction(source, by, FUNCTION_SUBTRACT, into);
+        return prepareAndExecuteFunction(source, FUNCTION_SUBTRACT, into, by);
     }
 
     /**
@@ -204,7 +249,7 @@ public class MathFunction extends AbstractFunction {
      * @return The <code>Result</code> of the multiplicity.
      */
     public static Result multiply(NumberVariable source, NumberVariable by, String into) {
-        return prepareAndExecuteFunction(source, by, FUNCTION_MULTIPLY, into);
+        return prepareAndExecuteFunction(source, FUNCTION_MULTIPLY, into, by);
     }
 
     /**
@@ -216,25 +261,62 @@ public class MathFunction extends AbstractFunction {
      * @return The <code>Result</code> of the division.
      */
     public static Result divide(NumberVariable source, NumberVariable by, String into) {
-        return prepareAndExecuteFunction(source, by, FUNCTION_DIVIDE, into);
+        return prepareAndExecuteFunction(source, FUNCTION_DIVIDE, into, by);
+    }
+
+    /**
+     * Calculates the absolute value of a <code>NumberVariable</code>.
+     *
+     * @param source The source <code>NumberVariable</code> of the calculation.
+     * @param into The name of the target <code>NumberVariable</code>. When set to <code>null</code> the source <code>NumberVariable</code> will contain the result of the calculation.
+     * @return The <code>Result</code> of the absolute calculation.
+     */
+    public static Result absolute(NumberVariable source, String into) {
+        return prepareAndExecuteFunction(source, FUNCTION_ABSOLUTE, into, null);
+    }
+
+    /**
+     * Calculates the maximum value of a <code>NumberVariable</code> and an other <code>NumberVariable</code>.
+     *
+     * @param source The source <code>NumberVariable</code> of the calculation.
+     * @param into The name of the target <code>NumberVariable</code>. When set to <code>null</code> the source <code>NumberVariable</code> will contain the result of the calculation.
+     * @return The <code>Result</code> of the maximum calculation.
+     */
+    public static Result maximum(NumberVariable source, NumberVariable other, String into) {
+        return prepareAndExecuteFunction(source, FUNCTION_MAXIMUM, into, other);
+    }
+
+    /**
+     * Calculates the minimum value of a <code>NumberVariable</code> and an other <code>NumberVariable</code>.
+     *
+     * @param source The source <code>NumberVariable</code> of the calculation.
+     * @param into The name of the target <code>NumberVariable</code>. When set to <code>null</code> the source <code>NumberVariable</code> will contain the result of the calculation.
+     * @return The <code>Result</code> of the minimum calculation.
+     */
+    public static Result minimum(NumberVariable source, NumberVariable other, String into) {
+        return prepareAndExecuteFunction(source, FUNCTION_MINIMUM, into, other);
     }
 
     /**
      * Helper method to prepare a new <code>MathFunction</code> instance and execute it immediately.
      *
      * @param source The source of the calculation.
-     * @param param1 The first parameter of the calculation.
      * @param function The math function to execute.
      * @param into The name of the result variable.
+     * @param param1 The first parameter of the calculation.
      * @return The <code>Result</code> of the execution.
      */
-    private static Result prepareAndExecuteFunction(NumberVariable source, NumberVariable param1, String function, String into) {
+    private static Result prepareAndExecuteFunction(NumberVariable source, String function, String into, NumberVariable param1) {
         final var variables = new Variables().add(source).add(param1);
         final var keyMap = new HashMap<String, String>();
         keyMap.put(INPUT_KEY_SOURCE_VARIABLE_NAME, source.getName());
-        keyMap.put(INPUT_KEY_TARGET_VARIABLE_NAME, into == null ? source.getName() : into);
-        keyMap.put(INPUT_KEY_FUNCTION_PARAM1_VARIABLE_NAME, param1.getName());
         keyMap.put(INPUT_KEY_FUNCTION, function);
+        if (into != null) {
+            keyMap.put(INPUT_KEY_TARGET_VARIABLE_NAME, into);
+        }
+        if (param1 != null) {
+            keyMap.put(INPUT_KEY_FUNCTION_PARAM1_VARIABLE_NAME, param1.getName());
+        }
         return new MathFunction().execute(variables, keyMap);
     }
 }

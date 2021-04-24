@@ -178,4 +178,40 @@ public class NumberVariable extends AbstractVariable<BigDecimal, NumberVariable>
         }
         return setValue(getValue().divide(divisor.getValue(), this.mathContext));
     }
+
+    /**
+     * Calculates the absolute value of the current value.
+     *
+     * @return The current instance of the <code>NumberVariable</code>.
+     */
+    public NumberVariable absolute() {
+        if (!hasValue()) {
+            setValue(BigDecimal.ZERO);
+        }
+        return setValue(getValue().abs(this.mathContext));
+    }
+
+    /**
+     * Gives the maximum value of this <code>NumberValue</code> and the other <code>NumberValue</code>.
+     *
+     * @return The current instance of the <code>NumberVariable</code>.
+     */
+    public NumberVariable maximum(NumberVariable other) {
+        if (!hasValue()) {
+            setValue(BigDecimal.ZERO);
+        }
+        return setValue(getValue().max(other.getValue()));
+    }
+
+    /**
+     * Gives the minumum value of this <code>NumberValue</code> and the other <code>NumberValue</code>.
+     *
+     * @return The current instance of the <code>NumberVariable</code>.
+     */
+    public NumberVariable minimum(NumberVariable other) {
+        if (!hasValue()) {
+            setValue(BigDecimal.ZERO);
+        }
+        return setValue(getValue().min(other.getValue()));
+    }
 }

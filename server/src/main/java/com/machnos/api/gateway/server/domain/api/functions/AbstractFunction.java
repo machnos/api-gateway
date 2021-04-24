@@ -31,11 +31,15 @@ public abstract class AbstractFunction implements Function {
      * @param variableName The name of the <code>Variable</code>.
      * @param variable The actual <code>Variable</code> that must be present.
      * @param result The <code>Result</code> instance that will be used to add <code>MachnosException</code> to.
+     * @return <code>true</code> when an <code>MachnosExceotion</code> is added to the <code>Result</code>, <code>false</code> otherwise.
      */
-    protected void requireVariable(String variableName, Variable<?,?> variable, Result result) {
+    protected boolean requireVariable(String variableName, Variable<?,?> variable, Result result) {
+        var hasError = false;
         if (variable == null) {
             result.addException(new MachnosException(MachnosException.MISSING_VARIABLE, variableName));
+            hasError = true;
         }
+        return hasError;
     }
 
     /**
@@ -44,15 +48,19 @@ public abstract class AbstractFunction implements Function {
      * @param variableName The name of the <code>Variable</code>.
      * @param variable The actual <code>Variable</code> that must be present and must contain a value.
      * @param result The <code>Result</code> instance that will be used to add <code>MachnosException</code> to.
+     * @return <code>true</code> when an <code>MachnosExceotion</code> is added to the <code>Result</code>, <code>false</code> otherwise.
      */
-    protected void requireVariableWithValue(String variableName, Variable<?,?> variable, Result result) {
+    protected boolean requireVariableWithValue(String variableName, Variable<?,?> variable, Result result) {
+        var hasError = false;
         if (variable == null) {
             result.addException(new MachnosException(MachnosException.MISSING_VARIABLE, variableName));
-            return;
+            hasError = true;
         }
         if (!variable.hasValue()) {
             result.addException(new MachnosException(MachnosException.MISSING_VALUE, variableName));
+            hasError = true;
         }
+        return hasError;
     }
 
 }
