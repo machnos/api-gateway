@@ -28,16 +28,30 @@ public class MachnosException extends RuntimeException {
     // 200_* reserved for configuration errors.
     public static final int INVALID_INTERFACE = 200_000;
 
+    // 301_* reserved for function errors.
+    public static final int MISSING_VARIABLE = 301_000;
+    public static final int MISSING_VALUE = 301_001;
+
 
     private final int errorCode;
+    private final String[] variables;
 
     public MachnosException(int errorCode) {
-        this(errorCode, null);
+        super();
+        this.errorCode = errorCode;
+        this.variables = null;
+    }
+
+    public MachnosException(int errorCode, String... variables) {
+        super();
+        this.errorCode = errorCode;
+        this.variables = variables;
     }
 
     public MachnosException(int errorCode, Throwable cause) {
         super(cause);
         this.errorCode = errorCode;
+        this.variables = null;
     }
 
 

@@ -5,6 +5,7 @@
 /api-gateway.iws
 /logs/
 /server/build/
+/server/config/
 /server/logs/
 /server/out/
 /server/src/main/dist/config/keystore.jks

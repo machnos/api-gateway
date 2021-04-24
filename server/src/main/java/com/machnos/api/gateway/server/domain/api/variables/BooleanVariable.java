@@ -15,30 +15,10 @@
  * under the License.
  */
 
-package com.machnos.api.gateway.server.domain.policies;
+package com.machnos.api.gateway.server.domain.api.variables;
 
 /**
- * Base class for all elements that form a policy. The logic of an api is determined by the set of policies that is
- * configured for the specific api's.
+ * <code>Variable</code> implementation that encapsulates a Boolean value.
  */
-public interface Policy {
-
-    /**
-     * Gives the id of the <code>Policy</code>. The id should be globally unique.
-     *
-     * @return The unique id of the <code>Policy</code>.
-     */
-    String getId();
-
-    /**
-     * Gives the name of the <code>Policy</code>.
-     *
-     * @return The name of the <code>Policy</code>.
-     */
-    String getName();
-
-    /**
-     * Execute the <code>Policy</code>.
-     */
-    void execute();
+public class BooleanVariable extends AbstractVariable<Boolean, BooleanVariable> {
 }

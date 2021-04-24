@@ -16,6 +16,6 @@
  */
 
 /**
- * Policy classes form the base of all api's. Policies for the logic that can be configured in each api.
+ * Variable classes are encapsulating an variable accompanied with a name.
  */
-package com.machnos.api.gateway.server.domain.policies;
+package com.machnos.api.gateway.server.domain.api.variables;

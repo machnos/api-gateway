@@ -15,4 +15,7 @@
  * under the License.
  */
 
-include 'server'
+/**
+ * Function classes form the base of all api's. Functions form the logic that can be configured in each api.
+ */
+package com.machnos.api.gateway.server.domain.api.functions;

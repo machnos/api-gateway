@@ -15,4 +15,22 @@
  * under the License.
  */
 
-include 'server'
+package com.machnos.api.gateway.server.domain.api.variables;
+
+import java.util.Random;
+
+/**
+ * Test class for the <code>BooleanVariable</code> class.
+ */
+public class BooleanVariableTest extends AbstractVariableTest<BooleanVariable, Boolean> {
+
+    @Override
+    protected BooleanVariable getInstance() {
+        return new BooleanVariable();
+    }
+
+    @Override
+    protected Boolean getValue() {
+        return new Random().nextBoolean();
+    }
+}
