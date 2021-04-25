@@ -17,9 +17,12 @@
 
 ext {
     version_junit = "5.7.1"
+    version_pac4j = "4.4.0"
 
     dep_bouncyCastle = "org.bouncycastle:bcpkix-jdk15on:1.68"
     dep_log4j = "org.apache.logging.log4j:log4j-core:2.14.1"
+    dep_pac4jHttp = "org.pac4j:pac4j-http:" + version_pac4j
+    dep_pac4jUndertow = "org.pac4j:undertow-pac4j:4.1.1"
     dep_snakeYamlEngine = "org.yaml:snakeyaml:1.28"
     dep_undertowCore = "io.undertow:undertow-core:2.0.34.Final"
 }

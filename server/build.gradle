@@ -20,5 +20,10 @@ plugins {
 }
 
 dependencies {
-    implementation dep_bouncyCastle, dep_log4j, dep_snakeYamlEngine, dep_undertowCore
+    implementation dep_bouncyCastle,
+                   dep_log4j,
+                   dep_pac4jHttp,
+                   dep_pac4jUndertow,
+                   dep_snakeYamlEngine,
+                   dep_undertowCore
 }

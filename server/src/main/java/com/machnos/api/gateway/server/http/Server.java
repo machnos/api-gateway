@@ -21,8 +21,13 @@ import com.machnos.api.gateway.server.configuration.HttpInterface;
 import com.machnos.api.gateway.server.domain.MachnosException;
 import com.machnos.api.gateway.server.domain.keystore.FileSystemKeyStoreWrapper;
 import com.machnos.api.gateway.server.domain.keystore.KeyStoreWrapper;
+import com.machnos.api.gateway.server.domain.management.gui.Pac4jConfigFactory;
 import io.undertow.Undertow;
 import io.undertow.UndertowOptions;
+import io.undertow.server.handlers.PathHandler;
+import io.undertow.server.session.InMemorySessionManager;
+import io.undertow.server.session.SessionAttachmentHandler;
+import io.undertow.server.session.SessionCookieConfig;
 import io.undertow.util.Headers;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,6 +43,9 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.bc.BcDigestCalculatorProvider;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
+import org.pac4j.http.client.indirect.FormClient;
+import org.pac4j.undertow.handler.CallbackHandler;
+import org.pac4j.undertow.handler.SecurityHandler;
 import org.xnio.Options;
 import org.xnio.Sequence;
 
@@ -112,15 +120,41 @@ public class Server {
                 sslContext.init(keyManagers, null, null);
                 builder.setServerOption(UndertowOptions.ENABLE_HTTP2, true)
                         .setSocketOption(Options.SSL_ENABLED_PROTOCOLS, Sequence.of(managementInterface.tlsProtocols));
-                managementInterface.getListenInetAddresses().forEach(c -> builder.addHttpsListener(
+                managementInterface.getListenInetAddresses().forEach(c -> {
+                    final var pac4jConfig = new Pac4jConfigFactory("https://" + c.getHostAddress() + ":" + managementInterface.listenPort).build();
+                    final var pathHandler = new PathHandler();
+                    pathHandler.addExactPath("/", SecurityHandler.build(exchange -> {
+                        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
+                        exchange.getResponseSender().send("Hello World");
+                    }, pac4jConfig, "FormClient"));
+                    pathHandler.addExactPath("/login.html", exchange -> {
+                        FormClient formClient = (FormClient) pac4jConfig.getClients().findClient("FormClient").get();
+                        StringBuilder sb = new StringBuilder();
+                        sb.append("<html><body>");
+                        sb.append("<form action=\"").append(formClient.getCallbackUrl()).append("?client_name=FormClient\" method=\"POST\">");
+                        sb.append("<input type=\"text\" name=\"username\" value=\"\" />");
+                        sb.append("<p />");
+                        sb.append("<input type=\"password\" name=\"password\" value=\"\" />");
+                        sb.append("<p />");
+                        sb.append("<input type=\"submit\" name=\"submit\" value=\"Submit\" />");
+                        sb.append("</form>");
+                        sb.append("</body></html>");
+                        exchange.getResponseHeaders().add(Headers.CONTENT_TYPE, "text/html; charset=utf-8");
+                        exchange.getResponseSender().send(sb.toString());
+                        exchange.endExchange();
+                    });
+                    pathHandler.addExactPath("/callback", CallbackHandler.build(pac4jConfig, null, true));
+
+                    builder.addHttpsListener(
                         managementInterface.listenPort,
                         c.getHostAddress(),
-                        sslContext,
-                        exchange -> {
-                            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
-                            exchange.getResponseSender().send("Hello World");
-                        })
-                );
+                        sslContext
+                    ).setHandler(new SessionAttachmentHandler(
+                            pathHandler,
+                            new InMemorySessionManager("SessionManager"),
+                            new SessionCookieConfig()
+                    ));
+                });
             } catch (NoSuchAlgorithmException | KeyStoreException | UnrecoverableKeyException | KeyManagementException e) {
                 throw new MachnosException(MachnosException.WRAPPED_EXCEPTION, e);
             }
