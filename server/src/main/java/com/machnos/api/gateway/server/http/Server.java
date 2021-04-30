@@ -43,7 +43,6 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.bc.BcDigestCalculatorProvider;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
-import org.pac4j.http.client.indirect.FormClient;
 import org.pac4j.undertow.handler.CallbackHandler;
 import org.pac4j.undertow.handler.SecurityHandler;
 import org.xnio.Options;
@@ -127,22 +126,23 @@ public class Server {
                         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
                         exchange.getResponseSender().send("Hello World");
                     }, pac4jConfig, "FormClient"));
-                    pathHandler.addExactPath("/login.html", exchange -> {
-                        FormClient formClient = (FormClient) pac4jConfig.getClients().findClient("FormClient").get();
-                        StringBuilder sb = new StringBuilder();
-                        sb.append("<html><body>");
-                        sb.append("<form action=\"").append(formClient.getCallbackUrl()).append("?client_name=FormClient\" method=\"POST\">");
-                        sb.append("<input type=\"text\" name=\"username\" value=\"\" />");
-                        sb.append("<p />");
-                        sb.append("<input type=\"password\" name=\"password\" value=\"\" />");
-                        sb.append("<p />");
-                        sb.append("<input type=\"submit\" name=\"submit\" value=\"Submit\" />");
-                        sb.append("</form>");
-                        sb.append("</body></html>");
-                        exchange.getResponseHeaders().add(Headers.CONTENT_TYPE, "text/html; charset=utf-8");
-                        exchange.getResponseSender().send(sb.toString());
-                        exchange.endExchange();
-                    });
+                    pathHandler.addExactPath("/login.html", new ClasspathResourceHttpHandler("com/machnos/api/gateway/server/gui"));
+//                    pathHandler.addExactPath("/login.html", exchange -> {
+//                        FormClient formClient = (FormClient) pac4jConfig.getClients().findClient("FormClient").get();
+//                        StringBuilder sb = new StringBuilder();
+//                        sb.append("<html><body>");
+//                        sb.append("<form action=\"").append(formClient.getCallbackUrl()).append("?client_name=FormClient\" method=\"POST\">");
+//                        sb.append("<input type=\"text\" name=\"username\" value=\"\" />");
+//                        sb.append("<p />");
+//                        sb.append("<input type=\"password\" name=\"password\" value=\"\" />");
+//                        sb.append("<p />");
+//                        sb.append("<input type=\"submit\" name=\"submit\" value=\"Submit\" />");
+//                        sb.append("</form>");
+//                        sb.append("</body></html>");
+//                        exchange.getResponseHeaders().add(Headers.CONTENT_TYPE, "text/html; charset=utf-8");
+//                        exchange.getResponseSender().send(sb.toString());
+//                        exchange.endExchange();
+//                    });
                     pathHandler.addExactPath("/callback", CallbackHandler.build(pac4jConfig, null, true));
 
                     builder.addHttpsListener(
@@ -152,7 +152,7 @@ public class Server {
                     ).setHandler(new SessionAttachmentHandler(
                             pathHandler,
                             new InMemorySessionManager("SessionManager"),
-                            new SessionCookieConfig()
+                            new SessionCookieConfig().setHttpOnly(true).setSecure(true)
                     ));
                 });
             } catch (NoSuchAlgorithmException | KeyStoreException | UnrecoverableKeyException | KeyManagementException e) {

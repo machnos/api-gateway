@@ -10,4 +10,5 @@ module com.machnos.api.gateway.server {
     requires undertow.pac4j;
     requires xnio.api;
     exports com.machnos.api.gateway.server.configuration to org.yaml.snakeyaml;
+    opens com.machnos.api.gateway.server.gui;
 }

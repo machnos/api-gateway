@@ -24,7 +24,7 @@ ext {
     dep_pac4jHttp = "org.pac4j:pac4j-http:" + version_pac4j
     dep_pac4jUndertow = "org.pac4j:undertow-pac4j:4.1.1"
     dep_snakeYamlEngine = "org.yaml:snakeyaml:1.28"
-    dep_undertowCore = "io.undertow:undertow-core:2.0.34.Final"
+    dep_undertowCore = "io.undertow:undertow-core:2.2.7.Final"
 }
 
 allprojects {
@@ -35,6 +35,12 @@ allprojects {
 
     repositories {
         mavenCentral()
+    }
+    idea {
+        module {
+            inheritOutputDirs = true
+            outputDir = file('out')
+        }
     }
 
     plugins.withType(JavaPlugin).whenPluginAdded {
