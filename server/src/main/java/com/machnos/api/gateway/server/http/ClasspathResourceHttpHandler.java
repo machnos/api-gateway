@@ -21,6 +21,8 @@ import io.undertow.io.IoCallback;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.resource.URLResource;
+import io.undertow.util.Headers;
+import io.undertow.util.StatusCodes;
 
 public class ClasspathResourceHttpHandler implements HttpHandler {
 
@@ -38,9 +40,24 @@ public class ClasspathResourceHttpHandler implements HttpHandler {
 
     @Override
     public void handleRequest(HttpServerExchange exchange) {
-        final var requestPath = this.rootPackage + exchange.getRequestPath();
+        final var requestPath = this.rootPackage + exchange.getRequestPath().toLowerCase();
         final var resource = this.classLoader.getResource(requestPath);
-        final var urlResource = new URLResource(resource, exchange.getRequestPath());
-        urlResource.serve(exchange.getResponseSender(), exchange, IoCallback.END_EXCHANGE);
+        if (resource == null) {
+            exchange.setStatusCode(StatusCodes.NOT_FOUND);
+        } else {
+            final var urlResource = new URLResource(resource, exchange.getRequestPath());
+            setContentType(exchange, requestPath);
+            urlResource.serve(exchange.getResponseSender(), exchange, IoCallback.END_EXCHANGE);
+        }
+    }
+
+    private void setContentType(HttpServerExchange exchange, String requestPath) {
+        if (requestPath.endsWith(".html")) {
+            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/html; charset=utf-8");
+        } else if (requestPath.endsWith(".js")) {
+            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/javascript; charset=utf-8");
+        } else if (requestPath.endsWith(".css")) {
+            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/css; charset=utf-8");
+        }
     }
 }

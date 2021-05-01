@@ -34,7 +34,7 @@ public class Pac4jConfigFactory implements ConfigFactory {
 
     @Override
     public Config build(Object... parameters) {
-        final var formClient = new FormClient(this.baseUrl + "/login.html", new SimpleTestUsernamePasswordAuthenticator());
+        final var formClient = new FormClient(this.baseUrl + "/login/login.html", new SimpleTestUsernamePasswordAuthenticator());
         final var clients = new Clients(this.baseUrl + "/callback", formClient);
 
         final var config = new Config(clients);

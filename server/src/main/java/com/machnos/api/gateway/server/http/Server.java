@@ -29,6 +29,7 @@ import io.undertow.server.session.InMemorySessionManager;
 import io.undertow.server.session.SessionAttachmentHandler;
 import io.undertow.server.session.SessionCookieConfig;
 import io.undertow.util.Headers;
+import io.undertow.util.StatusCodes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bouncycastle.asn1.oiw.OIWObjectIdentifiers;
@@ -44,6 +45,7 @@ import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.bc.BcDigestCalculatorProvider;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.pac4j.undertow.handler.CallbackHandler;
+import org.pac4j.undertow.handler.LogoutHandler;
 import org.pac4j.undertow.handler.SecurityHandler;
 import org.xnio.Options;
 import org.xnio.Sequence;
@@ -122,27 +124,15 @@ public class Server {
                 managementInterface.getListenInetAddresses().forEach(c -> {
                     final var pac4jConfig = new Pac4jConfigFactory("https://" + c.getHostAddress() + ":" + managementInterface.listenPort).build();
                     final var pathHandler = new PathHandler();
-                    pathHandler.addExactPath("/", SecurityHandler.build(exchange -> {
-                        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
-                        exchange.getResponseSender().send("Hello World");
-                    }, pac4jConfig, "FormClient"));
-                    pathHandler.addExactPath("/login.html", new ClasspathResourceHttpHandler("com/machnos/api/gateway/server/gui"));
-//                    pathHandler.addExactPath("/login.html", exchange -> {
-//                        FormClient formClient = (FormClient) pac4jConfig.getClients().findClient("FormClient").get();
-//                        StringBuilder sb = new StringBuilder();
-//                        sb.append("<html><body>");
-//                        sb.append("<form action=\"").append(formClient.getCallbackUrl()).append("?client_name=FormClient\" method=\"POST\">");
-//                        sb.append("<input type=\"text\" name=\"username\" value=\"\" />");
-//                        sb.append("<p />");
-//                        sb.append("<input type=\"password\" name=\"password\" value=\"\" />");
-//                        sb.append("<p />");
-//                        sb.append("<input type=\"submit\" name=\"submit\" value=\"Submit\" />");
-//                        sb.append("</form>");
-//                        sb.append("</body></html>");
-//                        exchange.getResponseHeaders().add(Headers.CONTENT_TYPE, "text/html; charset=utf-8");
-//                        exchange.getResponseSender().send(sb.toString());
-//                        exchange.endExchange();
-//                    });
+                    final var classpathHttpHandler = new ClasspathResourceHttpHandler("com/machnos/api/gateway/server/gui");
+                    pathHandler.addExactPath("/", exchange -> {
+                        exchange.getResponseHeaders().put(Headers.LOCATION, "https://" + c.getHostAddress() + ":" + managementInterface.listenPort +"/index.html");
+                        exchange.setStatusCode(StatusCodes.FOUND);
+                    });
+                    pathHandler.addExactPath("/index.html", SecurityHandler.build(classpathHttpHandler, pac4jConfig, "FormClient"));
+                    pathHandler.addPrefixPath("/login/", classpathHttpHandler);
+                    pathHandler.addPrefixPath("/resources/", classpathHttpHandler);
+                    pathHandler.addExactPath("/logout", new LogoutHandler(pac4jConfig, "/?defaulturlafterlogout"));
                     pathHandler.addExactPath("/callback", CallbackHandler.build(pac4jConfig, null, true));
 
                     builder.addHttpsListener(

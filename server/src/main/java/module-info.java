@@ -11,4 +11,7 @@ module com.machnos.api.gateway.server {
     requires xnio.api;
     exports com.machnos.api.gateway.server.configuration to org.yaml.snakeyaml;
     opens com.machnos.api.gateway.server.gui;
+    opens com.machnos.api.gateway.server.gui.login;
+    opens com.machnos.api.gateway.server.gui.resources.scripts;
+    opens com.machnos.api.gateway.server.gui.resources.styles;
 }
