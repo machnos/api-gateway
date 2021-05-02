@@ -21,6 +21,8 @@ import org.pac4j.core.authorization.authorizer.RequireAnyRoleAuthorizer;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.config.ConfigFactory;
+import org.pac4j.core.matching.matcher.csrf.CsrfTokenGeneratorMatcher;
+import org.pac4j.core.matching.matcher.csrf.DefaultCsrfTokenGenerator;
 import org.pac4j.http.client.indirect.FormClient;
 import org.pac4j.http.credentials.authenticator.test.SimpleTestUsernamePasswordAuthenticator;
 
@@ -39,6 +41,12 @@ public class Pac4jConfigFactory implements ConfigFactory {
 
         final var config = new Config(clients);
         config.addAuthorizer("admin", new RequireAnyRoleAuthorizer("ADMIN"));
+
+        var csrfMatcher = new CsrfTokenGeneratorMatcher(new DefaultCsrfTokenGenerator());
+        csrfMatcher.setHttpOnly(true);
+        csrfMatcher.setSecure(true);
+        config.addMatcher("MachnosCsrfToken", csrfMatcher);
+
         return config;
     }
 }

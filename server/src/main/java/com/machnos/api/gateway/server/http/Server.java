@@ -29,8 +29,6 @@ import io.undertow.server.handlers.resource.ResourceHandler;
 import io.undertow.server.session.InMemorySessionManager;
 import io.undertow.server.session.SessionAttachmentHandler;
 import io.undertow.server.session.SessionCookieConfig;
-import io.undertow.util.Headers;
-import io.undertow.util.StatusCodes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bouncycastle.asn1.oiw.OIWObjectIdentifiers;
@@ -45,6 +43,8 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.bc.BcDigestCalculatorProvider;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
+import org.pac4j.core.matching.matcher.DefaultMatchers;
+import org.pac4j.core.util.Pac4jConstants;
 import org.pac4j.undertow.handler.CallbackHandler;
 import org.pac4j.undertow.handler.LogoutHandler;
 import org.pac4j.undertow.handler.SecurityHandler;
@@ -126,12 +126,7 @@ public class Server {
                     final var pac4jConfig = new Pac4jConfigFactory("https://" + c.getHostAddress() + ":" + managementInterface.listenPort).build();
                     final var pathHandler = new PathHandler();
                     final var resourceRootPackage = "com/machnos/api/gateway/server/gui";
-                    final var classpathHttpHandler =
-                    pathHandler.addExactPath("/", exchange -> {
-                        exchange.getResponseHeaders().put(Headers.LOCATION, "https://" + c.getHostAddress() + ":" + managementInterface.listenPort +"/index.html");
-                        exchange.setStatusCode(StatusCodes.FOUND);
-                    });
-                    pathHandler.addExactPath("/index.html", SecurityHandler.build(new ResourceHandler(new InjectingClasspathResourceManager(resourceRootPackage)), pac4jConfig, "FormClient"));
+                    pathHandler.addExactPath("/", SecurityHandler.build(new ResourceHandler(new InjectingClasspathResourceManager(resourceRootPackage)), pac4jConfig, "FormClient", null, DefaultMatchers.SECURITYHEADERS + Pac4jConstants.ELEMENT_SEPARATOR + "MachnosCsrfToken"));
                     pathHandler.addPrefixPath("/login/", new ResourceHandler(new InjectingClasspathResourceManager(resourceRootPackage + "/login")));
                     pathHandler.addPrefixPath("/resources/", new ResourceHandler(new InjectingClasspathResourceManager(resourceRootPackage + "/resources")));
                     pathHandler.addExactPath("/logout", new LogoutHandler(pac4jConfig, "/?defaulturlafterlogout"));
