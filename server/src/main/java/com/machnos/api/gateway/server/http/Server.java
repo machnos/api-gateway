@@ -25,6 +25,7 @@ import com.machnos.api.gateway.server.domain.management.gui.Pac4jConfigFactory;
 import io.undertow.Undertow;
 import io.undertow.UndertowOptions;
 import io.undertow.server.handlers.PathHandler;
+import io.undertow.server.handlers.resource.ResourceHandler;
 import io.undertow.server.session.InMemorySessionManager;
 import io.undertow.server.session.SessionAttachmentHandler;
 import io.undertow.server.session.SessionCookieConfig;
@@ -124,14 +125,15 @@ public class Server {
                 managementInterface.getListenInetAddresses().forEach(c -> {
                     final var pac4jConfig = new Pac4jConfigFactory("https://" + c.getHostAddress() + ":" + managementInterface.listenPort).build();
                     final var pathHandler = new PathHandler();
-                    final var classpathHttpHandler = new ClasspathResourceHttpHandler("com/machnos/api/gateway/server/gui");
+                    final var resourceRootPackage = "com/machnos/api/gateway/server/gui";
+                    final var classpathHttpHandler =
                     pathHandler.addExactPath("/", exchange -> {
                         exchange.getResponseHeaders().put(Headers.LOCATION, "https://" + c.getHostAddress() + ":" + managementInterface.listenPort +"/index.html");
                         exchange.setStatusCode(StatusCodes.FOUND);
                     });
-                    pathHandler.addExactPath("/index.html", SecurityHandler.build(classpathHttpHandler, pac4jConfig, "FormClient"));
-                    pathHandler.addPrefixPath("/login/", classpathHttpHandler);
-                    pathHandler.addPrefixPath("/resources/", classpathHttpHandler);
+                    pathHandler.addExactPath("/index.html", SecurityHandler.build(new ResourceHandler(new InjectingClasspathResourceManager(resourceRootPackage)), pac4jConfig, "FormClient"));
+                    pathHandler.addPrefixPath("/login/", new ResourceHandler(new InjectingClasspathResourceManager(resourceRootPackage + "/login")));
+                    pathHandler.addPrefixPath("/resources/", new ResourceHandler(new InjectingClasspathResourceManager(resourceRootPackage + "/resources")));
                     pathHandler.addExactPath("/logout", new LogoutHandler(pac4jConfig, "/?defaulturlafterlogout"));
                     pathHandler.addExactPath("/callback", CallbackHandler.build(pac4jConfig, null, true));
 
