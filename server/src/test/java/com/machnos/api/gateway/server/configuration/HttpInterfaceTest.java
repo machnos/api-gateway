@@ -75,7 +75,7 @@ public class HttpInterfaceTest {
             assertEquals(localAddress, httpInterface.getListenInetAddresses().get(0));
 
             httpInterface.listenInterface = localAddress.getHostName();
-            assertEquals(1, httpInterface.getListenInetAddresses().size());
+            assertEquals(InetAddress.getAllByName(httpInterface.listenInterface).length, httpInterface.getListenInetAddresses().size());
             assertEquals(localAddress, httpInterface.getListenInetAddresses().get(0));
 
         } catch (UnknownHostException e) {

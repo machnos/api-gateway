@@ -17,6 +17,7 @@
 
 package com.machnos.api.gateway.server.http;
 
+import com.machnos.api.gateway.server.configuration.Configuration;
 import com.machnos.api.gateway.server.configuration.HttpInterface;
 import org.junit.jupiter.api.Test;
 
@@ -36,8 +37,10 @@ public class ServerTest {
      */
     @Test
     public void testStartStop() {
+        var configuration = new Configuration();
+        configuration.clusterName = "test-cluster";
         var managementInterface = new HttpInterface();
-        var server = new Server(managementInterface);
+        var server = new Server(configuration);
         // Test the initial running state
         assertFalse(server.isRunning());
 

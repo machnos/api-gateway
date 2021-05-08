@@ -17,6 +17,7 @@
 
 package com.machnos.api.gateway.server.http;
 
+import com.machnos.api.gateway.server.configuration.Configuration;
 import com.machnos.api.gateway.server.configuration.HttpInterface;
 import com.machnos.api.gateway.server.domain.MachnosException;
 import com.machnos.api.gateway.server.domain.keystore.FileSystemKeyStoreWrapper;
@@ -90,7 +91,9 @@ public class Server {
      *
      * @param managementInterface The http configuration for the management interface.
      */
-    public Server(HttpInterface managementInterface) {
+    public Server(Configuration configuration) {
+        var managementInterface = configuration.management;
+        var clusterName = configuration.clusterName;
         var builder = Undertow.builder();
         if (managementInterface.keystoreLocation != null && managementInterface.tlsProtocols != null && managementInterface.tlsProtocols.length > 0) {
             if (!managementInterface.keystoreLocation.exists()) {
@@ -126,9 +129,9 @@ public class Server {
                     final var pac4jConfig = new Pac4jConfigFactory("https://" + c.getHostAddress() + ":" + managementInterface.listenPort).build();
                     final var pathHandler = new PathHandler();
                     final var resourceRootPackage = "com/machnos/api/gateway/server/gui";
-                    pathHandler.addExactPath("/", SecurityHandler.build(new ResourceHandler(new InjectingClasspathResourceManager(resourceRootPackage)), pac4jConfig, "FormClient", null, DefaultMatchers.SECURITYHEADERS + Pac4jConstants.ELEMENT_SEPARATOR + "MachnosCsrfToken"));
-                    pathHandler.addPrefixPath("/login/", new ResourceHandler(new InjectingClasspathResourceManager(resourceRootPackage + "/login")));
-                    pathHandler.addPrefixPath("/resources/", new ResourceHandler(new InjectingClasspathResourceManager(resourceRootPackage + "/resources")));
+                    pathHandler.addExactPath("/", SecurityHandler.build(new ResourceHandler(new InjectingClasspathResourceManager(resourceRootPackage, clusterName)), pac4jConfig, "FormClient", null, DefaultMatchers.SECURITYHEADERS + Pac4jConstants.ELEMENT_SEPARATOR + "MachnosCsrfToken"));
+                    pathHandler.addPrefixPath("/login/", new ResourceHandler(new InjectingClasspathResourceManager(resourceRootPackage + "/login", clusterName)));
+                    pathHandler.addPrefixPath("/resources/", new ResourceHandler(new InjectingClasspathResourceManager(resourceRootPackage + "/resources", clusterName)));
                     pathHandler.addExactPath("/logout", new LogoutHandler(pac4jConfig, "/?defaulturlafterlogout"));
                     pathHandler.addExactPath("/callback", CallbackHandler.build(pac4jConfig, null, true));
 

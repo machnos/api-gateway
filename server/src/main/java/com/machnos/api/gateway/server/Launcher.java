@@ -44,7 +44,7 @@ public class Launcher {
                 logger.error("Unable to load configuration", e);
             }
         }
-        final var server = new Server(configuration.management);
+        final var server = new Server(configuration);
         server.start();
     }
 

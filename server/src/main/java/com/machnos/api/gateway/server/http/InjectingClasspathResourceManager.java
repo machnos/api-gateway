@@ -17,11 +17,61 @@
 
 package com.machnos.api.gateway.server.http;
 
-import io.undertow.server.handlers.resource.ClassPathResourceManager;
+import io.undertow.UndertowMessages;
+import io.undertow.server.handlers.resource.Resource;
+import io.undertow.server.handlers.resource.ResourceChangeListener;
+import io.undertow.server.handlers.resource.ResourceManager;
 
-public class InjectingClasspathResourceManager extends ClassPathResourceManager {
+import java.io.IOException;
+import java.net.URL;
 
-    public InjectingClasspathResourceManager(String rootPackage) {
-        super(InjectingClasspathResourceManager.class.getClassLoader(), rootPackage);
+public class InjectingClasspathResourceManager implements ResourceManager {
+
+    private final String rootPackage;
+    private final String clusterName;
+
+    public InjectingClasspathResourceManager(String rootPackage, String clusterName) {
+        if (rootPackage.isEmpty()) {
+            this.rootPackage = "";
+        } else if (rootPackage.endsWith("/")) {
+            this.rootPackage = rootPackage;
+        } else {
+            this.rootPackage = rootPackage + "/";
+        }
+        this.clusterName = clusterName;
+    }
+
+    @Override
+    public Resource getResource(String path) throws IOException {
+        String modPath = path;
+        if(modPath.startsWith("/")) {
+            modPath = path.substring(1);
+        }
+        final String realPath = this.rootPackage + modPath;
+        final URL resource = getClass().getClassLoader().getResource(realPath);
+        if(resource == null) {
+            return null;
+        } else {
+            return new InjectableURLResource(resource, path, this.clusterName);
+        }
+    }
+
+    @Override
+    public boolean isResourceChangeListenerSupported() {
+        return false;
+    }
+
+    @Override
+    public void registerResourceChangeListener(ResourceChangeListener listener) {
+        throw UndertowMessages.MESSAGES.resourceChangeListenerNotSupported();
+    }
+
+    @Override
+    public void removeResourceChangeListener(ResourceChangeListener listener) {
+        throw UndertowMessages.MESSAGES.resourceChangeListenerNotSupported();
+    }
+
+    @Override
+    public void close() throws IOException {
     }
 }
