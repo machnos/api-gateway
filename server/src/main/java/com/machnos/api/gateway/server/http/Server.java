@@ -89,7 +89,7 @@ public class Server {
     /**
      * Creates a new <code>Server</code> instance.
      *
-     * @param managementInterface The http configuration for the management interface.
+     * @param configuration The configuration used to setup the <code>Server</code>.
      */
     public Server(Configuration configuration) {
         var managementInterface = configuration.management;
