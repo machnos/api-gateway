@@ -1,7 +1,15 @@
 clusterName: Machnos test cluster
 management:
+  alias: management
   listenInterface: 127.0.0.1
   listenPort: 9443
   keystorePassword: Machnos
   keystoreType: JKS
   serverEntryPassword: MyKeyPassword
+httpInterfaces:
+  - alias: default
+    listenInterface: 127.0.0.1
+    listenPort: 8443
+    keystorePassword: Machnos
+    keystoreType: JKS
+    serverEntryPassword: MyKeyPassword

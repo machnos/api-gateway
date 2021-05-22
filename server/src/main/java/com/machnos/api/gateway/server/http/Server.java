@@ -116,7 +116,6 @@ public class Server {
             } catch (KeyStoreException | NoSuchAlgorithmException | CertIOException | CertificateException | OperatorCreationException e) {
                 throw new MachnosException(MachnosException.WRAPPED_EXCEPTION, e);
             }
-
             try {
                 final var keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
                 keyManagerFactory.init(keyStoreWrapper.getKeyStore(), managementInterface.getServerEntryPasswordAsCharArray());

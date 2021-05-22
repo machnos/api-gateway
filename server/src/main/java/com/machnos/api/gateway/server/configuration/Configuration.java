@@ -22,6 +22,8 @@ import org.yaml.snakeyaml.constructor.Constructor;
 
 import java.io.*;
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Data object that holds all configuration that is (de)serialized as yaml file. This class will reflect the
@@ -49,6 +51,11 @@ public final class Configuration {
      * in a browser, or via an Json API.
      */
     public HttpInterface management = new HttpInterface();
+
+    /**
+     * The http interfaces that handle api requests.
+     */
+    public List<HttpInterface> httpInterfaces = new ArrayList<>();
 
     /**
      * Loads the <code>Configuration</code> object from file.

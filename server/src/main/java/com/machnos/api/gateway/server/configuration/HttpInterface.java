@@ -40,6 +40,7 @@ public class HttpInterface {
     public static final String IPV4_SUFFIX = ":ipv4";
     public static final String IPV6_SUFFIX = ":ipv6";
 
+    public String alias;
     public String listenInterface = "127.0.0.1";
     public int listenPort = 8443;
     public String[] tlsProtocols = new String[] { "TLSv1.2", "TLSv1.3" };
