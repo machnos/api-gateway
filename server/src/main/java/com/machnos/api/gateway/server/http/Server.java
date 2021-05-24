@@ -25,6 +25,7 @@ import com.machnos.api.gateway.server.domain.keystore.KeyStoreWrapper;
 import com.machnos.api.gateway.server.domain.management.gui.Pac4jConfigFactory;
 import io.undertow.Undertow;
 import io.undertow.UndertowOptions;
+import io.undertow.server.HttpHandler;
 import io.undertow.server.handlers.PathHandler;
 import io.undertow.server.handlers.resource.ResourceHandler;
 import io.undertow.server.session.InMemorySessionManager;
@@ -49,6 +50,7 @@ import org.pac4j.core.util.Pac4jConstants;
 import org.pac4j.undertow.handler.CallbackHandler;
 import org.pac4j.undertow.handler.LogoutHandler;
 import org.pac4j.undertow.handler.SecurityHandler;
+import org.xnio.OptionMap;
 import org.xnio.Options;
 import org.xnio.Sequence;
 
@@ -95,62 +97,86 @@ public class Server {
         var managementInterface = configuration.management;
         var clusterName = configuration.clusterName;
         var builder = Undertow.builder();
-        if (managementInterface.keystoreLocation != null && managementInterface.tlsProtocols != null && managementInterface.tlsProtocols.length > 0) {
-            if (!managementInterface.keystoreLocation.exists()) {
-                var parentFile = managementInterface.keystoreLocation.getParentFile();
+        builder.setServerOption(UndertowOptions.ENABLE_HTTP2, true);
+
+        // Setup the management interface.
+        if (managementInterface != null) {
+            final var pac4jConfig = new Pac4jConfigFactory().build();
+            final var pathHandler = new PathHandler();
+            final var resourceRootPackage = "com/machnos/api/gateway/server/gui";
+            pathHandler.addExactPath("/", SecurityHandler.build(new ResourceHandler(new InjectingClasspathResourceManager(resourceRootPackage, clusterName)), pac4jConfig, "FormClient", null, DefaultMatchers.SECURITYHEADERS + Pac4jConstants.ELEMENT_SEPARATOR + "MachnosCsrfToken"));
+            pathHandler.addPrefixPath("/login/", new ResourceHandler(new InjectingClasspathResourceManager(resourceRootPackage + "/login", clusterName)));
+            pathHandler.addPrefixPath("/resources/", new ResourceHandler(new InjectingClasspathResourceManager(resourceRootPackage + "/resources", clusterName)));
+            pathHandler.addExactPath("/logout", new LogoutHandler(pac4jConfig, "/?defaulturlafterlogout"));
+            pathHandler.addExactPath("/callback", CallbackHandler.build(pac4jConfig, null, true));
+            final var rootHandler = new SessionAttachmentHandler(
+                    pathHandler,
+                    new InMemorySessionManager("SessionManager"),
+                    new SessionCookieConfig().setHttpOnly(true).setSecure(true)
+            );
+            addListenInterface(managementInterface, rootHandler, builder);
+        }
+        // Setup the api interfaces
+        if (configuration.httpInterfaces != null) {
+            for (var httpInterface : configuration.httpInterfaces) {
+                addListenInterface(httpInterface, new ApiHttpHandler(httpInterface.alias), builder);
+            }
+        }
+        this.server = builder.build();
+    }
+
+    private void addListenInterface(HttpInterface httpInterface, HttpHandler rootHandler, Undertow.Builder builder) {
+        if (httpInterface.keystoreLocation != null && httpInterface.tlsProtocols != null && httpInterface.tlsProtocols.length > 0) {
+            if (!httpInterface.keystoreLocation.exists()) {
+                var parentFile = httpInterface.keystoreLocation.getParentFile();
                 if (!parentFile.exists()) {
                     parentFile.mkdirs();
                 }
             }
             final var keyStoreWrapper = new FileSystemKeyStoreWrapper(
-                    managementInterface.keystoreLocation,
-                    KeyStoreWrapper.KeyStoreType.valueOf(managementInterface.keystoreType),
-                    managementInterface.getKeystorePasswordAsCharArray()
+                    httpInterface.keystoreLocation,
+                    KeyStoreWrapper.KeyStoreType.valueOf(httpInterface.keystoreType),
+                    httpInterface.getKeystorePasswordAsCharArray()
             );
-            validateSelfSignedCert(keyStoreWrapper, managementInterface.getServerEntryPasswordAsCharArray());
+            validateSelfSignedCert(keyStoreWrapper, httpInterface.getServerEntryPasswordAsCharArray());
             try {
                 if (keyStoreWrapper.getKeyStore().size() == 0) {
                     // Generate self signed cert and add it to the keystore.
-                    addSelfSignedCertificate(managementInterface, keyStoreWrapper);
+                    addSelfSignedCertificate(httpInterface, keyStoreWrapper);
                 }
             } catch (KeyStoreException | NoSuchAlgorithmException | CertIOException | CertificateException | OperatorCreationException e) {
                 throw new MachnosException(MachnosException.WRAPPED_EXCEPTION, e);
             }
             try {
                 final var keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-                keyManagerFactory.init(keyStoreWrapper.getKeyStore(), managementInterface.getServerEntryPasswordAsCharArray());
+                keyManagerFactory.init(keyStoreWrapper.getKeyStore(), httpInterface.getServerEntryPasswordAsCharArray());
                 final var keyManagers = keyManagerFactory.getKeyManagers();
                 final var sslContext = SSLContext.getInstance("TLS");
                 sslContext.init(keyManagers, null, null);
-                builder.setServerOption(UndertowOptions.ENABLE_HTTP2, true)
-                        .setSocketOption(Options.SSL_ENABLED_PROTOCOLS, Sequence.of(managementInterface.tlsProtocols));
-                managementInterface.getListenInetAddresses().forEach(c -> {
-                    final var pac4jConfig = new Pac4jConfigFactory("https://" + c.getHostAddress() + ":" + managementInterface.listenPort).build();
-                    final var pathHandler = new PathHandler();
-                    final var resourceRootPackage = "com/machnos/api/gateway/server/gui";
-                    pathHandler.addExactPath("/", SecurityHandler.build(new ResourceHandler(new InjectingClasspathResourceManager(resourceRootPackage, clusterName)), pac4jConfig, "FormClient", null, DefaultMatchers.SECURITYHEADERS + Pac4jConstants.ELEMENT_SEPARATOR + "MachnosCsrfToken"));
-                    pathHandler.addPrefixPath("/login/", new ResourceHandler(new InjectingClasspathResourceManager(resourceRootPackage + "/login", clusterName)));
-                    pathHandler.addPrefixPath("/resources/", new ResourceHandler(new InjectingClasspathResourceManager(resourceRootPackage + "/resources", clusterName)));
-                    pathHandler.addExactPath("/logout", new LogoutHandler(pac4jConfig, "/?defaulturlafterlogout"));
-                    pathHandler.addExactPath("/callback", CallbackHandler.build(pac4jConfig, null, true));
 
-                    builder.addHttpsListener(
-                        managementInterface.listenPort,
-                        c.getHostAddress(),
-                        sslContext
-                    ).setHandler(new SessionAttachmentHandler(
-                            pathHandler,
-                            new InMemorySessionManager("SessionManager"),
-                            new SessionCookieConfig().setHttpOnly(true).setSecure(true)
-                    ));
+                httpInterface.getListenInetAddresses().forEach(c -> {
+                    var listenerBuilder = new Undertow.ListenerBuilder()
+                            .setType(Undertow.ListenerType.HTTPS)
+                            .setOverrideSocketOptions(OptionMap.builder().set(Options.SSL_ENABLED_PROTOCOLS, Sequence.of(httpInterface.tlsProtocols)).getMap())
+                            .setHost(c.getHostAddress())
+                            .setPort(httpInterface.listenPort)
+                            .setSslContext(sslContext)
+                            .setRootHandler(rootHandler);
+                    builder.addListener(listenerBuilder);
                 });
             } catch (NoSuchAlgorithmException | KeyStoreException | UnrecoverableKeyException | KeyManagementException e) {
                 throw new MachnosException(MachnosException.WRAPPED_EXCEPTION, e);
             }
         } else {
-            builder.addHttpListener(managementInterface.listenPort, managementInterface.listenInterface);
+            httpInterface.getListenInetAddresses().forEach(c -> {
+                var listenerBuilder = new Undertow.ListenerBuilder()
+                        .setType(Undertow.ListenerType.HTTP)
+                        .setHost(c.getHostAddress())
+                        .setPort(httpInterface.listenPort)
+                        .setRootHandler(rootHandler);
+                builder.addListener(listenerBuilder);
+            });
         }
-        this.server = builder.build();
     }
 
     /**

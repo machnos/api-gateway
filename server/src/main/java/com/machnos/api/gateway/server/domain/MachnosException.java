@@ -31,6 +31,7 @@ public class MachnosException extends RuntimeException {
     // 301_* reserved for function errors.
     public static final int MISSING_VARIABLE = 301_000;
     public static final int MISSING_VALUE = 301_001;
+    public static final int OBJECT_IS_IMMUTABLE = 301_002;
 
 
     private final int errorCode;
