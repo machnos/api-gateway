@@ -32,6 +32,10 @@ public class ApiHttpHandler implements HttpHandler {
 
     @Override
     public void handleRequest(HttpServerExchange exchange) throws Exception {
+        if (exchange.isInIoThread()) {
+            exchange.dispatch(this);
+            return;
+        }
         var message = UndertowHttpMessage.buildFromRequest(exchange);
         var transport = UndertowHttpTransport.buildFromRequest(exchange);
         // Step 1. Find api based on path.
