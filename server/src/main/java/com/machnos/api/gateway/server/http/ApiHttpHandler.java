@@ -41,7 +41,14 @@ public class ApiHttpHandler implements HttpHandler {
         var responseMessage = new UndertowHttpMessage(exchange, UndertowHttpMessage.Type.RESPONSE);
         // Step 1. Find api based on path.
         String requestPath = transport.getRequestPath();
-        responseMessage.getHeaders().set("X-Name", "Mark");
+        if ("/".equals(requestPath)) {
+            responseMessage.getHeaders().set("Content-Type", "text/html");
+            responseMessage.setBody("<p>Hi there!</p>");
+        }
+
+        if (responseMessage.getBody() != null) {
+            exchange.getResponseSender().send(responseMessage.getBody());
+        }
         exchange.endExchange();
     }
 }

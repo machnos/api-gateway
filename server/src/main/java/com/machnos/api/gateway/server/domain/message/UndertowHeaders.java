@@ -61,7 +61,7 @@ public class UndertowHeaders implements Headers {
     @Override
     public void set(String headerName, String headerValue) {
         if (this.type.isRequest()) {
-            throw new MachnosException(MachnosException.OBJECT_IS_IMMUTABLE, "Headers");
+            throw new MachnosException(MachnosException.OBJECT_IS_IMMUTABLE, "headers");
         }
         HttpString httpString = io.undertow.util.Headers.fromCache(headerName);
         if (httpString == null) {

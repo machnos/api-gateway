@@ -22,4 +22,8 @@ public interface Message {
     boolean isHttp();
     Headers getHeaders();
 
+    String getBody();
+
+    void setBody(String body);
+
 }

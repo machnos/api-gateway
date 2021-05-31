@@ -33,6 +33,8 @@ public class UndertowHttpMessage implements HttpMessage {
         }
     }
 
+    private String body;
+
     private final HttpServerExchange httpServerExchange;
     private final Type type;
     private final UndertowHeaders headers;
@@ -49,4 +51,20 @@ public class UndertowHttpMessage implements HttpMessage {
         return this.headers;
     }
 
+    @Override
+    public String getBody() {
+        if (this.type.isRequest() && this.body == null) {
+            this.httpServerExchange.getRequestReceiver().receiveFullString((exchange, message) -> {
+                this.body = message;
+            }, ((exchange, e) -> {
+                this.body = "";
+            }));
+        }
+        return this.body;
+    }
+
+    @Override
+    public void setBody(String body) {
+        this.body = body;
+    }
 }
