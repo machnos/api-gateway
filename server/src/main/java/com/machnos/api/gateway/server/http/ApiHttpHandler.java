@@ -17,6 +17,8 @@
 
 package com.machnos.api.gateway.server.http;
 
+import com.machnos.api.gateway.server.domain.api.DummyWebApi;
+import com.machnos.api.gateway.server.domain.api.ExecutionContext;
 import com.machnos.api.gateway.server.domain.message.UndertowHttpMessage;
 import com.machnos.api.gateway.server.domain.transport.UndertowHttpTransport;
 import io.undertow.server.HttpHandler;
@@ -36,14 +38,17 @@ public class ApiHttpHandler implements HttpHandler {
             exchange.dispatch(this);
             return;
         }
-        var transport = new UndertowHttpTransport(exchange);
-        var requestMessage = new UndertowHttpMessage(exchange, UndertowHttpMessage.Type.REQUEST);
-        var responseMessage = new UndertowHttpMessage(exchange, UndertowHttpMessage.Type.RESPONSE);
+        final var transport = new UndertowHttpTransport(exchange);
+        final var requestMessage = new UndertowHttpMessage(exchange, UndertowHttpMessage.Type.REQUEST);
+        final var responseMessage = new UndertowHttpMessage(exchange, UndertowHttpMessage.Type.RESPONSE);
+        final var executionContext = new ExecutionContext(transport, requestMessage, responseMessage);
+
+
         // Step 1. Find api based on path.
         String requestPath = transport.getRequestPath();
         if ("/".equals(requestPath)) {
-            responseMessage.getHeaders().set("Content-Type", "text/html");
-            responseMessage.setBody("<p>Hi there!</p>");
+
+            new DummyWebApi().handleRequest(executionContext);
         }
 
         if (responseMessage.getBody() != null) {

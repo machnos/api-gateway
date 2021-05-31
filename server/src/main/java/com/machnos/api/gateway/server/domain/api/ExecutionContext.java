@@ -26,7 +26,6 @@ public class ExecutionContext {
     private final Message requestMessage;
     private final Message responseMessage;
 
-
     public ExecutionContext(Transport transport, Message requestMessage, Message responseMessage) {
         this.transport = transport;
         this.requestMessage = requestMessage;

@@ -22,7 +22,11 @@ public interface HttpTransport extends Transport {
     @Override
     default boolean isHttp() { return true; }
 
+    @Override
+    default HttpTransport getHttpTransport() {return this;}
+
     String getRequestMethod();
 
     String getRequestPath();
+
 }

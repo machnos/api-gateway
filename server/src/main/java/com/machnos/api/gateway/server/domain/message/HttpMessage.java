@@ -19,7 +19,13 @@ package com.machnos.api.gateway.server.domain.message;
 
 public interface HttpMessage extends Message {
 
+    int STATUS_CODE_UNAUTHORIZED = 401;
+
     @Override
     default boolean isHttp() { return true; }
 
+    @Override
+    default HttpMessage getHttpMessage() { return this; }
+
+    void setStatusCode(int statusCode);
 }

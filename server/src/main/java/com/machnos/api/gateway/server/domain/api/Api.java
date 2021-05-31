@@ -15,15 +15,9 @@
  * under the License.
  */
 
-package com.machnos.api.gateway.server.domain.message;
+package com.machnos.api.gateway.server.domain.api;
 
-public interface Message {
+public interface Api {
 
-    Headers getHeaders();
-    String getBody();
-    void setBody(String body);
-
-
-    boolean isHttp();
-    HttpMessage getHttpMessage();
+    void handleRequest(ExecutionContext executionContext);
 }

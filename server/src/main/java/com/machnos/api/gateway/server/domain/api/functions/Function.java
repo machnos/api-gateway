@@ -17,9 +17,7 @@
 
 package com.machnos.api.gateway.server.domain.api.functions;
 
-import com.machnos.api.gateway.server.domain.api.variables.Variables;
-
-import java.util.Map;
+import com.machnos.api.gateway.server.domain.api.ExecutionContext;
 
 /**
  * Base class for all elements that form a policy. The logic of an api is determined by the set of policies that is
@@ -57,9 +55,12 @@ public interface Function {
     /**
      * Execute the <code>Function</code>.
      *
-     * @param inputVariables The input <code>Variables</code>.
-     * @param functionConfiguration The configuration settings of the <code>Function</code>.
-     * @return The <code>Result</code> of the execution.
+     * @param The input <code>ExecutionContext</code>.
      */
-    Result execute(final Variables inputVariables, Map<String, String> functionConfiguration);
+    void execute(ExecutionContext executionContext);
+
+    Function getNext();
+
+    void setNext(Function function);
+
 }

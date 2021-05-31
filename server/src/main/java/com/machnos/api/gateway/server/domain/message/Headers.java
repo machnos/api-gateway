@@ -21,6 +21,10 @@ import java.util.List;
 
 public interface Headers {
 
+    String HTTP_AUTHORIZATION = "Authorization";
+    String HTTP_CONTENT_TYPE = "Content-Type";
+    String HTTP_WWW_AUTHENTICATE = "WWW-Authenticate";
+
     boolean contains(String headerName);
     String getFirst(String headerName);
     List<String> get(String headerName);
