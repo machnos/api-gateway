@@ -17,18 +17,9 @@
 
 package com.machnos.api.gateway.server.domain.message;
 
-import java.util.List;
-import java.util.Map;
-
 public interface Message {
 
-    Map<String, List<String>> getHeaders();
+    boolean isHttp();
+    Headers getHeaders();
 
-    boolean containsHeader(String headerKey);
-
-    List<String> getHeaderValues(String headerKey);
-
-    String getFirstHeaderValue(String headerKey);
-
-    void setHeader(String headerKey, List<String> headerValues);
 }

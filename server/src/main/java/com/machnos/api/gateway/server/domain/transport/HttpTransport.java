@@ -17,8 +17,12 @@
 
 package com.machnos.api.gateway.server.domain.transport;
 
-public interface HttpTransport {
+public interface HttpTransport extends Transport {
 
+    @Override
+    default boolean isHttp() { return true; }
 
     String getRequestMethod();
+
+    String getRequestPath();
 }

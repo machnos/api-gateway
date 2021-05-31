@@ -15,25 +15,15 @@
  * under the License.
  */
 
-package com.machnos.api.gateway.server.domain.transport;
+package com.machnos.api.gateway.server.domain.message;
 
-import io.undertow.server.HttpServerExchange;
+import java.util.List;
 
-public class UndertowHttpTransport implements HttpTransport {
+public interface Headers {
 
-    private final HttpServerExchange httpServerExchange;
+    boolean contains(String headerName);
+    String getFirst(String headerName);
+    List<String> get(String headerName);
 
-    public UndertowHttpTransport(HttpServerExchange httpServerExchange) {
-        this.httpServerExchange = httpServerExchange;
-    }
-
-    @Override
-    public String getRequestMethod() {
-        return this.httpServerExchange.getRequestMethod().toString();
-    }
-
-    @Override
-    public String getRequestPath() {
-        return this.httpServerExchange.getRequestPath();
-    }
+    void set(String headerName, String headerValue);
 }

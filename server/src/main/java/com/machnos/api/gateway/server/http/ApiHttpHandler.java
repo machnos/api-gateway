@@ -31,15 +31,17 @@ public class ApiHttpHandler implements HttpHandler {
     }
 
     @Override
-    public void handleRequest(HttpServerExchange exchange) throws Exception {
+    public void handleRequest(HttpServerExchange exchange) {
         if (exchange.isInIoThread()) {
             exchange.dispatch(this);
             return;
         }
-        var message = UndertowHttpMessage.buildFromRequest(exchange);
-        var transport = UndertowHttpTransport.buildFromRequest(exchange);
+        var transport = new UndertowHttpTransport(exchange);
+        var requestMessage = new UndertowHttpMessage(exchange, UndertowHttpMessage.Type.REQUEST);
+        var responseMessage = new UndertowHttpMessage(exchange, UndertowHttpMessage.Type.RESPONSE);
         // Step 1. Find api based on path.
-        String requestPath = exchange.getRequestPath();
+        String requestPath = transport.getRequestPath();
+        responseMessage.getHeaders().set("X-Name", "Mark");
         exchange.endExchange();
     }
 }

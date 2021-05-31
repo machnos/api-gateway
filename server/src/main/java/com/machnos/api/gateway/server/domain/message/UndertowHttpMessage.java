@@ -19,22 +19,34 @@ package com.machnos.api.gateway.server.domain.message;
 
 import io.undertow.server.HttpServerExchange;
 
-import java.util.ArrayList;
+public class UndertowHttpMessage implements HttpMessage {
 
-public class UndertowHttpMessage extends AbstractHttpMessage {
+    public enum Type {
+        REQUEST, RESPONSE;
 
-    private UndertowHttpMessage() {
-        super();
-    }
-
-    public static UndertowHttpMessage buildFromRequest(HttpServerExchange exchange) {
-        final var message = new UndertowHttpMessage();
-        final var requestHeaders = exchange.getRequestHeaders();
-        for (final var name : requestHeaders.getHeaderNames()) {
-            final var values = requestHeaders.get(name);
-            message.setHeader(name.toString(), new ArrayList<>(values));
+        public boolean isRequest() {
+            return Type.REQUEST.equals(this);
         }
-        message.makeImmutable();
-        return message;
+
+        public boolean isResponse() {
+            return Type.RESPONSE.equals(this);
+        }
     }
+
+    private final HttpServerExchange httpServerExchange;
+    private final Type type;
+    private final UndertowHeaders headers;
+
+    public UndertowHttpMessage(HttpServerExchange httpServerExchange, Type type) {
+        super();
+        this.httpServerExchange = httpServerExchange;
+        this.type = type;
+        this.headers = new UndertowHeaders(httpServerExchange, type);
+    }
+
+    @Override
+    public Headers getHeaders() {
+        return this.headers;
+    }
+
 }

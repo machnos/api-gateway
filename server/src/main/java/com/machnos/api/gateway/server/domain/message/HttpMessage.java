@@ -19,4 +19,7 @@ package com.machnos.api.gateway.server.domain.message;
 
 public interface HttpMessage extends Message {
 
+    @Override
+    default boolean isHttp() { return true; }
+
 }

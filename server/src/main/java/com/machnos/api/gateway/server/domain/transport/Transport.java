@@ -15,9 +15,9 @@
  * under the License.
  */
 
-package com.machnos.api.gateway.server.domain.message;
+package com.machnos.api.gateway.server.domain.transport;
 
-public class AbstractHttpMessage extends AbstractMessage implements HttpMessage {
+public interface Transport {
 
-
+    boolean isHttp();
 }
