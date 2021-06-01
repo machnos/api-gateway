@@ -21,13 +21,17 @@ import com.machnos.api.gateway.server.domain.api.functions.CompoundFunction;
 import com.machnos.api.gateway.server.domain.api.functions.RequireBasicAuthentication;
 import com.machnos.api.gateway.server.domain.api.functions.SetResponseContent;
 
-public class DummyWebApi implements  Api {
+public class DummyWebApi implements Api {
 
     private final CompoundFunction rootFunction = new CompoundFunction(getClass().getSimpleName());
 
     public DummyWebApi() {
-        this.rootFunction.addFunction(new RequireBasicAuthentication().setRealmName("Machnos API Gateway"));
-        this.rootFunction.addFunction(new SetResponseContent().setContent("<p>Hi ${account.username}!</p>").setContentType("text/html"));
+        this.rootFunction.addFunction(new RequireBasicAuthentication());
+        this.rootFunction.addFunction(new SetResponseContent().setContent(
+                "<p>Hi ${account.username}!</p>" +
+                "<p>You visited this page using a '${transport.http.request.method}' method via interface '${transport.interfaceAlias}'.</p>" +
+                "<p>The authorization header: ${request.header.authorization.first}</p>"
+        ).setContentType("text/html"));
     }
 
     @Override

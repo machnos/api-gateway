@@ -19,11 +19,17 @@ package com.machnos.api.gateway.server.domain.idm;
 
 public class Account {
 
-    private final Object username;
+    public static final String VARIABLE_NAME = "account";
+
+    private final String username;
     private final Credentials credentials;
 
     public Account(String username, Credentials credentials) {
         this.username = username;
         this.credentials = credentials;
+    }
+
+    public String getUsername() {
+        return this.username;
     }
 }

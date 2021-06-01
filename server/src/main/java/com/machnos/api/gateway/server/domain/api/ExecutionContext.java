@@ -17,6 +17,7 @@
 
 package com.machnos.api.gateway.server.domain.api;
 
+import com.machnos.api.gateway.server.domain.api.variables.VariableParser;
 import com.machnos.api.gateway.server.domain.idm.Account;
 import com.machnos.api.gateway.server.domain.message.Message;
 import com.machnos.api.gateway.server.domain.transport.Transport;
@@ -26,6 +27,7 @@ public class ExecutionContext {
     private final Transport transport;
     private final Message requestMessage;
     private final Message responseMessage;
+    private final VariableParser variableParser = new VariableParser();
     private Account account;
 
     public ExecutionContext(Transport transport, Message requestMessage, Message responseMessage) {
@@ -53,5 +55,13 @@ public class ExecutionContext {
 
     public Account getAccount() {
         return this.account;
+    }
+
+    public VariableParser getVariableParser() {
+        return this.variableParser;
+    }
+
+    public String parse(String input) {
+        return this.variableParser.parse(input, this);
     }
 }

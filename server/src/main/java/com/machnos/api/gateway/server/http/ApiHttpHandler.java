@@ -38,7 +38,7 @@ public class ApiHttpHandler implements HttpHandler {
             exchange.dispatch(this);
             return;
         }
-        final var transport = new UndertowHttpTransport(exchange);
+        final var transport = new UndertowHttpTransport(this.interfaceAlias, exchange);
         final var requestMessage = new UndertowHttpMessage(exchange, UndertowHttpMessage.Type.REQUEST);
         final var responseMessage = new UndertowHttpMessage(exchange, UndertowHttpMessage.Type.RESPONSE);
         final var executionContext = new ExecutionContext(transport, requestMessage, responseMessage);
@@ -51,7 +51,7 @@ public class ApiHttpHandler implements HttpHandler {
         }
 
         if (responseMessage.getBody() != null) {
-            exchange.getResponseSender().send(responseMessage.getBody());
+            exchange.getResponseSender().send(executionContext.parse(responseMessage.getBody()));
         }
         exchange.endExchange();
     }

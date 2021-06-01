@@ -23,7 +23,6 @@ public interface Message {
     String getBody();
     void setBody(String body);
 
-
     boolean isHttp();
     HttpMessage getHttpMessage();
 }

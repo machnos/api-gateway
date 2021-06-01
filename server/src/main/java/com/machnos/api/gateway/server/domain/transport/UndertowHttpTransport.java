@@ -21,10 +21,17 @@ import io.undertow.server.HttpServerExchange;
 
 public class UndertowHttpTransport implements HttpTransport {
 
+    private final String interfaceAlias;
     private final HttpServerExchange httpServerExchange;
 
-    public UndertowHttpTransport(HttpServerExchange httpServerExchange) {
+    public UndertowHttpTransport(String interfaceAlias, HttpServerExchange httpServerExchange) {
+        this.interfaceAlias = interfaceAlias;
         this.httpServerExchange = httpServerExchange;
+    }
+
+    @Override
+    public String getInterfaceAlias() {
+        return this.interfaceAlias;
     }
 
     @Override
