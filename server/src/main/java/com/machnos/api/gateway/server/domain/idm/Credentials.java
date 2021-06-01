@@ -15,29 +15,7 @@
  * under the License.
  */
 
-package com.machnos.api.gateway.server.domain.api.functions;
+package com.machnos.api.gateway.server.domain.idm;
 
-/**
- * Abstract superclass for all <code>Function</code> implementations.
- */
-public abstract class AbstractFunction implements Function {
-
-    private final String id;
-    private final String name;
-
-    protected AbstractFunction(String name) {
-        this.id = MACHNOS_FUNCTION_ID_PREFIX + name;
-        this.name = MACHNOS_FUNCTION_NAME_PREFIX + name;
-    }
-
-    @Override
-    public String getId() {
-        return this.id;
-    }
-
-    @Override
-    public String getName() {
-        return this.name;
-    }
-
+public interface Credentials {
 }

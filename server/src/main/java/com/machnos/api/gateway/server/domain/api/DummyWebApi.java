@@ -17,20 +17,17 @@
 
 package com.machnos.api.gateway.server.domain.api;
 
-import com.machnos.api.gateway.server.domain.api.functions.Function;
+import com.machnos.api.gateway.server.domain.api.functions.CompoundFunction;
 import com.machnos.api.gateway.server.domain.api.functions.RequireBasicAuthentication;
 import com.machnos.api.gateway.server.domain.api.functions.SetResponseContent;
 
 public class DummyWebApi implements  Api {
 
-    private final Function rootFunction;
+    private final CompoundFunction rootFunction = new CompoundFunction(getClass().getSimpleName());
 
     public DummyWebApi() {
-        this.rootFunction = new RequireBasicAuthentication().setRealmName("Machnos API Gateway");
-
-        var function = new SetResponseContent().setContent("<p>Hi there!</p>").setContentType("text/html");
-        this.rootFunction.setNext(function);
-
+        this.rootFunction.addFunction(new RequireBasicAuthentication().setRealmName("Machnos API Gateway"));
+        this.rootFunction.addFunction(new SetResponseContent().setContent("<p>Hi ${account.username}!</p>").setContentType("text/html"));
     }
 
     @Override

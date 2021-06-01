@@ -17,6 +17,7 @@
 
 package com.machnos.api.gateway.server.domain.api;
 
+import com.machnos.api.gateway.server.domain.idm.Account;
 import com.machnos.api.gateway.server.domain.message.Message;
 import com.machnos.api.gateway.server.domain.transport.Transport;
 
@@ -25,6 +26,7 @@ public class ExecutionContext {
     private final Transport transport;
     private final Message requestMessage;
     private final Message responseMessage;
+    private Account account;
 
     public ExecutionContext(Transport transport, Message requestMessage, Message responseMessage) {
         this.transport = transport;
@@ -42,5 +44,14 @@ public class ExecutionContext {
 
     public Message getResponseMessage() {
         return this.responseMessage;
+    }
+
+    public ExecutionContext setAccount(Account account) {
+        this.account = account;
+        return this;
+    }
+
+    public Account getAccount() {
+        return this.account;
     }
 }

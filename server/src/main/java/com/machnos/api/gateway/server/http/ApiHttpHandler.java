@@ -47,7 +47,6 @@ public class ApiHttpHandler implements HttpHandler {
         // Step 1. Find api based on path.
         String requestPath = transport.getRequestPath();
         if ("/".equals(requestPath)) {
-
             new DummyWebApi().handleRequest(executionContext);
         }
 

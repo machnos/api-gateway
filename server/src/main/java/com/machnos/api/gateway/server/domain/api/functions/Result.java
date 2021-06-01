@@ -17,27 +17,19 @@
 
 package com.machnos.api.gateway.server.domain.api.functions;
 
-/**
- * Abstract superclass for all <code>Function</code> implementations.
- */
-public abstract class AbstractFunction implements Function {
+public class Result {
 
-    private final String id;
-    private final String name;
+    private static final int STATUS_CODE_FAILED = -1;
+    private static final int STATUS_CODE_SUCCESS = 0;
+    private static final int STATUS_CODE_STOP_API = 1;
 
-    protected AbstractFunction(String name) {
-        this.id = MACHNOS_FUNCTION_ID_PREFIX + name;
-        this.name = MACHNOS_FUNCTION_NAME_PREFIX + name;
+    public static final Result FAILED = new Result(STATUS_CODE_FAILED);
+    public static final Result SUCCESS = new Result(STATUS_CODE_SUCCESS);
+    public static final Result STOP_API = new Result(STATUS_CODE_STOP_API);
+
+    private final int statusCode;
+
+    public Result(int statusCode) {
+        this.statusCode = statusCode;
     }
-
-    @Override
-    public String getId() {
-        return this.id;
-    }
-
-    @Override
-    public String getName() {
-        return this.name;
-    }
-
 }

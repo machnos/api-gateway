@@ -56,11 +56,8 @@ public interface Function {
      * Execute the <code>Function</code>.
      *
      * @param The input <code>ExecutionContext</code>.
+     * @return The <code>Result</code> of the execution.
      */
-    void execute(ExecutionContext executionContext);
-
-    Function getNext();
-
-    void setNext(Function function);
+    Result execute(ExecutionContext executionContext);
 
 }
