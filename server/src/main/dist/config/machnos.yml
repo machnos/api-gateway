@@ -6,6 +6,7 @@ management:
   keystorePassword: Machnos
   keystoreType: JKS
   serverEntryPassword: MyKeyPassword
+  tlsClientAuthenticationMode: not_requested
 httpInterfaces:
   - alias: default
     listenInterface: 127.0.0.1

@@ -19,6 +19,9 @@ package com.machnos.api.gateway.server.domain.transport;
 
 import io.undertow.server.HttpServerExchange;
 
+import javax.net.ssl.SSLPeerUnverifiedException;
+import java.security.cert.Certificate;
+
 public class UndertowSecurity implements Security {
 
     private final HttpServerExchange httpServerExchange;
@@ -41,5 +44,43 @@ public class UndertowSecurity implements Security {
             return null;
         }
         return this.httpServerExchange.getConnection().getSslSession().getProtocol();
+    }
+
+    @Override
+    public Certificate getRemoteCertificate() {
+        var chain = getRemoteCertificateChain();
+        if (chain == null) {
+            return null;
+        }
+        return chain[0];
+    }
+
+    @Override
+    public Certificate[] getRemoteCertificateChain() {
+        if (this.httpServerExchange.getConnection().getSslSession() == null) {
+            return null;
+        }
+        try {
+            return this.httpServerExchange.getConnection().getSslSession().getPeerCertificates();
+        } catch (SSLPeerUnverifiedException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public Certificate getLocalCertificate() {
+        var chain = getLocalCertificateChain();
+        if (chain == null) {
+            return null;
+        }
+        return chain[0];
+    }
+
+    @Override
+    public Certificate[] getLocalCertificateChain() {
+        if (this.httpServerExchange.getConnection().getSslSession() == null) {
+            return null;
+        }
+        return this.httpServerExchange.getConnection().getSslSession().getLocalCertificates();
     }
 }

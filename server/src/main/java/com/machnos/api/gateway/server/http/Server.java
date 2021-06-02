@@ -53,9 +53,11 @@ import org.pac4j.undertow.handler.SecurityHandler;
 import org.xnio.OptionMap;
 import org.xnio.Options;
 import org.xnio.Sequence;
+import org.xnio.SslClientAuthMode;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.security.*;
@@ -152,7 +154,11 @@ public class Server {
                 keyManagerFactory.init(keyStoreWrapper.getKeyStore(), httpInterface.getServerEntryPasswordAsCharArray());
                 final var keyManagers = keyManagerFactory.getKeyManagers();
                 final var sslContext = SSLContext.getInstance("TLS");
-                sslContext.init(keyManagers, null, null);
+
+                final var trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+                trustManagerFactory.init(keyStoreWrapper.getKeyStore());
+
+                sslContext.init(keyManagers, trustManagerFactory.getTrustManagers(), null);
 
                 httpInterface.getListenInetAddresses().forEach(c -> {
                     var listenerBuilder = new Undertow.ListenerBuilder()
@@ -160,6 +166,7 @@ public class Server {
                             .setOverrideSocketOptions(OptionMap.builder()
                                     .set(Options.SSL_ENABLED_PROTOCOLS, Sequence.of(httpInterface.tlsProtocols))
                                     .set(Options.SSL_ENABLED_CIPHER_SUITES,Sequence.of(httpInterface.cipherSuites))
+                                    .set(Options.SSL_CLIENT_AUTH_MODE, SslClientAuthMode.valueOf(httpInterface.tlsClientAuthenticationMode.toUpperCase()))
                                     .getMap()
                             )
                             .setHost(c.getHostAddress())

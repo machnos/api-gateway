@@ -17,9 +17,19 @@
 
 package com.machnos.api.gateway.server.domain.transport;
 
+import java.security.cert.Certificate;
+
 public interface Security {
 
     String getCipherSuite();
 
     String getProtocol();
+
+    Certificate getRemoteCertificate();
+
+    Certificate[] getRemoteCertificateChain();
+
+    Certificate getLocalCertificate();
+
+    Certificate[] getLocalCertificateChain();
 }

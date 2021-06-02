@@ -49,6 +49,7 @@ public class HttpInterface {
     public String keystorePassword;
     public String keystoreType = "JKS";
     public String serverEntryPassword;
+    public String tlsClientAuthenticationMode = "requested";
 
     /**
      * Returns the keystore password as char array.
