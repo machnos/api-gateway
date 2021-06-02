@@ -28,10 +28,33 @@ public class DummyWebApi implements Api {
     public DummyWebApi() {
         this.rootFunction.addFunction(new RequireBasicAuthentication());
         this.rootFunction.addFunction(new SetResponseContent().setContent(
-                "<p>Hi ${account.username}!</p>" +
-                "<p>You visited this page using a '${transport.http.request.method}' method via interface '${transport.interfaceAlias}'.</p>" +
-                "<p>The authorization header: ${request.header.authorization.first}</p>"
+                "<p>Hi ${account.username}!</p>"
+                + "<p>You visited this page using a '${transport.http.request.method}' method via interface '${transport.interfaceAlias}' and landed on api ${api.name}@${api.contextRoot}</p>"
+                + "<p>The authorization header: ${request.header.authorization.first}</p>"
+                + "<p>RequestUrl: ${transport.http.request.url}</p>"
+                + "<p>RequestScheme: ${transport.http.request.url.scheme}</p>"
+                + "<p>RequestHost: ${transport.http.request.url.host}</p>"
+                + "<p>RequestPort: ${transport.http.request.url.port}</p>"
+                + "<p>RequestPath: ${transport.http.request.url.path}</p>"
+                + "<p>RequestQuery: ${transport.http.request.url.query}</p>"
+                + "<p>RequestQueryParam3: ${transport.http.request.url.query.param3}</p>"
+                + "<p>IsSecure: ${transport.isSecure}</p>"
+                + "<p>IsHttp09: ${transport.http.isHttp09}</p>"
+                + "<p>IsHttp10: ${transport.http.isHttp10}</p>"
+                + "<p>IsHttp11: ${transport.http.isHttp11}</p>"
+                + "<p>CipherSuite: ${transport.security.cipherSuite}</p>"
+                + "<p>SecurityProtocol: ${transport.security.protocol}</p>"
         ).setContentType("text/html"));
+    }
+
+    @Override
+    public String getName() {
+        return getClass().getSimpleName();
+    }
+
+    @Override
+    public String getContextRoot() {
+        return "/api/";
     }
 
     @Override

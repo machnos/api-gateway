@@ -23,10 +23,14 @@ public class UndertowHttpTransport implements HttpTransport {
 
     private final String interfaceAlias;
     private final HttpServerExchange httpServerExchange;
+    private final UndertowSecurity security;
+    private final UndertowRequestURL requestUrl;
 
     public UndertowHttpTransport(String interfaceAlias, HttpServerExchange httpServerExchange) {
         this.interfaceAlias = interfaceAlias;
         this.httpServerExchange = httpServerExchange;
+        this.security = new UndertowSecurity(this.httpServerExchange);
+        this.requestUrl = new UndertowRequestURL(this.httpServerExchange);
     }
 
     @Override
@@ -35,12 +39,35 @@ public class UndertowHttpTransport implements HttpTransport {
     }
 
     @Override
+    public boolean isSecure() {
+        return this.httpServerExchange.isSecure();
+    }
+
+    @Override
+    public UndertowSecurity getSecurity() { return this.security; }
+
+    @Override
+    public boolean isHttp09() {
+        return this.httpServerExchange.isHttp09();
+    }
+
+    @Override
+    public boolean isHttp10() {
+        return this.httpServerExchange.isHttp10();
+    }
+
+    @Override
+    public boolean isHttp11() {
+        return this.httpServerExchange.isHttp11();
+    }
+
+    @Override
     public String getRequestMethod() {
         return this.httpServerExchange.getRequestMethod().toString();
     }
 
     @Override
-    public String getRequestPath() {
-        return this.httpServerExchange.getRequestPath();
+    public UndertowRequestURL getRequestURL() {
+        return this.requestUrl;
     }
 }

@@ -54,11 +54,10 @@ public class UndertowHttpMessage implements HttpMessage {
     @Override
     public String getBody() {
         if (this.type.isRequest() && this.body == null) {
-            this.httpServerExchange.getRequestReceiver().receiveFullString((exchange, message) -> {
-                this.body = message;
-            }, ((exchange, e) -> {
-                this.body = "";
-            }));
+            this.httpServerExchange.getRequestReceiver().receiveFullString(
+                    (exchange, message) -> this.body = message,
+                    ((exchange, e) -> this.body = "")
+            );
         }
         return this.body;
     }

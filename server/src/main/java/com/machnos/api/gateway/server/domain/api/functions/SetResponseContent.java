@@ -20,6 +20,8 @@ package com.machnos.api.gateway.server.domain.api.functions;
 import com.machnos.api.gateway.server.domain.api.ExecutionContext;
 import com.machnos.api.gateway.server.domain.message.Headers;
 
+import java.nio.charset.Charset;
+
 public class SetResponseContent extends AbstractFunction {
 
     private String content;
@@ -35,7 +37,7 @@ public class SetResponseContent extends AbstractFunction {
         if (executionContext.getResponseMessage().isHttp()) {
             final var httpResponse = executionContext.getResponseMessage().getHttpMessage();
             if (getContentType() != null) {
-                httpResponse.getHeaders().set(Headers.HTTP_CONTENT_TYPE, getContentType());
+                httpResponse.getHeaders().set(Headers.HTTP_CONTENT_TYPE, executionContext.parse(getContentType()) + "; charset=" + Charset.defaultCharset());
             }
         }
         return Result.SUCCESS;

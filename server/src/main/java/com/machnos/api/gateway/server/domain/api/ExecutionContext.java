@@ -29,6 +29,7 @@ public class ExecutionContext {
     private final Message responseMessage;
     private final VariableParser variableParser = new VariableParser();
     private Account account;
+    private Api api;
 
     public ExecutionContext(Transport transport, Message requestMessage, Message responseMessage) {
         this.transport = transport;
@@ -57,9 +58,15 @@ public class ExecutionContext {
         return this.account;
     }
 
-    public VariableParser getVariableParser() {
-        return this.variableParser;
+    public Api getApi() {
+        return this.api;
     }
+
+    public void executeApi(Api api) {
+        this.api = api;
+        api.handleRequest(this);
+    }
+
 
     public String parse(String input) {
         return this.variableParser.parse(input, this);

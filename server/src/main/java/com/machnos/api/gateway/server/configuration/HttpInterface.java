@@ -43,7 +43,8 @@ public class HttpInterface {
     public String alias;
     public String listenInterface = "127.0.0.1";
     public int listenPort = 8443;
-    public String[] tlsProtocols = new String[] { "TLSv1.2", "TLSv1.3" };
+    public String[] tlsProtocols = new String[] { "TLSv1.3" };
+    public String[] cipherSuites = new String[] { "TLS_AES_256_GCM_SHA384", "TLS_CHACHA20_POLY1305_SHA256", "TLS_AES_128_GCM_SHA256", "TLS_AES_128_CCM_8_SHA256", "TLS_AES_128_CCM_SHA256" };
     public File keystoreLocation = new File(Configuration.CONFIG_DIRECTORY, "keystore.jks");
     public String keystorePassword;
     public String keystoreType = "JKS";

@@ -19,5 +19,9 @@ package com.machnos.api.gateway.server.domain.api;
 
 public interface Api {
 
+    String getName();
+
+    String getContextRoot();
+
     void handleRequest(ExecutionContext executionContext);
 }

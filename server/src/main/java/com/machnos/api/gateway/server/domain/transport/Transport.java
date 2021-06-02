@@ -19,8 +19,12 @@ package com.machnos.api.gateway.server.domain.transport;
 
 public interface Transport {
 
-    boolean isHttp();
     String getInterfaceAlias();
+
+    boolean isSecure();
+    Security getSecurity();
+
+    boolean isHttp();
     HttpTransport getHttpTransport();
 
 }

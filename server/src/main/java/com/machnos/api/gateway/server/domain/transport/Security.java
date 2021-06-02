@@ -17,21 +17,9 @@
 
 package com.machnos.api.gateway.server.domain.transport;
 
-public interface HttpTransport extends Transport {
+public interface Security {
 
-    @Override
-    default boolean isHttp() { return true; }
+    String getCipherSuite();
 
-    @Override
-    default HttpTransport getHttpTransport() {return this;}
-
-    boolean isHttp09();
-    boolean isHttp10();
-    boolean isHttp11();
-
-    String getRequestMethod();
-
-    RequestURL getRequestURL();
-
-
+    String getProtocol();
 }

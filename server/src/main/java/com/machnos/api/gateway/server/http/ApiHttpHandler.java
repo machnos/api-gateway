@@ -24,6 +24,8 @@ import com.machnos.api.gateway.server.domain.transport.UndertowHttpTransport;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 
+import java.nio.charset.Charset;
+
 public class ApiHttpHandler implements HttpHandler {
 
     private final String interfaceAlias;
@@ -45,13 +47,13 @@ public class ApiHttpHandler implements HttpHandler {
 
 
         // Step 1. Find api based on path.
-        String requestPath = transport.getRequestPath();
-        if ("/".equals(requestPath)) {
-            new DummyWebApi().handleRequest(executionContext);
+        String requestPath = transport.getRequestURL().getPath();
+        final var api = new DummyWebApi();
+        if (requestPath.startsWith(api.getContextRoot())) {
+            executionContext.executeApi(api);
         }
-
         if (responseMessage.getBody() != null) {
-            exchange.getResponseSender().send(executionContext.parse(responseMessage.getBody()));
+            exchange.getResponseSender().send(executionContext.parse(responseMessage.getBody()), Charset.defaultCharset());
         }
         exchange.endExchange();
     }

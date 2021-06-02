@@ -157,7 +157,11 @@ public class Server {
                 httpInterface.getListenInetAddresses().forEach(c -> {
                     var listenerBuilder = new Undertow.ListenerBuilder()
                             .setType(Undertow.ListenerType.HTTPS)
-                            .setOverrideSocketOptions(OptionMap.builder().set(Options.SSL_ENABLED_PROTOCOLS, Sequence.of(httpInterface.tlsProtocols)).getMap())
+                            .setOverrideSocketOptions(OptionMap.builder()
+                                    .set(Options.SSL_ENABLED_PROTOCOLS, Sequence.of(httpInterface.tlsProtocols))
+                                    .set(Options.SSL_ENABLED_CIPHER_SUITES,Sequence.of(httpInterface.cipherSuites))
+                                    .getMap()
+                            )
                             .setHost(c.getHostAddress())
                             .setPort(httpInterface.listenPort)
                             .setSslContext(sslContext)

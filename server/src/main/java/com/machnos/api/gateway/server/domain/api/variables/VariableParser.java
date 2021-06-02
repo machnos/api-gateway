@@ -17,9 +17,12 @@
 
 package com.machnos.api.gateway.server.domain.api.variables;
 
+import com.machnos.api.gateway.server.domain.api.Api;
 import com.machnos.api.gateway.server.domain.api.ExecutionContext;
 import com.machnos.api.gateway.server.domain.idm.Account;
 import com.machnos.api.gateway.server.domain.message.Message;
+import com.machnos.api.gateway.server.domain.transport.RequestURL;
+import com.machnos.api.gateway.server.domain.transport.Security;
 import com.machnos.api.gateway.server.domain.transport.Transport;
 
 public class VariableParser {
@@ -30,8 +33,12 @@ public class VariableParser {
 
     private static final String ACCOUNT_VARIABLE_PREFIX = "account.";
     private static final int ACCOUNT_VARIABLE_PREFIX_LENGTH = ACCOUNT_VARIABLE_PREFIX.length();
+    private static final String API_VARIABLE_PREFIX = "api.";
+    private static final int API_VARIABLE_PREFIX_LENGTH = API_VARIABLE_PREFIX.length();
     private static final String TRANSPORT_VARIABLE_PREFIX = "transport.";
     private static final int TRANSPORT_VARIABLE_PREFIX_LENGTH = TRANSPORT_VARIABLE_PREFIX.length();
+    private static final String SECURITY_VARIABLE_PREFIX = "security.";
+    private static final int SECURITY_VARIABLE_PREFIX_LENGTH = SECURITY_VARIABLE_PREFIX.length();
     private static final String REQUEST_VARIABLE_PREFIX = "request.";
     private static final int REQUEST_VARIABLE_PREFIX_LENGTH = REQUEST_VARIABLE_PREFIX.length();
     private static final String RESPONSE_VARIABLE_PREFIX = "response.";
@@ -77,6 +84,8 @@ public class VariableParser {
             return executionContext.getAccount() != null ? getAccountValue(variable.substring(ACCOUNT_VARIABLE_PREFIX_LENGTH), executionContext.getAccount()) : null;
         } else if (variable.startsWith(TRANSPORT_VARIABLE_PREFIX)) {
             return executionContext.getTransport() != null ? getTransportValue(variable.substring(TRANSPORT_VARIABLE_PREFIX_LENGTH), executionContext.getTransport()) : null;
+        } else if (variable.startsWith(API_VARIABLE_PREFIX)) {
+            return executionContext.getApi() != null ? getApiValue(variable.substring(API_VARIABLE_PREFIX_LENGTH), executionContext.getApi()) : null;
         }
         return null;
     }
@@ -110,12 +119,61 @@ public class VariableParser {
     private Object getTransportValue(String variable, Transport transport) {
         if ("http.request.method".equals(variable)) {
             return transport.isHttp() ? transport.getHttpTransport().getRequestMethod() : null;
-        } else if ("http.request.path".equals(variable)) {
-            return transport.isHttp() ? transport.getHttpTransport().getRequestPath() : null;
+        } else if (variable.startsWith("http.request.url")) {
+            return transport.isHttp() ? getRequestURLValue(variable.substring("http.request.url".length()), transport.getHttpTransport().getRequestURL()) : null;
+        } else if (variable.startsWith(SECURITY_VARIABLE_PREFIX)) {
+            return getSecurityValue(variable.substring(SECURITY_VARIABLE_PREFIX_LENGTH), transport.getSecurity());
+        } else if ("http.ishttp09".equals(variable)) {
+            return transport.isHttp() && transport.getHttpTransport().isHttp09();
+        } else if ("http.ishttp10".equals(variable)) {
+            return transport.isHttp() && transport.getHttpTransport().isHttp10();
+        } else if ("http.ishttp11".equals(variable)) {
+            return transport.isHttp() && transport.getHttpTransport().isHttp11();
         } else if ("interfacealias".equals(variable)) {
             return transport.getInterfaceAlias();
         } else if ("ishttp".equals(variable)) {
             return transport.isHttp();
+        } else if ("issecure".equals(variable)) {
+            return transport.isSecure();
+        }
+        return null;
+    }
+
+    private Object getApiValue(String variable, Api api) {
+        if ("name".equals(variable)) {
+            return api.getName();
+        } else if ("contextroot".equals(variable)) {
+            return api.getContextRoot();
+        }
+        return null;
+    }
+
+    private Object getRequestURLValue(String variable, RequestURL requestURL) {
+        if (variable.equals("")) {
+            return requestURL.toString();
+        } else if (".scheme".equals(variable)) {
+            return requestURL.getScheme();
+        } else if (".host".equals(variable)) {
+            return requestURL.getHost();
+        } else if (".port".equals(variable)) {
+            return requestURL.getPort();
+        } else if (".path".equals(variable)) {
+            return requestURL.getPath();
+        } else if (".query".equals(variable)) {
+            return requestURL.getQuery();
+        } else if (".fragment".equals(variable)) {
+            return requestURL.getFragment();
+        } else if (variable.startsWith(".query.")) {
+            return requestURL.getQueryParameter(variable.substring(".query.".length()));
+        }
+        return null;
+    }
+
+    private Object getSecurityValue(String variable, Security security) {
+        if (variable.equals("ciphersuite")) {
+            return security.getCipherSuite();
+        } else if (variable.equals("protocol")) {
+            return security.getProtocol();
         }
         return null;
     }
