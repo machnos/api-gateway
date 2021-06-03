@@ -56,8 +56,8 @@ allprojects {
             }
         }
         compileTestJava {
-            sourceCompatibility = '11'
-            targetCompatibility = '11'
+            sourceCompatibility = '16'
+            targetCompatibility = '16'
             options.encoding = 'UTF-8'
             options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
         }

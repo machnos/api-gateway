@@ -30,8 +30,8 @@ public interface HttpTransport extends Transport {
     boolean isHttp11();
 
     String getRequestMethod();
-
     RequestURL getRequestURL();
-
+    int getStatusCode();
+    void setStatusCode(int statusCode);
 
 }

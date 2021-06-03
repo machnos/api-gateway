@@ -70,4 +70,14 @@ public class UndertowHttpTransport implements HttpTransport {
     public UndertowRequestURL getRequestURL() {
         return this.requestUrl;
     }
+
+    @Override
+    public int getStatusCode() {
+        return this.httpServerExchange.getStatusCode();
+    }
+
+    @Override
+    public void setStatusCode(int statusCode) {
+        this.httpServerExchange.setStatusCode(statusCode);
+    }
 }

@@ -49,13 +49,13 @@ public class RequireBasicAuthentication extends AbstractFunction {
     }
 
     public Result execute(ExecutionContext executionContext) {
-        if (!executionContext.getResponseMessage().isHttp()) {
-            return Result.SUCCESS;
+        if (!executionContext.getRequestMessage().isHttp()) {
+            return Result.FAILED;
         }
         final var responseMessage = executionContext.getResponseMessage().getHttpMessage();
         final var headers = executionContext.getRequestMessage().getHeaders();
         if (!headers.contains(Headers.HTTP_AUTHORIZATION)) {
-            responseMessage.setStatusCode(HttpMessage.STATUS_CODE_UNAUTHORIZED);
+            executionContext.getTransport().getHttpTransport().setStatusCode(HttpMessage.STATUS_CODE_UNAUTHORIZED);
             responseMessage.getHeaders().set(Headers.HTTP_WWW_AUTHENTICATE, getChallenge());
             return Result.STOP_API;
         }

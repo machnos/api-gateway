@@ -27,5 +27,4 @@ public interface HttpMessage extends Message {
     @Override
     default HttpMessage getHttpMessage() { return this; }
 
-    void setStatusCode(int statusCode);
 }

@@ -19,8 +19,6 @@ package com.machnos.api.gateway.server.domain.idm;
 
 public class Account {
 
-    public static final String VARIABLE_NAME = "account";
-
     private final String username;
     private final Credentials credentials;
 

@@ -24,8 +24,31 @@ import com.machnos.api.gateway.server.domain.message.Message;
 import com.machnos.api.gateway.server.domain.transport.RequestURL;
 import com.machnos.api.gateway.server.domain.transport.Security;
 import com.machnos.api.gateway.server.domain.transport.Transport;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x500.style.BCStyle;
+import org.bouncycastle.asn1.x500.style.IETFUtils;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
+import org.bouncycastle.util.encoders.Hex;
+
+import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.X509Certificate;
+import java.security.interfaces.DSAPublicKey;
+import java.security.interfaces.RSAPublicKey;
 
 public class VariableParser {
+
+    /**
+     * The logger for this class.
+     */
+    private static final Logger logger = LogManager.getLogger();
+
 
     private static final String VARIABLE_PREFIX = "${";
     private static final int VARIABLE_PREFIX_LENGTH = VARIABLE_PREFIX.length();
@@ -121,6 +144,8 @@ public class VariableParser {
             return transport.isHttp() ? transport.getHttpTransport().getRequestMethod() : null;
         } else if (variable.startsWith("http.request.url")) {
             return transport.isHttp() ? getRequestURLValue(variable.substring("http.request.url".length()), transport.getHttpTransport().getRequestURL()) : null;
+        } else if (variable.equals("statuscode")) {
+            return transport.isHttp() ? transport.getHttpTransport().getStatusCode() : null;
         } else if (variable.startsWith(SECURITY_VARIABLE_PREFIX)) {
             return getSecurityValue(variable.substring(SECURITY_VARIABLE_PREFIX_LENGTH), transport.getSecurity());
         } else if ("http.ishttp09".equals(variable)) {
@@ -150,7 +175,7 @@ public class VariableParser {
 
     private Object getRequestURLValue(String variable, RequestURL requestURL) {
         if (variable.equals("")) {
-            return requestURL.toString();
+            return requestURL;
         } else if (".scheme".equals(variable)) {
             return requestURL.getScheme();
         } else if (".host".equals(variable)) {
@@ -170,11 +195,97 @@ public class VariableParser {
     }
 
     private Object getSecurityValue(String variable, Security security) {
-        if (variable.equals("ciphersuite")) {
+        if ("ciphersuite".equals(variable)) {
             return security.getCipherSuite();
-        } else if (variable.equals("protocol")) {
+        } else if ("protocol".equals(variable)) {
             return security.getProtocol();
+        } else if (variable.startsWith("remotecertificate")) {
+            return security.getRemoteCertificate() != null ? getCertificateValue(variable.substring("remoteCertificate".length()), security.getRemoteCertificate()) : null;
+        } else if (variable.startsWith("localcertificate")) {
+            return security.getLocalCertificate() != null ? getCertificateValue(variable.substring("localcertificate".length()), security.getLocalCertificate()) : null;
         }
         return null;
+    }
+
+    private Object getCertificateValue(String variable, Certificate certificate) {
+        if (variable.equals("")) {
+            return certificate;
+        } else if (certificate instanceof X509Certificate) {
+            try {
+                final var certificateHolder = new JcaX509CertificateHolder((X509Certificate) certificate);
+                if (variable.startsWith(".subject.")) {
+                    return getX500NameValue(variable.substring(".subject.".length()), certificateHolder.getSubject());
+                } else if (variable.startsWith(".issuer.")) {
+                    return getX500NameValue(variable.substring(".issuer.".length()), certificateHolder.getIssuer());
+                } else if (".notbefore".equals(variable)) {
+                    return certificateHolder.getNotBefore();
+                } else if (".notafter".equals(variable)) {
+                    return certificateHolder.getNotAfter();
+                } else if (".serial".equals(variable)) {
+                    return new String(Hex.encode(certificateHolder.getSerialNumber().toByteArray()));
+                } else if (".version".equals(variable)) {
+                    return certificateHolder.getVersionNumber();
+                } else if (".sha256".equals(variable)) {
+                    final var encoded = certificateHolder.getEncoded();
+                    final var sha256 = MessageDigest.getInstance("SHA-256");
+                    return new String(Hex.encode(sha256.digest(encoded)));
+                } else if (".sha1".equals(variable)) {
+                    final var encoded = certificateHolder.getEncoded();
+                    final var sha1 = MessageDigest.getInstance("SHA1");
+                    return new String(Hex.encode(sha1.digest(encoded)));
+                } else if (".md5".equals(variable)) {
+                    final var encoded = certificateHolder.getEncoded();
+                    final var md5 = MessageDigest.getInstance("MD5");
+                    return new String(Hex.encode(md5.digest(encoded)));
+                } else if (".key.algorithm".equals(variable)) {
+                    return certificate.getPublicKey().getAlgorithm();
+                } else if (".key.size".equals(variable)) {
+                    if (certificate.getPublicKey() instanceof RSAPublicKey) {
+                        return ((RSAPublicKey) certificate.getPublicKey()).getModulus().bitLength();
+                    } else if (certificate.getPublicKey() instanceof DSAPublicKey) {
+                        return ((DSAPublicKey) certificate.getPublicKey()).getY().bitLength();
+                    }
+                }
+            } catch (CertificateEncodingException | IOException | NoSuchAlgorithmException e) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(e.getMessage(), e);
+                }
+                return null;
+            }
+        }
+        return null;
+    }
+
+    private Object getX500NameValue(String variable, X500Name subject) {
+        if ("dn".equals(variable)) {
+            return subject.toString();
+        } else if ("cn".equals(variable)) {
+            return getValueFromX500Name(subject, BCStyle.CN);
+        } else if ("c".equals(variable)) {
+            return getValueFromX500Name(subject, BCStyle.C);
+        } else if ("o".equals(variable)) {
+            return getValueFromX500Name(subject, BCStyle.O);
+        } else if ("ou".equals(variable)) {
+            return getValueFromX500Name(subject, BCStyle.OU);
+        } else if ("l".equals(variable)) {
+            return getValueFromX500Name(subject, BCStyle.L);
+        } else if ("st".equals(variable)) {
+            return getValueFromX500Name(subject, BCStyle.ST);
+        } else if ("street".equals(variable)) {
+            return getValueFromX500Name(subject, BCStyle.STREET);
+        } else if ("dc".equals(variable)) {
+            return getValueFromX500Name(subject, BCStyle.DC);
+        } else if ("uid".equals(variable)) {
+            return getValueFromX500Name(subject, BCStyle.UID);
+        }
+        return null;
+    }
+
+    private String getValueFromX500Name(X500Name x500Name, ASN1ObjectIdentifier objectIdentifier) {
+        final var  rdNs = x500Name.getRDNs(objectIdentifier);
+        if (rdNs == null || rdNs.length == 0) {
+            return null;
+        }
+        return IETFUtils.valueToString(rdNs[0].getFirst().getValue());
     }
 }

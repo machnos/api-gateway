@@ -67,10 +67,4 @@ public class UndertowHttpMessage implements HttpMessage {
         this.body = body;
     }
 
-    @Override
-    public void setStatusCode(int statusCode) {
-        if (this.type.isResponse()) {
-            this.httpServerExchange.setStatusCode(statusCode);
-        }
-    }
 }

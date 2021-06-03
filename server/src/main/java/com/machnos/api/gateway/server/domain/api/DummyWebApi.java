@@ -39,11 +39,9 @@ public class DummyWebApi implements Api {
                 + "<p>RequestQuery: ${transport.http.request.url.query}</p>"
                 + "<p>RequestQueryParam3: ${transport.http.request.url.query.param3}</p>"
                 + "<p>IsSecure: ${transport.isSecure}</p>"
-                + "<p>IsHttp09: ${transport.http.isHttp09}</p>"
-                + "<p>IsHttp10: ${transport.http.isHttp10}</p>"
-                + "<p>IsHttp11: ${transport.http.isHttp11}</p>"
                 + "<p>CipherSuite: ${transport.security.cipherSuite}</p>"
                 + "<p>SecurityProtocol: ${transport.security.protocol}</p>"
+                + "<p>RemoteCertificateSubjectDN: ${transport.security.localCertificate.key.size}</p>"
         ).setContentType("text/html"));
     }
 
