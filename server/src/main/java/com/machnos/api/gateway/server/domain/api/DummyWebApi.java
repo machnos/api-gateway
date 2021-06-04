@@ -18,15 +18,18 @@
 package com.machnos.api.gateway.server.domain.api;
 
 import com.machnos.api.gateway.server.domain.api.functions.CompoundFunction;
-import com.machnos.api.gateway.server.domain.api.functions.RequireBasicAuthentication;
 import com.machnos.api.gateway.server.domain.api.functions.SetResponseContent;
+import com.machnos.api.gateway.server.domain.api.functions.flowlogic.AllFunctionsMustSucceed;
+import com.machnos.api.gateway.server.domain.api.functions.security.RequireBasicAuthentication;
+import com.machnos.api.gateway.server.domain.api.functions.security.RequireTransportSecurity;
 
 public class DummyWebApi implements Api {
 
-    private final CompoundFunction rootFunction = new CompoundFunction(getClass().getSimpleName());
+    private final CompoundFunction rootFunction = new AllFunctionsMustSucceed();
 
     public DummyWebApi() {
         this.rootFunction.addFunction(new RequireBasicAuthentication());
+        this.rootFunction.addFunction(new RequireTransportSecurity().setRemoteCertificateRequired(true));
         this.rootFunction.addFunction(new SetResponseContent().setContent(
                 "<p>Hi ${account.username}!</p>"
                 + "<p>You visited this page using a '${transport.http.request.method}' method via interface '${transport.interfaceAlias}' and landed on api ${api.name}@${api.contextRoot}</p>"

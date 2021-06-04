@@ -15,26 +15,20 @@
  * under the License.
  */
 
-package com.machnos.api.gateway.server.domain.api.functions;
+package com.machnos.api.gateway.server.domain.api.functions.flowlogic;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.machnos.api.gateway.server.domain.api.ExecutionContext;
+import com.machnos.api.gateway.server.domain.api.functions.AbstractFunction;
+import com.machnos.api.gateway.server.domain.api.functions.Result;
 
-public abstract class CompoundFunction extends AbstractFunction {
+public class Fail extends AbstractFunction {
 
-    private List<Function> functions = new ArrayList<>();
-
-    public CompoundFunction(String name) {
-        super(name);
-    }
-    public CompoundFunction addFunction(Function function) {
-        if (function != null) {
-            this.functions.add(function);
-        }
-        return this;
+    public Fail() {
+        super("Fail");
     }
 
-    public List<Function> getFunctions() {
-        return this.functions;
+    @Override
+    public Result execute(ExecutionContext executionContext) {
+        return Result.FAILED;
     }
 }

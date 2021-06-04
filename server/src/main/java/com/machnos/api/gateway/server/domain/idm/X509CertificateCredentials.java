@@ -15,26 +15,19 @@
  * under the License.
  */
 
-package com.machnos.api.gateway.server.domain.api.functions;
+package com.machnos.api.gateway.server.domain.idm;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.machnos.api.gateway.server.domain.transport.x509.X509Certificate;
 
-public abstract class CompoundFunction extends AbstractFunction {
+public class X509CertificateCredentials implements Credentials{
 
-    private List<Function> functions = new ArrayList<>();
+    private final X509Certificate x509Certificate;
 
-    public CompoundFunction(String name) {
-        super(name);
-    }
-    public CompoundFunction addFunction(Function function) {
-        if (function != null) {
-            this.functions.add(function);
-        }
-        return this;
+    public X509CertificateCredentials(X509Certificate x509Certificate) {
+        this.x509Certificate = x509Certificate;
     }
 
-    public List<Function> getFunctions() {
-        return this.functions;
+    public X509Certificate getX509Certificate() {
+        return this.x509Certificate;
     }
 }

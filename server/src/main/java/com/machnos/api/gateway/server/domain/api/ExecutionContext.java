@@ -65,8 +65,8 @@ public class ExecutionContext {
     public void executeApi(Api api) {
         this.api = api;
         api.handleRequest(this);
+        this.api = null;
     }
-
 
     public String parse(String input) {
         return this.variableParser.parse(input, this);

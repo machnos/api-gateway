@@ -33,7 +33,7 @@ public class SetResponseContent extends AbstractFunction {
 
     @Override
     public Result execute(ExecutionContext executionContext) {
-        executionContext.getResponseMessage().setBody(getContent());
+        executionContext.getResponseMessage().setBody(executionContext.parse(getContent()));
         if (executionContext.getResponseMessage().isHttp()) {
             final var httpResponse = executionContext.getResponseMessage().getHttpMessage();
             if (getContentType() != null) {

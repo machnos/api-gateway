@@ -17,7 +17,7 @@
 
 package com.machnos.api.gateway.server.domain.transport;
 
-import java.security.cert.Certificate;
+import com.machnos.api.gateway.server.domain.transport.x509.X509Certificate;
 
 public interface Security {
 
@@ -25,11 +25,11 @@ public interface Security {
 
     String getProtocol();
 
-    Certificate getRemoteCertificate();
+    X509Certificate getRemoteCertificate();
 
-    Certificate[] getRemoteCertificateChain();
+    X509Certificate[] getRemoteCertificateChain();
 
-    Certificate getLocalCertificate();
+    X509Certificate getLocalCertificate();
 
-    Certificate[] getLocalCertificateChain();
+    X509Certificate[] getLocalCertificateChain();
 }

@@ -24,31 +24,14 @@ import com.machnos.api.gateway.server.domain.message.Message;
 import com.machnos.api.gateway.server.domain.transport.RequestURL;
 import com.machnos.api.gateway.server.domain.transport.Security;
 import com.machnos.api.gateway.server.domain.transport.Transport;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.bouncycastle.asn1.ASN1ObjectIdentifier;
-import org.bouncycastle.asn1.x500.X500Name;
-import org.bouncycastle.asn1.x500.style.BCStyle;
-import org.bouncycastle.asn1.x500.style.IETFUtils;
-import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
+import com.machnos.api.gateway.server.domain.transport.x509.X500Name;
+import com.machnos.api.gateway.server.domain.transport.x509.X509Certificate;
 import org.bouncycastle.util.encoders.Hex;
 
-import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateEncodingException;
-import java.security.cert.X509Certificate;
 import java.security.interfaces.DSAPublicKey;
 import java.security.interfaces.RSAPublicKey;
 
 public class VariableParser {
-
-    /**
-     * The logger for this class.
-     */
-    private static final Logger logger = LogManager.getLogger();
-
 
     private static final String VARIABLE_PREFIX = "${";
     private static final int VARIABLE_PREFIX_LENGTH = VARIABLE_PREFIX.length();
@@ -207,50 +190,34 @@ public class VariableParser {
         return null;
     }
 
-    private Object getCertificateValue(String variable, Certificate certificate) {
+    private Object getCertificateValue(String variable, X509Certificate certificate) {
         if (variable.equals("")) {
             return certificate;
-        } else if (certificate instanceof X509Certificate) {
-            try {
-                final var certificateHolder = new JcaX509CertificateHolder((X509Certificate) certificate);
-                if (variable.startsWith(".subject.")) {
-                    return getX500NameValue(variable.substring(".subject.".length()), certificateHolder.getSubject());
-                } else if (variable.startsWith(".issuer.")) {
-                    return getX500NameValue(variable.substring(".issuer.".length()), certificateHolder.getIssuer());
-                } else if (".notbefore".equals(variable)) {
-                    return certificateHolder.getNotBefore();
-                } else if (".notafter".equals(variable)) {
-                    return certificateHolder.getNotAfter();
-                } else if (".serial".equals(variable)) {
-                    return new String(Hex.encode(certificateHolder.getSerialNumber().toByteArray()));
-                } else if (".version".equals(variable)) {
-                    return certificateHolder.getVersionNumber();
-                } else if (".sha256".equals(variable)) {
-                    final var encoded = certificateHolder.getEncoded();
-                    final var sha256 = MessageDigest.getInstance("SHA-256");
-                    return new String(Hex.encode(sha256.digest(encoded)));
-                } else if (".sha1".equals(variable)) {
-                    final var encoded = certificateHolder.getEncoded();
-                    final var sha1 = MessageDigest.getInstance("SHA1");
-                    return new String(Hex.encode(sha1.digest(encoded)));
-                } else if (".md5".equals(variable)) {
-                    final var encoded = certificateHolder.getEncoded();
-                    final var md5 = MessageDigest.getInstance("MD5");
-                    return new String(Hex.encode(md5.digest(encoded)));
-                } else if (".key.algorithm".equals(variable)) {
-                    return certificate.getPublicKey().getAlgorithm();
-                } else if (".key.size".equals(variable)) {
-                    if (certificate.getPublicKey() instanceof RSAPublicKey) {
-                        return ((RSAPublicKey) certificate.getPublicKey()).getModulus().bitLength();
-                    } else if (certificate.getPublicKey() instanceof DSAPublicKey) {
-                        return ((DSAPublicKey) certificate.getPublicKey()).getY().bitLength();
-                    }
-                }
-            } catch (CertificateEncodingException | IOException | NoSuchAlgorithmException e) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug(e.getMessage(), e);
-                }
-                return null;
+        } else if (variable.startsWith(".subject.")) {
+            return getX500NameValue(variable.substring(".subject.".length()), certificate.getSubject());
+        } else if (variable.startsWith(".issuer.")) {
+            return getX500NameValue(variable.substring(".issuer.".length()), certificate.getIssuer());
+        } else if (".notbefore".equals(variable)) {
+            return certificate.getNotBefore();
+        } else if (".notafter".equals(variable)) {
+            return certificate.getNotAfter();
+        } else if (".serial".equals(variable)) {
+            return new String(Hex.encode(certificate.getSerialNumber().toByteArray()));
+        } else if (".version".equals(variable)) {
+            return certificate.getVersionNumber();
+        } else if (".sha256".equals(variable)) {
+            return certificate.getSHA256();
+        } else if (".sha1".equals(variable)) {
+            return certificate.getSHA1();
+        } else if (".md5".equals(variable)) {
+            return certificate.getMD5();
+        } else if (".key.algorithm".equals(variable)) {
+            return certificate.getPublicKey().getAlgorithm();
+        } else if (".key.size".equals(variable)) {
+            if (certificate.getPublicKey() instanceof final RSAPublicKey rsaPublicKey) {
+                return rsaPublicKey.getModulus().bitLength();
+            } else if (certificate.getPublicKey() instanceof final DSAPublicKey dsaPublicKey) {
+                return dsaPublicKey.getY().bitLength();
             }
         }
         return null;
@@ -258,34 +225,27 @@ public class VariableParser {
 
     private Object getX500NameValue(String variable, X500Name subject) {
         if ("dn".equals(variable)) {
-            return subject.toString();
+            return subject.getDN();
         } else if ("cn".equals(variable)) {
-            return getValueFromX500Name(subject, BCStyle.CN);
+            return subject.getCN();
         } else if ("c".equals(variable)) {
-            return getValueFromX500Name(subject, BCStyle.C);
+            return subject.getC();
         } else if ("o".equals(variable)) {
-            return getValueFromX500Name(subject, BCStyle.O);
+            return subject.getO();
         } else if ("ou".equals(variable)) {
-            return getValueFromX500Name(subject, BCStyle.OU);
+            return subject.getOU();
         } else if ("l".equals(variable)) {
-            return getValueFromX500Name(subject, BCStyle.L);
+            return subject.getL();
         } else if ("st".equals(variable)) {
-            return getValueFromX500Name(subject, BCStyle.ST);
+            return subject.getST();
         } else if ("street".equals(variable)) {
-            return getValueFromX500Name(subject, BCStyle.STREET);
+            return subject.getStreet();
         } else if ("dc".equals(variable)) {
-            return getValueFromX500Name(subject, BCStyle.DC);
+            return subject.getDC();
         } else if ("uid".equals(variable)) {
-            return getValueFromX500Name(subject, BCStyle.UID);
+            return subject.getUID();
         }
         return null;
     }
 
-    private String getValueFromX500Name(X500Name x500Name, ASN1ObjectIdentifier objectIdentifier) {
-        final var  rdNs = x500Name.getRDNs(objectIdentifier);
-        if (rdNs == null || rdNs.length == 0) {
-            return null;
-        }
-        return IETFUtils.valueToString(rdNs[0].getFirst().getValue());
-    }
 }

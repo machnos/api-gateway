@@ -15,9 +15,11 @@
  * under the License.
  */
 
-package com.machnos.api.gateway.server.domain.api.functions;
+package com.machnos.api.gateway.server.domain.api.functions.security;
 
 import com.machnos.api.gateway.server.domain.api.ExecutionContext;
+import com.machnos.api.gateway.server.domain.api.functions.AbstractFunction;
+import com.machnos.api.gateway.server.domain.api.functions.Result;
 import com.machnos.api.gateway.server.domain.idm.Account;
 import com.machnos.api.gateway.server.domain.idm.PasswordCredentials;
 import com.machnos.api.gateway.server.domain.message.Headers;
