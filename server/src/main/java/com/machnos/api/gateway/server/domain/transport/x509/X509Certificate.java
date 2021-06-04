@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.util.Date;
 
@@ -37,7 +38,6 @@ public class X509Certificate {
      */
     private static final Logger logger = LogManager.getLogger();
 
-
     private final JcaX509CertificateHolder certificateHolder;
     private X500Name subject;
     private X500Name issuer;
@@ -46,9 +46,9 @@ public class X509Certificate {
     private String md5;
     private PublicKey publicKey;
 
-    public X509Certificate(java.security.cert.X509Certificate x509Certificate) {
+    public X509Certificate(Certificate certificate) {
         try {
-            this.certificateHolder = new JcaX509CertificateHolder(x509Certificate);
+            this.certificateHolder = new JcaX509CertificateHolder((java.security.cert.X509Certificate) certificate);
         } catch (CertificateEncodingException e) {
             throw new MachnosException(MachnosException.WRAPPED_EXCEPTION, e);
         }

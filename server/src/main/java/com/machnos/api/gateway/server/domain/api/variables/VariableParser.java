@@ -28,9 +28,6 @@ import com.machnos.api.gateway.server.domain.transport.x509.X500Name;
 import com.machnos.api.gateway.server.domain.transport.x509.X509Certificate;
 import org.bouncycastle.util.encoders.Hex;
 
-import java.security.interfaces.DSAPublicKey;
-import java.security.interfaces.RSAPublicKey;
-
 public class VariableParser {
 
     private static final String VARIABLE_PREFIX = "${";
@@ -214,11 +211,7 @@ public class VariableParser {
         } else if (".key.algorithm".equals(variable)) {
             return certificate.getPublicKey().getAlgorithm();
         } else if (".key.size".equals(variable)) {
-            if (certificate.getPublicKey() instanceof final RSAPublicKey rsaPublicKey) {
-                return rsaPublicKey.getModulus().bitLength();
-            } else if (certificate.getPublicKey() instanceof final DSAPublicKey dsaPublicKey) {
-                return dsaPublicKey.getY().bitLength();
-            }
+            return certificate.getPublicKey().getKeySize();
         }
         return null;
     }

@@ -44,7 +44,8 @@ public class DummyWebApi implements Api {
                 + "<p>IsSecure: ${transport.isSecure}</p>"
                 + "<p>CipherSuite: ${transport.security.cipherSuite}</p>"
                 + "<p>SecurityProtocol: ${transport.security.protocol}</p>"
-                + "<p>RemoteCertificateSubjectDN: ${transport.security.localCertificate.key.size}</p>"
+                + "<p>Alg: ${transport.security.localCertificate.key.algorithm}</p>"
+                + "<p>Size: ${transport.security.localCertificate.key.size}</p>"
         ).setContentType("text/html"));
     }
 

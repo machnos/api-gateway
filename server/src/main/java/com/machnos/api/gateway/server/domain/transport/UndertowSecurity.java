@@ -17,12 +17,20 @@
 
 package com.machnos.api.gateway.server.domain.transport;
 
+import com.machnos.api.gateway.server.domain.transport.x509.X509Certificate;
 import io.undertow.server.HttpServerExchange;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.net.ssl.SSLPeerUnverifiedException;
-import java.security.cert.Certificate;
+import java.util.Arrays;
 
 public class UndertowSecurity implements Security {
+
+    /**
+     * The logger for this class.
+     */
+    private static final Logger logger = LogManager.getLogger();
 
     private final HttpServerExchange httpServerExchange;
 
@@ -47,7 +55,7 @@ public class UndertowSecurity implements Security {
     }
 
     @Override
-    public Certificate getRemoteCertificate() {
+    public X509Certificate getRemoteCertificate() {
         var chain = getRemoteCertificateChain();
         if (chain == null) {
             return null;
@@ -56,19 +64,23 @@ public class UndertowSecurity implements Security {
     }
 
     @Override
-    public Certificate[] getRemoteCertificateChain() {
+    public X509Certificate[] getRemoteCertificateChain() {
         if (this.httpServerExchange.getConnection().getSslSession() == null) {
             return null;
         }
         try {
-            return this.httpServerExchange.getConnection().getSslSession().getPeerCertificates();
+            final var certificates = this.httpServerExchange.getConnection().getSslSession().getPeerCertificates();
+            return Arrays.stream(certificates).map(X509Certificate::new).toArray(X509Certificate[]::new);
         } catch (SSLPeerUnverifiedException e) {
+            if (logger.isDebugEnabled()) {
+                logger.debug(e.getMessage(), e);
+            }
             return null;
         }
     }
 
     @Override
-    public Certificate getLocalCertificate() {
+    public X509Certificate getLocalCertificate() {
         var chain = getLocalCertificateChain();
         if (chain == null) {
             return null;
@@ -77,10 +89,14 @@ public class UndertowSecurity implements Security {
     }
 
     @Override
-    public Certificate[] getLocalCertificateChain() {
+    public X509Certificate[] getLocalCertificateChain() {
         if (this.httpServerExchange.getConnection().getSslSession() == null) {
             return null;
         }
-        return this.httpServerExchange.getConnection().getSslSession().getLocalCertificates();
+        final var certificates = this.httpServerExchange.getConnection().getSslSession().getLocalCertificates();
+        if (certificates == null) {
+            return null;
+        }
+        return Arrays.stream(certificates).map(X509Certificate::new).toArray(X509Certificate[]::new);
     }
 }
