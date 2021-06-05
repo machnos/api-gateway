@@ -17,23 +17,23 @@
 
 package com.machnos.api.gateway.server.domain.api;
 
-import com.machnos.api.gateway.server.domain.api.functions.CompoundFunction;
 import com.machnos.api.gateway.server.domain.api.functions.SetResponseContent;
-import com.machnos.api.gateway.server.domain.api.functions.flowlogic.AllFunctionsMustSucceed;
+import com.machnos.api.gateway.server.domain.api.functions.flowlogic.AtLeastOneFunctionMustSucceed;
 import com.machnos.api.gateway.server.domain.api.functions.flowlogic.SetVariable;
 import com.machnos.api.gateway.server.domain.api.functions.security.RequireBasicAuthentication;
 import com.machnos.api.gateway.server.domain.api.functions.security.RequireTransportSecurity;
 
-public class DummyWebApi implements Api {
+public class DummyWebApi extends AbstractApi {
 
-    private final CompoundFunction rootFunction = new AllFunctionsMustSucceed();
 
     public DummyWebApi() {
-        this.rootFunction.addFunction(new RequireBasicAuthentication());
-        this.rootFunction.addFunction(new RequireTransportSecurity().setRemoteCertificateRequired(true));
-        this.rootFunction.addFunction(new SetVariable().setName("company.name").setValue("Machnos"));
-        this.rootFunction.addFunction(new SetVariable().setName("company.slogan").setValue("${company.name} fixes everything!"));
-        this.rootFunction.addFunction(new SetResponseContent().setContent(
+        addFunction(new AtLeastOneFunctionMustSucceed()
+                .addFunction(new RequireTransportSecurity().setRemoteCertificateRequired(true))
+                .addFunction(new RequireBasicAuthentication())
+        );
+        addFunction(new SetVariable().setVariableName("company.name").setVariableValue("Machnos"));
+        addFunction(new SetVariable().setVariableName("company.slogan").setVariableValue("${company.name} fixes everything!"));
+        addFunction(new SetResponseContent().setContent(
                 "<p>Hi ${account.username}!</p>"
                 + "<p>You visited this page using a '${transport.http.request.method}' method via interface '${transport.interfaceAlias}' and landed on api ${api.name}@${api.contextRoot}</p>"
                 + "<p>The authorization header: ${request.header.authorization.first}</p>"
@@ -63,8 +63,4 @@ public class DummyWebApi implements Api {
         return "/api/";
     }
 
-    @Override
-    public void handleRequest(ExecutionContext executionContext) {
-        this.rootFunction.execute(executionContext);
-    }
 }

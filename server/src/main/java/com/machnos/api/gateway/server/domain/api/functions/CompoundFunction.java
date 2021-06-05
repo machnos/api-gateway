@@ -22,13 +22,29 @@ import com.machnos.api.gateway.server.domain.api.ExecutionContext;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Superclass for all <code>Function</code> instances that contain one or more child <code>Function</code>s.
+ */
 public abstract class CompoundFunction extends AbstractFunction {
 
-    private List<Function> functions = new ArrayList<>();
+    /**
+     * The list of child <code>Function</code>s.
+     */
+    private final List<Function> functions = new ArrayList<>();
 
+    /**
+     * Constructs a new <code>CompoundFunction</code> instance.
+     * @param name The name of the <code>Function</code>.
+     */
     public CompoundFunction(String name) {
         super(name);
     }
+
+    /**
+     * Adds a child <code>Function</code>.
+     * @param function The <code>Function</code> to add.
+     * @return This <code>CompoundFunction</code> instance.
+     */
     public CompoundFunction addFunction(Function function) {
         if (function != null) {
             this.functions.add(function);
@@ -36,17 +52,23 @@ public abstract class CompoundFunction extends AbstractFunction {
         return this;
     }
 
-    @Override
-    public final Result execute(ExecutionContext executionContext) {
-        executionContext.getVariables().startLevel();
-        final var result = doExecute(executionContext);
-        executionContext.getVariables().endLevel();
-        return result;
-    }
-
+    /**
+     * Gives the list with child <code>Function</code>s.
+     * @return The list with child <code>Function</code>s.
+     */
     public List<Function> getFunctions() {
         return this.functions;
     }
 
-    protected abstract Result doExecute(ExecutionContext executionContext);
+    @Override
+    public void preExecute(ExecutionContext executionContext) {
+        executionContext.getVariables().startLevel();
+        super.preExecute(executionContext);
+    }
+
+    @Override
+    public void postExecute(ExecutionContext executionContext) {
+        executionContext.getVariables().endLevel();
+        super.postExecute(executionContext);
+    }
 }

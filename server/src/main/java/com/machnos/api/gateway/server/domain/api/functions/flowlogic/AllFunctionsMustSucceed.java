@@ -22,21 +22,43 @@ import com.machnos.api.gateway.server.domain.api.functions.CompoundFunction;
 import com.machnos.api.gateway.server.domain.api.functions.Function;
 import com.machnos.api.gateway.server.domain.api.functions.Result;
 
+/**
+ * <code>CompoundFunction</code> that succeeds when all child <code>Function</code>s are successfully executed.
+ *
+ * This <code>CompoundFunction</code> stops executing child <code>Function</code>s as soon as a child <code>Function</code>
+ * fails. The order in which the child <code>Function</code>s are executed is the order in which the are added to the
+ * <code>CompoundFunction</code>.
+ */
 public class AllFunctionsMustSucceed extends CompoundFunction {
 
+    /**
+     * The name of this <code>Function</code>.
+     */
+    private static final String FUNCTION_NAME = "All Functions Must Succeed";
+
+    /**
+     * The <code>Result</code> of this <code>Function</code> in case of a child failure.
+     */
+    private static final Result RESULT_CHILD_FUNCTION_FAILED = Result.fail(FUNCTION_NAME + " - Child function failed - 01");
+
+    /**
+     * Constructs a new <code>AllFunctionsMustSucceed</code> instance.
+     */
     public AllFunctionsMustSucceed() {
-        super("AllFunctionsMustSucceed");
+        super(FUNCTION_NAME);
     }
 
     @Override
     public Result doExecute(ExecutionContext executionContext) {
         for (Function function : getFunctions()) {
-            var result = function.execute(executionContext);
-            if (Result.FAILED.equals(result) || Result.STOP_API.equals(result)) {
-                return result;
+            var childResult = function.execute(executionContext);
+            if (childResult.isFailed()) {
+                return RESULT_CHILD_FUNCTION_FAILED;
+            }
+            if (childResult.isStopApi()) {
+                return childResult;
             }
         }
-        return Result.SUCCESS;
+        return Result.succeed();
     }
-
 }

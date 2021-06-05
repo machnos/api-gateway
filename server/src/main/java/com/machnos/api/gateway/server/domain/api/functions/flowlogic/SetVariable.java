@@ -21,41 +21,62 @@ import com.machnos.api.gateway.server.domain.api.ExecutionContext;
 import com.machnos.api.gateway.server.domain.api.functions.AbstractFunction;
 import com.machnos.api.gateway.server.domain.api.functions.Result;
 
+/**
+ * <code>Function</code> that can set a variable to the <code>ExecutionContext</code>.
+ */
 public class SetVariable extends AbstractFunction  {
 
-    private String name;
+    /**
+     * The name of this <code>Function</code>.
+     */
+    private static final String FUNCTION_NAME = "Set Variable";
 
-    private Object value;
+    /**
+     * The <code>Result</code> of this <code>Function</code> in case of a child failure.
+     */
+    private static final Result RESULT_NAME_NOT_SET = Result.fail(FUNCTION_NAME + " - Variable name not set - 01");
 
+    /**
+     * The name of the variable.
+     */
+    private String variableName;
+
+    /**
+     * The value of the variable.
+     */
+    private Object variableValue;
+
+    /**
+     * Constructs a new <code>SetVariable</code> instance.
+     */
     public SetVariable() {
-        super("SetVariable");
+        super(FUNCTION_NAME);
     }
 
     @Override
-    public Result execute(ExecutionContext executionContext) {
+    public Result doExecute(ExecutionContext executionContext) {
         if (getName() == null) {
-            return Result.FAILED;
+            return RESULT_NAME_NOT_SET;
         }
-        executionContext.getVariables().setVariable(getName(), getValue() instanceof String ? executionContext.parse((String)getValue()) : getValue());
-        return Result.SUCCESS;
+        executionContext.getVariables().setVariable(getVariableName(), getVariableValue() instanceof String ? executionContext.parse((String) getVariableValue()) : getVariableValue());
+        return Result.succeed();
     }
 
-    @Override
-    public String getName() {
-        return this.name;
+    public String getVariableName() {
+        return this.variableName;
     }
 
-    public SetVariable setName(String name) {
-        this.name = name;
+    public SetVariable setVariableName(String name) {
+        this.variableName = name;
         return this;
     }
 
-    public Object getValue() {
-        return this.value;
+    public Object getVariableValue() {
+        return this.variableValue;
     }
 
-    public SetVariable setValue(Object value) {
-        this.value = value;
+    public SetVariable setVariableValue(Object variableValue) {
+        this.variableValue = variableValue;
         return this;
     }
 }

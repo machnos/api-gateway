@@ -22,21 +22,41 @@ import com.machnos.api.gateway.server.domain.api.functions.CompoundFunction;
 import com.machnos.api.gateway.server.domain.api.functions.Function;
 import com.machnos.api.gateway.server.domain.api.functions.Result;
 
+/**
+ * <code>CompoundFunction</code> that succeeds when all child <code>Function</code>s are successfully executed.
+ *
+ * This <code>CompoundFunction</code> stops executing child <code>Function</code>s as soon as a child <code>Function</code>
+ * succeeds. The order in which the child <code>Function</code>s are executed is the order in which the are added to
+ * the <code>CompoundFunction</code>.
+ */
 public class AtLeastOneFunctionMustSucceed extends CompoundFunction {
 
+    /**
+     * The name of this <code>Function</code>.
+     */
+    private static final String FUNCTION_NAME = "At Least One Functions Must Succeed";
+
+    /**
+     * The <code>Result</code> of this <code>Function</code> in case of a child failure.
+     */
+    private static final Result RESULT_NO_CHILD_FUNCTION_SUCCEEDED = Result.fail(FUNCTION_NAME + " - No child function succeeded - 01");
+
+    /**
+     * Constructs a new <code>AtLeastOneFunctionMustSucceed</code> instance.
+     */
     public AtLeastOneFunctionMustSucceed() {
-        super("AtLeastOneFunctionMustSucceed");
+        super(FUNCTION_NAME);
     }
 
     @Override
     public Result doExecute(ExecutionContext executionContext) {
         for (Function function : getFunctions()) {
             var result = function.execute(executionContext);
-            if (Result.SUCCESS.equals(result)) {
-                return Result.SUCCESS;
+            if (result.isSucceeded()) {
+                return result;
             }
         }
-        return Result.FAILED;
+        return RESULT_NO_CHILD_FUNCTION_SUCCEEDED;
     }
 
 }

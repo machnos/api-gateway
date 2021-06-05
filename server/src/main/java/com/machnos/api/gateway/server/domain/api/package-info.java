@@ -16,6 +16,6 @@
  */
 
 /**
- * Function classes form the base of all API's. They form the logic that can be configured in each API.
+ * Domain classes that represent the API functionality.
  */
-package com.machnos.api.gateway.server.domain.api.functions;
+package com.machnos.api.gateway.server.domain.api;

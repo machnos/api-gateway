@@ -32,7 +32,7 @@ public class SetResponseContent extends AbstractFunction {
     }
 
     @Override
-    public Result execute(ExecutionContext executionContext) {
+    public Result doExecute(ExecutionContext executionContext) {
         executionContext.getResponseMessage().setBody(executionContext.parse(getContent()));
         if (executionContext.getResponseMessage().isHttp()) {
             final var httpResponse = executionContext.getResponseMessage().getHttpMessage();
@@ -40,7 +40,7 @@ public class SetResponseContent extends AbstractFunction {
                 httpResponse.getHeaders().set(Headers.HTTP_CONTENT_TYPE, executionContext.parse(getContentType()) + "; charset=" + Charset.defaultCharset());
             }
         }
-        return Result.SUCCESS;
+        return Result.succeed();
     }
 
     public String getContent() {

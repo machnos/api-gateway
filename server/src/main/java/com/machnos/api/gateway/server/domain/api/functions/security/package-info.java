@@ -16,6 +16,6 @@
  */
 
 /**
- * Function classes form the base of all API's. They form the logic that can be configured in each API.
+ * Function classes that control the security of an API.
  */
-package com.machnos.api.gateway.server.domain.api.functions;
+package com.machnos.api.gateway.server.domain.api.functions.security;
