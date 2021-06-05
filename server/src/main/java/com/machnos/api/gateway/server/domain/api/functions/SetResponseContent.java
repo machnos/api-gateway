@@ -22,13 +22,28 @@ import com.machnos.api.gateway.server.domain.message.Headers;
 
 import java.nio.charset.Charset;
 
+/**
+ * <code>Function</code> that sets the response content.
+ */
 public class SetResponseContent extends AbstractFunction {
 
+    /**
+     * The name of this <code>Function</code>.
+     */
+    private static final String FUNCTION_NAME = "Set response content";
+
+    /**
+     * The content to send to the client.
+     */
     private String content;
+
+    /**
+     * The content type of the content.
+     */
     private String contentType;
 
     public SetResponseContent() {
-        super("SetResponseContent");
+        super(FUNCTION_NAME);
     }
 
     @Override
@@ -43,19 +58,40 @@ public class SetResponseContent extends AbstractFunction {
         return Result.succeed();
     }
 
+    /**
+     * Gives the content.
+     *
+     * @return The content.
+     */
     public String getContent() {
         return this.content;
     }
 
+    /**
+     * Sets the content.
+     *
+     * @param content The content to send to the client.
+     * @return This <code>SetResponseContent</code> instance.
+     */
     public SetResponseContent setContent(String content) {
         this.content = content;
         return this;
     }
 
+    /**
+     * Gives the content type.
+     * @return The content type.
+     */
     public String getContentType() {
         return this.contentType;
     }
 
+    /**
+     * Sets the content type.
+     *
+     * @param contentType The content type.
+     * @return This <code>SetResponseContent</code> instance.
+     */
     public SetResponseContent setContentType(String contentType) {
         this.contentType = contentType;
         return this;

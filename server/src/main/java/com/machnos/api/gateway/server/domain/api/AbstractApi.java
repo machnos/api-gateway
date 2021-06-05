@@ -21,14 +21,28 @@ import com.machnos.api.gateway.server.domain.api.functions.CompoundFunction;
 import com.machnos.api.gateway.server.domain.api.functions.Function;
 import com.machnos.api.gateway.server.domain.api.functions.flowlogic.AllFunctionsMustSucceed;
 
+/**
+ * Abstract superclass for all <code>Api</code> instances.
+ */
 public abstract class AbstractApi implements Api {
 
+    /**
+     * The root <code>Function</code> of the <code>Api</code>.
+     */
     private final CompoundFunction rootFunction = new AllFunctionsMustSucceed();
 
+    /**
+     * Gives the root <code>Function</code> of the api.
+     * @return The root code>Function</code> of the api.
+     */
     public CompoundFunction getRootFunction() {
         return this.rootFunction;
     }
 
+    /**
+     * Adds a child function to the <code>Api</code>.
+     * @param function The <code>Function</code> to add to the <code>Api</code>.
+     */
     protected void addFunction(Function function) {
         getRootFunction().addFunction(function);
     }

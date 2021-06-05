@@ -32,12 +32,12 @@ public class VariablesTest {
         final var variables = new Variables();
         final var varName = "Name";
         assertNull(variables.getVariable(varName));
-        variables.startLevel();
+        variables.startScope();
         variables.setVariable(varName, "John");
         assertEquals("John", variables.getVariable(varName));
         variables.setVariable(varName, "Doe");
         assertEquals("Doe", variables.getVariable(varName));
-        variables.endLevel();
+        variables.endScope();
         assertNull(variables.getVariable(varName));
     }
 
@@ -47,10 +47,10 @@ public class VariablesTest {
         final var varNameLevel1 = "level1";
         final var varNameLevel2 = "level2";
         // Start level 1
-        variables.startLevel();
+        variables.startScope();
         variables.setVariable(varNameLevel1, "value1");
         // Start level 2
-        variables.startLevel();
+        variables.startScope();
         variables.setVariable(varNameLevel2, "value2");
         // Both variables should be available.
         assertEquals(variables.getVariable(varNameLevel1), "value1");
@@ -61,7 +61,7 @@ public class VariablesTest {
         assertEquals(variables.getVariable(varNameLevel1), "value1Changed");
         assertEquals(variables.getVariable(varNameLevel2), "value2Changed");
         // End level 2. The variable added in this level should no longer be available.
-        variables.endLevel();
+        variables.endScope();
         assertEquals(variables.getVariable(varNameLevel1), "value1Changed");
         assertNull(variables.getVariable(varNameLevel2));
     }

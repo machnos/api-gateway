@@ -21,30 +21,57 @@ import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class that is capable of managing variables in a certain scope.
+ */
 public class Variables {
 
-    private final ArrayDeque<Map<String, Object>> variableLevels = new ArrayDeque<>();
+    /**
+     * The <code>ArrayDeque</code> that holds the variables at a certain scope.
+     */
+    private final ArrayDeque<Map<String, Object>> variableScopes = new ArrayDeque<>();
 
-    public void startLevel() {
-        this.variableLevels.offerFirst(new HashMap<>());
+    /**
+     * Start a new level. This means that all variables added after this call will be alive as long as the
+     * {@link #endScope()} is called. This makes it possible for <code>CompoundFunction</code>s to allow variables that
+     * only live during the execution of that <code>CompoundFunction</code>.
+     */
+    public void startScope() {
+        this.variableScopes.offerFirst(new HashMap<>());
     }
 
-    public void endLevel() {
-        this.variableLevels.pollFirst();
+    /**
+     * End the current scope. All variables add in the current scope will be discarded.
+     */
+    public void endScope() {
+        this.variableScopes.pollFirst();
     }
 
+    /**
+     * Set a variable. If the variable already exists in a certain scope, that value will be updated. If the variable
+     * not yet exists, it will be created in the current scope.
+     *
+     * @param variableName The name of the variable.
+     * @param variableValue The value of the variable.
+     */
     public void setVariable(String variableName, Object variableValue) {
-        for (Map<String, Object> variables : this.variableLevels) {
+        for (Map<String, Object> variables : this.variableScopes) {
             if (variables.containsKey(variableName)) {
                 variables.put(variableName, variableValue);
                 return;
             }
         }
-        this.variableLevels.peekFirst().put(variableName, variableValue);
+        this.variableScopes.peekFirst().put(variableName, variableValue);
     }
 
+    /**
+     * Get a variable.
+     *
+     * @param variableName The name of the variable.
+     * @return The value, or <code>null</code> whe no variable with the given name exists.
+     */
     public Object getVariable(String variableName) {
-        for (Map<String, Object> variables : this.variableLevels) {
+        for (Map<String, Object> variables : this.variableScopes) {
             if (variables.containsKey(variableName)) {
                 return variables.get(variableName);
             }

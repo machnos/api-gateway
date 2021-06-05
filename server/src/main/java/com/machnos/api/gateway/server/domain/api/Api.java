@@ -17,11 +17,30 @@
 
 package com.machnos.api.gateway.server.domain.api;
 
+/**
+ * Interface that represents an <code>Api</code>.
+ */
 public interface Api {
 
+    /**
+     * Gives the name of the <code>Api</code>.
+     *
+     * @return The name of the <code>Api</code>.
+     */
     String getName();
 
+    /**
+     * Gives the context root of the <code>Api</code>.
+     *
+     * This value is only available for <code>Api</code>'s that are available via http.
+     *
+     * @return The context root of the <code>Api</code>.
+     */
     String getContextRoot();
 
+    /**
+     * Handle a request to this <code>Api</code>.
+     * @param executionContext The <code>ExecutionContext</code> in which the <code>Api</code> is executed.
+     */
     void handleRequest(ExecutionContext executionContext);
 }

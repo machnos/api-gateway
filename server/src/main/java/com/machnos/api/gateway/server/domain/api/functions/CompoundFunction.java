@@ -62,13 +62,13 @@ public abstract class CompoundFunction extends AbstractFunction {
 
     @Override
     public void preExecute(ExecutionContext executionContext) {
-        executionContext.getVariables().startLevel();
+        executionContext.getVariables().startScope();
         super.preExecute(executionContext);
     }
 
     @Override
     public void postExecute(ExecutionContext executionContext) {
-        executionContext.getVariables().endLevel();
+        executionContext.getVariables().endScope();
         super.postExecute(executionContext);
     }
 }

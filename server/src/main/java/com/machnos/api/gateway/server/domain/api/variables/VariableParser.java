@@ -28,52 +28,133 @@ import com.machnos.api.gateway.server.domain.transport.x509.X500Name;
 import com.machnos.api.gateway.server.domain.transport.x509.X509Certificate;
 import org.bouncycastle.util.encoders.Hex;
 
+/**
+ * A class that is capable of parsing variable names and returning their values.
+ */
 public class VariableParser {
 
+    /**
+     * The prefix of a variable name.
+     */
     private static final String VARIABLE_PREFIX = "${";
+    /**
+     * The length of the prefix of a variable name.
+     */
     private static final int VARIABLE_PREFIX_LENGTH = VARIABLE_PREFIX.length();
+    /**
+     * The suffix of a variable name.
+     */
     private static final String VARIABLE_SUFFIX = "}";
+    /**
+     * The length of the suffix of a variable name.
+     */
+    private static final int VARIABLE_SUFFIX_LENGTH = VARIABLE_SUFFIX.length();
 
+    /**
+     * The prefix of the <code>Account</code> variables.
+     */
     private static final String ACCOUNT_VARIABLE_PREFIX = "account.";
+    /**
+     * The length of the prefix of the <code>Account</code> variables.
+     */
     private static final int ACCOUNT_VARIABLE_PREFIX_LENGTH = ACCOUNT_VARIABLE_PREFIX.length();
+    /**
+     * The prefix of the <code>Api</code> variables.
+     */
     private static final String API_VARIABLE_PREFIX = "api.";
+    /**
+     * The length of the prefix of the <code>Api</code> variables.
+     */
     private static final int API_VARIABLE_PREFIX_LENGTH = API_VARIABLE_PREFIX.length();
+    /**
+     * The prefix of the <code>Transport</code> variables.
+     */
     private static final String TRANSPORT_VARIABLE_PREFIX = "transport.";
+    /**
+     * The length of the prefix of the <code>Transport</code> variables.
+     */
     private static final int TRANSPORT_VARIABLE_PREFIX_LENGTH = TRANSPORT_VARIABLE_PREFIX.length();
+    /**
+     * The prefix of the <code>Security</code> variables.
+     */
     private static final String SECURITY_VARIABLE_PREFIX = "security.";
+    /**
+     * The length of the prefix of the <code>Security</code> variables.
+     */
     private static final int SECURITY_VARIABLE_PREFIX_LENGTH = SECURITY_VARIABLE_PREFIX.length();
+    /**
+     * The prefix of the request <code>Message</code> variables.
+     */
     private static final String REQUEST_VARIABLE_PREFIX = "request.";
+    /**
+     * The length of the prefix of the request <code>Message</code> variables.
+     */
     private static final int REQUEST_VARIABLE_PREFIX_LENGTH = REQUEST_VARIABLE_PREFIX.length();
+    /**
+     * The prefix of the response <code>Message</code> variables.
+     */
     private static final String RESPONSE_VARIABLE_PREFIX = "response.";
+    /**
+     * The length of the prefix of the response <code>Message</code> variables.
+     */
     private static final int RESPONSE_VARIABLE_PREFIX_LENGTH = RESPONSE_VARIABLE_PREFIX.length();
+    /**
+     * The prefix of a header variable.
+     */
     private static final String HEADER_VARIABLE_PREFIX = "header.";
+    /**
+     * The length of the prefix of a header variable.
+     */
     private static final int HEADER_VARIABLE_PREFIX_LENGTH = HEADER_VARIABLE_PREFIX.length();
-    private static final String HEADERS_VARIABLE_PREFIX = "headers.";
-    private static final int HEADERS_VARIABLE_PREFIX_LENGTH = HEADERS_VARIABLE_PREFIX.length();
+    /**
+     * The suffix of the first element in a collection.
+     */
     private static final String COLLECTION_VARIABLE_SUFFIX_FIRST = ".first";
+    /**
+     * The length of the suffix of the first element in a collection.
+     */
     private static final int COLLECTION_VARIABLE_SUFFIX_FIRST_LENGTH = COLLECTION_VARIABLE_SUFFIX_FIRST.length();
 
 
+    /**
+     * Parse the input and replaces all variables with actual values.
+     *
+     * @param input The input to parse.
+     * @param executionContext The <code>ExecutionContext</code> that contains all variables.
+     * @return The parsed input.
+     */
     public String parse(String input, ExecutionContext executionContext) {
         if (input == null) {
             return null;
         }
         var result = input;
+        // Loop over the result finding variable names.
         while (true) {
+            // Match over the last index. This will allow us to support variables within variables because the
+            // inner variable will always start after the outer variable.
             final var startIx = result.lastIndexOf(VARIABLE_PREFIX);
             if (startIx == -1) {
+                // No start index, hence no variables in the result.
                 return result;
             }
             final var endIx = result.indexOf(VARIABLE_SUFFIX, startIx + VARIABLE_PREFIX_LENGTH);
             if (endIx == -1) {
+                // No end index, hence no variables in the result.
                 return result;
             }
             final var variableName = result.substring(startIx + VARIABLE_PREFIX_LENGTH, endIx);
             final var variableValue = getValue(variableName, executionContext);
-            result = result.substring(0, startIx) + (variableValue != null ? variableValue.toString() : "") + result.substring(endIx + 1);
+            result = result.substring(0, startIx) + (variableValue != null ? variableValue.toString() : "") + result.substring(endIx + VARIABLE_SUFFIX_LENGTH);
         }
     }
 
+    /**
+     * Get a value of a variable.
+     *
+     * @param variableName The name of the variable.
+     * @param executionContext The <code>ExecutionContext</code> that contains all variables.
+     * @return The value of the variable, or <code>null</code> when the variable does not exists.
+     */
     private Object getValue(String variableName, ExecutionContext executionContext) {
         if (variableName == null) {
             return null;
@@ -93,17 +174,20 @@ public class VariableParser {
         return executionContext.getVariables().getVariable(variableName);
     }
 
+    /**
+     * Get a variable from a <code>Message</code> instance.
+     *
+     * @param variable The name of the variable.
+     * @param message The <code>Message</code> instance containing the values.
+     * @return The value of the variable, or <code>null</code> when the variable does not exists.
+     */
     private Object getMessageValue(String variable, Message message) {
         if ("body".equals(variable)) {
             return message.getBody();
         } else if (variable.startsWith(HEADER_VARIABLE_PREFIX)) {
             if (variable.endsWith(COLLECTION_VARIABLE_SUFFIX_FIRST)) {
                 var headerName = variable.substring(HEADER_VARIABLE_PREFIX_LENGTH, variable.length() - COLLECTION_VARIABLE_SUFFIX_FIRST_LENGTH);
-                var values = message.getHeaders().get(headerName);
-                if (values == null || values.size() == 0) {
-                    return null;
-                }
-                return values.get(0);
+                return message.getHeaders().getFirst(headerName);
             }
             return message.getHeaders().get(variable.substring(HEADER_VARIABLE_PREFIX_LENGTH));
         } else if ("ishttp".equals(variable)) {
@@ -112,6 +196,13 @@ public class VariableParser {
         return null;
     }
 
+    /**
+     * Get a variable from an <code>Account</code> instance.
+     *
+     * @param variable The name of the variable.
+     * @param account The <code>Account</code> instance containing the values.
+     * @return The value of the variable, or <code>null</code> when the variable does not exists.
+     */
     private Object getAccountValue(String variable, Account account) {
         if ("username".equals(variable)) {
             return account.getUsername();
@@ -119,6 +210,13 @@ public class VariableParser {
         return null;
     }
 
+    /**
+     * Get a variable from a <code>Transport</code> instance.
+     *
+     * @param variable The name of the variable.
+     * @param transport The <code>Transport</code> instance containing the values.
+     * @return The value of the variable, or <code>null</code> when the variable does not exists.
+     */
     private Object getTransportValue(String variable, Transport transport) {
         if ("http.request.method".equals(variable)) {
             return transport.isHttp() ? transport.getHttpTransport().getRequestMethod() : null;
@@ -144,6 +242,13 @@ public class VariableParser {
         return null;
     }
 
+    /**
+     * Get a variable from an <code>Api</code> instance.
+     *
+     * @param variable The name of the variable.
+     * @param api The <code>Api</code> instance containing the values.
+     * @return The value of the variable, or <code>null</code> when the variable does not exists.
+     */
     private Object getApiValue(String variable, Api api) {
         if ("name".equals(variable)) {
             return api.getName();
@@ -153,6 +258,13 @@ public class VariableParser {
         return null;
     }
 
+    /**
+     * Get a variable from a <code>RequestURL</code> instance.
+     *
+     * @param variable The name of the variable.
+     * @param requestURL The <code>Message</code> instance containing the values.
+     * @return The value of the variable, or <code>null</code> when the variable does not exists.
+     */
     private Object getRequestURLValue(String variable, RequestURL requestURL) {
         if (variable.equals("")) {
             return requestURL;
@@ -174,6 +286,13 @@ public class VariableParser {
         return null;
     }
 
+    /**
+     * Get a variable from a <code>Security</code> instance.
+     *
+     * @param variable The name of the variable.
+     * @param security The <code>Security</code> instance containing the values.
+     * @return The value of the variable, or <code>null</code> when the variable does not exists.
+     */
     private Object getSecurityValue(String variable, Security security) {
         if ("ciphersuite".equals(variable)) {
             return security.getCipherSuite();
@@ -187,6 +306,13 @@ public class VariableParser {
         return null;
     }
 
+    /**
+     * Get a variable from a <code>X509Certificate</code> instance.
+     *
+     * @param variable The name of the variable.
+     * @param certificate The <code>X509Certificate</code> instance containing the values.
+     * @return The value of the variable, or <code>null</code> when the variable does not exists.
+     */
     private Object getCertificateValue(String variable, X509Certificate certificate) {
         if (variable.equals("")) {
             return certificate;
@@ -216,27 +342,34 @@ public class VariableParser {
         return null;
     }
 
-    private Object getX500NameValue(String variable, X500Name subject) {
+    /**
+     * Get a variable from a <code>X500Name</code> instance.
+     *
+     * @param variable The name of the variable.
+     * @param x500Name The <code>X500Name</code> instance containing the values.
+     * @return The value of the variable, or <code>null</code> when the variable does not exists.
+     */
+    private Object getX500NameValue(String variable, X500Name x500Name) {
         if ("dn".equals(variable)) {
-            return subject.getDN();
+            return x500Name.getDN();
         } else if ("cn".equals(variable)) {
-            return subject.getCN();
+            return x500Name.getCN();
         } else if ("c".equals(variable)) {
-            return subject.getC();
+            return x500Name.getC();
         } else if ("o".equals(variable)) {
-            return subject.getO();
+            return x500Name.getO();
         } else if ("ou".equals(variable)) {
-            return subject.getOU();
+            return x500Name.getOU();
         } else if ("l".equals(variable)) {
-            return subject.getL();
+            return x500Name.getL();
         } else if ("st".equals(variable)) {
-            return subject.getST();
+            return x500Name.getST();
         } else if ("street".equals(variable)) {
-            return subject.getStreet();
+            return x500Name.getStreet();
         } else if ("dc".equals(variable)) {
-            return subject.getDC();
+            return x500Name.getDC();
         } else if ("uid".equals(variable)) {
-            return subject.getUID();
+            return x500Name.getUID();
         }
         return null;
     }
