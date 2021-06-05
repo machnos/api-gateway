@@ -18,25 +18,44 @@
 package com.machnos.api.gateway.server.domain.api.functions.flowlogic;
 
 import com.machnos.api.gateway.server.domain.api.ExecutionContext;
-import com.machnos.api.gateway.server.domain.api.functions.CompoundFunction;
-import com.machnos.api.gateway.server.domain.api.functions.Function;
+import com.machnos.api.gateway.server.domain.api.functions.AbstractFunction;
 import com.machnos.api.gateway.server.domain.api.functions.Result;
 
-public class AtLeastOneFunctionMustSucceed extends CompoundFunction {
+public class SetVariable extends AbstractFunction  {
 
-    public AtLeastOneFunctionMustSucceed() {
-        super("AtLeastOneFunctionMustSucceed");
+    private String name;
+
+    private Object value;
+
+    public SetVariable() {
+        super("SetVariable");
     }
 
     @Override
-    public Result doExecute(ExecutionContext executionContext) {
-        for (Function function : getFunctions()) {
-            var result = function.execute(executionContext);
-            if (Result.SUCCESS.equals(result)) {
-                return Result.SUCCESS;
-            }
+    public Result execute(ExecutionContext executionContext) {
+        if (getName() == null) {
+            return Result.FAILED;
         }
-        return Result.FAILED;
+        executionContext.getVariables().setVariable(getName(), getValue() instanceof String ? executionContext.parse((String)getValue()) : getValue());
+        return Result.SUCCESS;
     }
 
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    public SetVariable setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public Object getValue() {
+        return this.value;
+    }
+
+    public SetVariable setValue(Object value) {
+        this.value = value;
+        return this;
+    }
 }

@@ -17,6 +17,8 @@
 
 package com.machnos.api.gateway.server.domain.api.functions;
 
+import com.machnos.api.gateway.server.domain.api.ExecutionContext;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +36,17 @@ public abstract class CompoundFunction extends AbstractFunction {
         return this;
     }
 
+    @Override
+    public final Result execute(ExecutionContext executionContext) {
+        executionContext.getVariables().startLevel();
+        final var result = doExecute(executionContext);
+        executionContext.getVariables().endLevel();
+        return result;
+    }
+
     public List<Function> getFunctions() {
         return this.functions;
     }
+
+    protected abstract Result doExecute(ExecutionContext executionContext);
 }

@@ -90,7 +90,7 @@ public class VariableParser {
         } else if (variable.startsWith(API_VARIABLE_PREFIX)) {
             return executionContext.getApi() != null ? getApiValue(variable.substring(API_VARIABLE_PREFIX_LENGTH), executionContext.getApi()) : null;
         }
-        return null;
+        return executionContext.getVariables().getVariable(variableName);
     }
 
     private Object getMessageValue(String variable, Message message) {

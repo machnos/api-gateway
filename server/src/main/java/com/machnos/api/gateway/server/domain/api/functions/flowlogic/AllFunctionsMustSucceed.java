@@ -29,7 +29,7 @@ public class AllFunctionsMustSucceed extends CompoundFunction {
     }
 
     @Override
-    public Result execute(ExecutionContext executionContext) {
+    public Result doExecute(ExecutionContext executionContext) {
         for (Function function : getFunctions()) {
             var result = function.execute(executionContext);
             if (Result.FAILED.equals(result) || Result.STOP_API.equals(result)) {
