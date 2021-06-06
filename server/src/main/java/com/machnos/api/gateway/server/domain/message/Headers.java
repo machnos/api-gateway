@@ -19,15 +19,53 @@ package com.machnos.api.gateway.server.domain.message;
 
 import java.util.List;
 
+/**
+ * The headers that come with a <code>Message</code>.
+ */
 public interface Headers {
 
+    /**
+     * The http Authorization header name.
+     */
     String HTTP_AUTHORIZATION = "Authorization";
+    /**
+     * The http Content-Type header name.
+     */
     String HTTP_CONTENT_TYPE = "Content-Type";
+    /**
+     * The http WWW-Authenticate header name.
+     */
     String HTTP_WWW_AUTHENTICATE = "WWW-Authenticate";
 
+    /**
+     * Boolean indicating the <code>Headers</code> contain a header with a given name.
+     *
+     * @param headerName The name of the header to check the presence for.
+     * @return <code>true</code> if a header with the given headerName exists, <code>false</code> otherwise.
+     */
     boolean contains(String headerName);
+
+    /**
+     * Gives the first value of a header with the given headerName.
+     *
+     * @param headerName The name of the header that contains the value.
+     * @return The first value of a header with the given headerName, or <code>null</code> when no such header exists.
+     */
     String getFirst(String headerName);
+
+    /**
+     * Gives the values of a header with the given headerName.
+     *
+     * @param headerName The name of the header that contains the value.
+     * @return The values of a header with a given name, or <code>null</code> when nu such header exists.
+     */
     List<String> get(String headerName);
 
+    /**
+     * Sets a header value. When a header with the given headerName already exists, it's value will be overwritten.
+     *
+     * @param headerName The name of the header value to set.
+     * @param headerValue The value the header should have.
+     */
     void set(String headerName, String headerValue);
 }

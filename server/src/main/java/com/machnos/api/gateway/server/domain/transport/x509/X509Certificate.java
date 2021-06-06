@@ -31,6 +31,9 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.util.Date;
 
+/**
+ * Class representing a X509 certificate.
+ */
 public class X509Certificate {
 
     /**
@@ -38,14 +41,40 @@ public class X509Certificate {
      */
     private static final Logger logger = LogManager.getLogger();
 
+    /**
+     * The BouncyCastle <code>JcaX509CertificateHolder</code> that is wrapped by this class.
+     */
     private final JcaX509CertificateHolder certificateHolder;
+    /**
+     * The subject of the certificate.
+     */
     private X500Name subject;
+    /**
+     * The issuer of the certificate.
+     */
     private X500Name issuer;
+    /**
+     * The sha-256 digest of the certificate.
+     */
     private String sha256;
+    /**
+     * The sha-1 digest of the certificate.
+     */
     private String sha1;
+    /**
+     * The md-5 digest of the certificate.
+     */
     private String md5;
+    /**
+     * The <code>PublicKey</code> part of the certificate.
+     */
     private PublicKey publicKey;
 
+    /**
+     * Constructs a new <code>X509Certificate</code> instance.
+     *
+     * @param certificate The <code>Certificate</code> to wrap with this instance.
+     */
     public X509Certificate(Certificate certificate) {
         try {
             this.certificateHolder = new JcaX509CertificateHolder((java.security.cert.X509Certificate) certificate);
@@ -54,6 +83,11 @@ public class X509Certificate {
         }
     }
 
+    /**
+     * Gives the subject of the certificate.
+     *
+     * @return The subject of the certificate.
+     */
     public X500Name getSubject() {
         if (this.subject == null) {
             this.subject = new X500Name(this.certificateHolder.getSubject());
@@ -61,6 +95,11 @@ public class X509Certificate {
         return this.subject;
     }
 
+    /**
+     * Gives the issuer of the certificate.
+     *
+     * @return The issuer of the certificate.
+     */
     public X500Name getIssuer() {
         if (this.issuer == null) {
             this.issuer = new X500Name(this.certificateHolder.getIssuer());
@@ -68,22 +107,47 @@ public class X509Certificate {
         return this.issuer;
     }
 
+    /**
+     * Gives the <code>Date</code> at which this certificate becomes valid.
+     *
+     * @return The <code>Date</code> at which this certificate becomes valid.
+     */
     public Date getNotBefore() {
         return this.certificateHolder.getNotBefore();
     }
 
+    /**
+     * Gives the <code>Date</code> at which this certificate becomes invalid.
+     *
+     * @return The <code>Date</code> at which this certificate becomes invalid.
+     */
     public Date getNotAfter() {
         return this.certificateHolder.getNotAfter();
     }
 
+    /**
+     * Gives the serial number of the certificate.
+     *
+     * @return The serial number.
+     */
     public BigInteger getSerialNumber() {
         return this.certificateHolder.getSerialNumber();
     }
 
+    /**
+     * Gives the version number of the certificate.
+     *
+     * @return The version number.
+     */
     public int getVersionNumber() {
         return this.certificateHolder.getVersionNumber();
     }
 
+    /**
+     * Gives a string representation of the sha-256 digest of the certificate.
+     *
+     * @return The sha-256 digest of the certificate.
+     */
     public String getSHA256() {
         if (this.sha256 == null) {
             try {
@@ -98,6 +162,11 @@ public class X509Certificate {
         return this.sha256;
     }
 
+    /**
+     * Gives a string representation of the sha-1 digest of the certificate.
+     *
+     * @return The sha-1 digest of the certificate.
+     */
     public String getSHA1() {
         if (this.sha1 == null) {
             try {
@@ -112,6 +181,11 @@ public class X509Certificate {
         return this.sha1;
     }
 
+    /**
+     * Gives a string representation of the md-5 digest of the certificate.
+     *
+     * @return The md-5 digest of the certificate.
+     */
     public String getMD5() {
         if (this.md5 == null) {
             try {
@@ -126,6 +200,11 @@ public class X509Certificate {
         return this.md5;
     }
 
+    /**
+     * Gives the <code>PublicKey</code> part of the certificate.
+     *
+     * @return The <code>PublicKey</code>.
+     */
     public PublicKey getPublicKey() {
         if (this.publicKey == null) {
             this.publicKey = new PublicKey(this.certificateHolder.getSubjectPublicKeyInfo());

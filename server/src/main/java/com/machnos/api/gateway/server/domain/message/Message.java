@@ -17,12 +17,46 @@
 
 package com.machnos.api.gateway.server.domain.message;
 
+/**
+ * Class representing a message that can be send to, or received from a client.
+ */
 public interface Message {
 
+    /**
+     * Gives the <code>Headers</code> that belong to the <code>Message</code>.
+     *
+     * @return The <code>Headers</code> of the <code>Message</code>.
+     */
     Headers getHeaders();
+
+    /**
+     * Gives the body/payload of the message.
+     *
+     * @return The body of the message.
+     */
     String getBody();
+
+    /**
+     * Sets the body of the message.
+     *
+     * @param body The body to set.
+     */
     void setBody(String body);
 
-    boolean isHttp();
-    HttpMessage getHttpMessage();
+    /**
+     * Boolean indicating this message is an <code>HttpMessage</code>.
+     *
+     * @return <code>true</code> if this message is an <code>HttpMessage</code>, <code>false</code> otherwise.
+     */
+    default boolean isHttp() {return false;}
+
+    /**
+     * Gives this <code>Message</code> as <code>HttpMessage</code>.
+     *
+     * @return This <code>Message</code> as <code>HttpMessage</code>, or <code>null</code> when this <code>Message</code>
+     * is not an <code>HttpMessage</code>.
+     *
+     * @see #isHttp()
+     */
+    default HttpMessage getHttpMessage() {return null;}
 }

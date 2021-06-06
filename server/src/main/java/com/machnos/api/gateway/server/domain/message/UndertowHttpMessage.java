@@ -19,26 +19,35 @@ package com.machnos.api.gateway.server.domain.message;
 
 import io.undertow.server.HttpServerExchange;
 
+/**
+ * <code>HttpMessage</code> implementation backed by the Undertow <code>HttpServerExchange</code>.
+ */
 public class UndertowHttpMessage implements HttpMessage {
 
-    public enum Type {
-        REQUEST, RESPONSE;
-
-        public boolean isRequest() {
-            return Type.REQUEST.equals(this);
-        }
-
-        public boolean isResponse() {
-            return Type.RESPONSE.equals(this);
-        }
-    }
-
+    /**
+     * The message body.
+     */
     private String body;
 
+    /**
+     * The Undertow <code>HttpServerExchange</code>.
+     */
     private final HttpServerExchange httpServerExchange;
+    /**
+     * The http message type.
+     */
     private final Type type;
+    /**
+     * The <code>UndertowHeaders</code>.
+     */
     private final UndertowHeaders headers;
 
+    /**
+     * Constructs a new <code>UndertowHttpMessage</code> instance.
+     *
+     * @param httpServerExchange The <code>HttpServerExchange</code> that holds all values encapsulated by this class.
+     * @param type The http message type.
+     */
     public UndertowHttpMessage(HttpServerExchange httpServerExchange, Type type) {
         super();
         this.httpServerExchange = httpServerExchange;

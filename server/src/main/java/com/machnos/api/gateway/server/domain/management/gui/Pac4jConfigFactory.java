@@ -26,6 +26,9 @@ import org.pac4j.core.matching.matcher.csrf.DefaultCsrfTokenGenerator;
 import org.pac4j.http.client.indirect.FormClient;
 import org.pac4j.http.credentials.authenticator.test.SimpleTestUsernamePasswordAuthenticator;
 
+/**
+ * The PAC4j Configuration factory used by the management gui.
+ */
 public class Pac4jConfigFactory implements ConfigFactory {
 
     @Override

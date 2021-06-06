@@ -17,5 +17,8 @@
 
 package com.machnos.api.gateway.server.domain.idm;
 
+/**
+ * Tagging interface for all credentials.
+ */
 public interface Credentials {
 }

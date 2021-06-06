@@ -15,33 +15,7 @@
  * under the License.
  */
 
-package com.machnos.api.gateway.server.domain.idm;
-
 /**
- * Credentials in the form of a password(phrase).
+ * Domain classes that represent the Java Key Store functionality.
  */
-public class PasswordCredentials implements Credentials {
-
-    /**
-     * The password.
-     */
-    private final char[] password;
-
-    /**
-     * Constructs a new <code>PasswordCredentials</code> instance.
-     *
-     * @param password The password.
-     */
-    public PasswordCredentials(char[] password) {
-        this.password = password;
-    }
-
-    /**
-     * Gives the password.
-     *
-     * @return The password.
-     */
-    public char[] getPassword() {
-        return this.password;
-    }
-}
+package com.machnos.api.gateway.server.domain.keystore;

@@ -36,7 +36,7 @@ public class Launcher {
     private static final Logger logger = LogManager.getLogger();
 
     public static void main(String[] args) {
-        Configuration configuration = null;
+        Configuration configuration = new Configuration();
         try {
             configuration = Configuration.load(new File(Configuration.CONFIG_DIRECTORY, "machnos.yml"));
         } catch (IOException e) {

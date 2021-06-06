@@ -17,8 +17,47 @@
 
 package com.machnos.api.gateway.server.domain.message;
 
+/**
+ * Class representing a message that is based on an http request or response.
+ */
 public interface HttpMessage extends Message {
 
+    /**
+     * The http message type.
+     */
+    enum Type {
+        /**
+         * Enum representing an http request.
+         */
+        REQUEST,
+        /**
+         * Enum representing an http response.
+         */
+        RESPONSE;
+
+        /**
+         * Determine if this <code>Type</code> is an http request.
+         *
+         * @return <code>true</code> when this <code>Type</code> is an http request, <code>false</code> otherwise.
+         */
+        public boolean isRequest() {
+            return Type.REQUEST.equals(this);
+        }
+
+        /**
+         * Determine if this <code>Type</code> is an http response.
+         *
+         * @return <code>true</code> when this <code>Type</code> is an http response, <code>false</code> otherwise.
+         */
+        public boolean isResponse() {
+            return Type.RESPONSE.equals(this);
+        }
+    }
+
+
+    /**
+     * The http status code for unauthorized request.
+     */
     int STATUS_CODE_UNAUTHORIZED = 401;
 
     @Override

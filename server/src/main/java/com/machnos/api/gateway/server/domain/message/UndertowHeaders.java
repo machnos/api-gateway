@@ -25,16 +25,36 @@ import io.undertow.util.HttpString;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <code>Headers</code> implementation backed by the Undertow <code>HttpServerExchange</code>.
+ */
 public class UndertowHeaders implements Headers {
 
+    /**
+     * The <code>HttpServerExchange</code> containing all headers.
+     */
     private final HttpServerExchange httpServerExchange;
+    /**
+     * The http message type.
+     */
     private final UndertowHttpMessage.Type type;
 
+    /**
+     * Constructs a new <code>UndertowHeaders</code> instance.
+     *
+     * @param httpServerExchange The <code>HttpSererExchange</code> holding all message header.
+     * @param type The http message type.
+     */
     public UndertowHeaders(HttpServerExchange httpServerExchange, UndertowHttpMessage.Type type) {
         this.httpServerExchange = httpServerExchange;
         this.type = type;
     }
 
+    /**
+     * Gives the Undertow <code>HeaderMap</code> containing all http headers.
+     *
+     * @return The Undertow <code>HeaderMap</code>.
+     */
     private HeaderMap getHeaderMap() {
         return this.type.isRequest() ? this.httpServerExchange.getRequestHeaders() : this.httpServerExchange.getResponseHeaders();
     }

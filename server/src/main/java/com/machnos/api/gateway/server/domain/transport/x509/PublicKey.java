@@ -24,12 +24,15 @@ import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.asn1.x9.X9ObjectIdentifiers;
 import org.bouncycastle.crypto.params.AsymmetricKeyParameter;
-import org.bouncycastle.crypto.params.DSAPublicKeyParameters;
+import org.bouncycastle.crypto.params.ECKeyParameters;
 import org.bouncycastle.crypto.params.RSAKeyParameters;
 import org.bouncycastle.crypto.util.PublicKeyFactory;
 
 import java.io.IOException;
 
+/**
+ * Class representing a Public Key.
+ */
 public class PublicKey {
 
     /**
@@ -37,31 +40,50 @@ public class PublicKey {
      */
     private static final Logger logger = LogManager.getLogger();
 
+    /**
+     * The public key info.
+     */
     private final SubjectPublicKeyInfo subjectPublicKeyInfo;
 
+    /**
+     * Constructs a new <code>PublicKey</code> instance based.
+     *
+     * @param subjectPublicKeyInfo The <code>SubjectPublicKeyInfo</code> that is wrapped by this class.
+     */
     public PublicKey(SubjectPublicKeyInfo subjectPublicKeyInfo) {
         this.subjectPublicKeyInfo = subjectPublicKeyInfo;
     }
 
+    /**
+     * Gives a string representation of the algorithm of the <code>PublicKey</code>.
+     *
+     * @return The name of the algorithm, or "UNKNOWN" if the algorithm is not known.
+     */
     public String getAlgorithm() {
         AlgorithmIdentifier algorithm = this.subjectPublicKeyInfo.getAlgorithm();
-        // Found in org.bouncycastle.cert.crmf.jcajce.CRMFHelper
-        // TODO check if this can be done easier.
         if (algorithm.getAlgorithm().equals(PKCSObjectIdentifiers.rsaEncryption)) {
             return "RSA";
-        } else if (algorithm.getAlgorithm().equals(X9ObjectIdentifiers.id_dsa)) {
-            return "DSA";
+        } else if (algorithm.getAlgorithm().equals(X9ObjectIdentifiers.id_ecPublicKey)) {
+            return "EC";
+        }
+        if (logger.isInfoEnabled()) {
+            logger.info(String.format("Unknown algorithm: '%s'", algorithm.getAlgorithm().getId()));
         }
         return "UNKNOWN";
     }
 
+    /**
+     * Returns the bit length of the key.
+     *
+     * @return The bit length of the key, or -1 if it cannot be determined.
+     */
     public int getKeySize() {
         try {
             AsymmetricKeyParameter keyParameter = PublicKeyFactory.createKey(this.subjectPublicKeyInfo);
             if (keyParameter instanceof final RSAKeyParameters rsaKeyParameters) {
                 return rsaKeyParameters.getModulus().bitLength();
-            } else if (keyParameter instanceof final DSAPublicKeyParameters dsaPublicKeyParameters) {
-                return dsaPublicKeyParameters.getY().bitLength();
+            } else if (keyParameter instanceof final ECKeyParameters ecKeyParameters) {
+                return ecKeyParameters.getParameters().getN().bitLength();
             }
             if (logger.isInfoEnabled()) {
                 logger.info(String.format("Unknown key type: '%s'", keyParameter.getClass().getName()));

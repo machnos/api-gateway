@@ -53,7 +53,7 @@ public class ApiHttpHandler implements HttpHandler {
             executionContext.executeApi(api);
         }
         if (responseMessage.getBody() != null) {
-            exchange.getResponseSender().send(executionContext.parse(responseMessage.getBody()), Charset.defaultCharset());
+            exchange.getResponseSender().send(executionContext.parseVariableAsString(responseMessage.getBody()), Charset.defaultCharset());
         }
         exchange.endExchange();
     }

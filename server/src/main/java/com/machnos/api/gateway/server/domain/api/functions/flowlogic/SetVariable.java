@@ -58,7 +58,7 @@ public class SetVariable extends AbstractFunction  {
         if (getName() == null) {
             return RESULT_NAME_NOT_SET;
         }
-        executionContext.getVariables().setVariable(getVariableName(), getVariableValue() instanceof String ? executionContext.parse((String) getVariableValue()) : getVariableValue());
+        executionContext.getVariables().setVariable(getVariableName(), getVariableValue() instanceof String ? executionContext.parseVariableAsString((String) getVariableValue()) : getVariableValue());
         return Result.succeed();
     }
 

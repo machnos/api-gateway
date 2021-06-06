@@ -29,9 +29,7 @@ public class MachnosException extends RuntimeException {
     public static final int INVALID_INTERFACE = 200_000;
 
     // 301_* reserved for function errors.
-    public static final int MISSING_VARIABLE = 301_000;
-    public static final int MISSING_VALUE = 301_001;
-    public static final int OBJECT_IS_IMMUTABLE = 301_002;
+    public static final int OBJECT_IS_IMMUTABLE = 301_000;
 
 
     private final int errorCode;

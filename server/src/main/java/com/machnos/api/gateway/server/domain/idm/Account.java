@@ -17,16 +17,36 @@
 
 package com.machnos.api.gateway.server.domain.idm;
 
+/**
+ * An <code>Account</code> represents an user of system identity.
+ */
 public class Account {
 
+    /**
+     * The username of the account.
+     */
     private final String username;
+    /**
+     * The credentials of the account.
+     */
     private final Credentials credentials;
 
+    /**
+     * Constructs a new <code>Account</code> instance.
+     *
+     * @param username The username of the user/system the <code>Account/<code> belongs to.
+     * @param credentials The credentials for authenticating the user/system.
+     */
     public Account(String username, Credentials credentials) {
         this.username = username;
         this.credentials = credentials;
     }
 
+    /**
+     * Gives the username of the <code>Account</code>.
+     *
+     * @return The username of the <code>Account</code>.
+     */
     public String getUsername() {
         return this.username;
     }

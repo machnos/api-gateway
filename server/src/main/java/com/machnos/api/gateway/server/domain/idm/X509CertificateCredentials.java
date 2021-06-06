@@ -19,14 +19,30 @@ package com.machnos.api.gateway.server.domain.idm;
 
 import com.machnos.api.gateway.server.domain.transport.x509.X509Certificate;
 
-public class X509CertificateCredentials implements Credentials{
+/**
+ * Credentials in the form of a X509 certificate
+ */
+public class X509CertificateCredentials implements Credentials {
 
+    /**
+     * The <code>X509Certificate</code>.
+     */
     private final X509Certificate x509Certificate;
 
+    /**
+     * Constructs a new <code>X509CertificateCredentials</code> instance.
+     *
+     * @param x509Certificate The <code>X509Certificate</code>.
+     */
     public X509CertificateCredentials(X509Certificate x509Certificate) {
         this.x509Certificate = x509Certificate;
     }
 
+    /**
+     * Gives the <code>X509Certificate</code>.
+     *
+     * @return The <code>X509Certificate</code>.
+     */
     public X509Certificate getX509Certificate() {
         return this.x509Certificate;
     }

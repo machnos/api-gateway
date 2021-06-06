@@ -123,7 +123,7 @@ public class VariableParser {
      * @param executionContext The <code>ExecutionContext</code> that contains all variables.
      * @return The parsed input.
      */
-    public String parse(String input, ExecutionContext executionContext) {
+    public String parseAsString(String input, ExecutionContext executionContext) {
         if (input == null) {
             return null;
         }
