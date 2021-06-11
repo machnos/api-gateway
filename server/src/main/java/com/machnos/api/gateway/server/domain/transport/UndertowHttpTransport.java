@@ -18,14 +18,39 @@
 package com.machnos.api.gateway.server.domain.transport;
 
 import io.undertow.server.HttpServerExchange;
+import io.undertow.util.Protocols;
 
+/**
+ * <code>Transport</code> implementation that is backed by the Undertow <code>HttpServerExchange</code>.
+ */
 public class UndertowHttpTransport implements HttpTransport {
 
+    /**
+     * The alias that is configured with this transport.
+     */
     private final String interfaceAlias;
+
+    /**
+     * The Undertow <code>HttpServerExchange</code>.
+     */
     private final HttpServerExchange httpServerExchange;
+
+    /**
+     * The <code>Security</code> implementation for Undertow.
+     */
     private final UndertowSecurity security;
+
+    /**
+     * The <code>RequestURL</code> implementation for Undertow.
+     */
     private final UndertowRequestURL requestUrl;
 
+    /**
+     * Constructs a new <code>UndertowHttpTransport</code> instance.
+     *
+     * @param interfaceAlias The alias of the interface that received the connection.
+     * @param httpServerExchange The Undertow <code>HttpServerExchange</code> that is wrapped by this class.
+     */
     public UndertowHttpTransport(String interfaceAlias, HttpServerExchange httpServerExchange) {
         this.interfaceAlias = interfaceAlias;
         this.httpServerExchange = httpServerExchange;
@@ -62,6 +87,11 @@ public class UndertowHttpTransport implements HttpTransport {
     }
 
     @Override
+    public boolean isHttp20() {
+        return Protocols.HTTP_2_0.equals(this.httpServerExchange.getProtocol());
+    }
+
+    @Override
     public String getRequestMethod() {
         return this.httpServerExchange.getRequestMethod().toString();
     }
@@ -72,12 +102,12 @@ public class UndertowHttpTransport implements HttpTransport {
     }
 
     @Override
-    public int getStatusCode() {
+    public int getResponseStatusCode() {
         return this.httpServerExchange.getStatusCode();
     }
 
     @Override
-    public void setStatusCode(int statusCode) {
+    public void setResponseStatusCode(int statusCode) {
         this.httpServerExchange.setStatusCode(statusCode);
     }
 }

@@ -26,10 +26,21 @@ import io.undertow.server.HttpServerExchange;
 
 import java.nio.charset.Charset;
 
+/**
+ * An Undertow <code>HttpHandler</code> that is capable of dispatching a request to a certain <code>Api</code>.
+ */
 public class ApiHttpHandler implements HttpHandler {
 
+    /**
+     * The alias of the interface that has received the request.
+     */
     private final String interfaceAlias;
 
+    /**
+     * Constructs a new <code>ApiHttpHandler</code>.
+     *
+     * @param interfaceAlias The alias of the interface that has received the request.
+     */
     public ApiHttpHandler(String interfaceAlias) {
         this.interfaceAlias = interfaceAlias;
     }

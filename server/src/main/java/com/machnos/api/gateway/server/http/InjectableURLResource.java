@@ -32,11 +32,28 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.stream.Collectors;
 
+/**
+ * <code>URLResource</code> implementation that is capable of replacing variables with actual values.
+ */
 public class InjectableURLResource extends URLResource {
 
+    /**
+     * The name of the cluster.
+     */
     private final String clusterName;
+
+    /**
+     * The URL to wrap.
+     */
     private final URL url;
 
+    /**
+     * Constructs a new <code>InjectableURLResource</code> instance.
+     *
+     * @param url The <code>URL</code> to wrap.
+     * @param path The path.
+     * @param clusterName The name of the Machnos Api Gateway cluster.
+     */
     public InjectableURLResource(final URL url, final String path, final String clusterName) {
         super(url, path);
         this.url = url;
@@ -80,10 +97,16 @@ public class InjectableURLResource extends URLResource {
         }
     }
 
+    /**
+     * Boolean indicating the resource should be checked for injectable variables.
+     *
+     * @return <code>true</code> when the resource should be inspected, <code>false</code> otherwise.
+     */
     private boolean couldBeInjected() {
         return getPath().toLowerCase().endsWith(".html");
     }
 
+    @Override
     public void serveImpl(final Sender sender, final HttpServerExchange exchange, final long start, final long end, final boolean range, final IoCallback completionCallback) {
 
         class ServerTask implements Runnable, IoCallback {

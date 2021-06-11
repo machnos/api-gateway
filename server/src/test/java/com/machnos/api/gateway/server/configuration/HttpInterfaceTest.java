@@ -30,6 +30,9 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
  */
 public class HttpInterfaceTest {
 
+    /**
+     * Test getting the listen addresses when an interface name is used.
+     */
     @Test
     public void testGetListenInetAddressesOnNetworkInterfaces() {
         try {
@@ -64,6 +67,9 @@ public class HttpInterfaceTest {
         }
     }
 
+    /**
+     * The getting the listen addresses when a hostname is used.
+     */
     @Test
     public void testGetListenInetAddressesOnHostNames() {
         try {

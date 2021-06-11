@@ -27,6 +27,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  */
 public class VariablesTest {
 
+    /**
+     * Test getting variables.
+     */
     @Test
     public void testAddGetVariable() {
         final var variables = new Variables();
@@ -41,8 +44,11 @@ public class VariablesTest {
         assertNull(variables.getVariable(varName));
     }
 
+    /**
+     * Test getting variables when using multiple scopes.
+     */
     @Test
-    public void testMultiLevel() {
+    public void testMultiScopes() {
         final var variables = new Variables();
         final var varNameLevel1 = "level1";
         final var varNameLevel2 = "level2";

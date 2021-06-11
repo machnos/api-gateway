@@ -31,29 +31,55 @@ public class MachnosException extends RuntimeException {
     // 301_* reserved for function errors.
     public static final int OBJECT_IS_IMMUTABLE = 301_000;
 
-
+    /**
+     * The error code of the <code>MachnosException</code>
+     */
     private final int errorCode;
+
+    /**
+     * The variables that will be applied in the error message.
+     */
     private final String[] variables;
 
+    /**
+     * Constructs a new <code>MachnosException</code> instance.
+     *
+     * @param errorCode The error code for this exception.
+     */
     public MachnosException(int errorCode) {
         super();
         this.errorCode = errorCode;
         this.variables = null;
     }
 
+    /**
+     * Constructs a new <code>MachnosException</code> instance.
+     *
+     * @param errorCode The error code for this exception.
+     * @param variables The variables to be applied in the error message.
+     */
     public MachnosException(int errorCode, String... variables) {
         super();
         this.errorCode = errorCode;
         this.variables = variables;
     }
 
+    /**
+     * Constructs a new <code>MachnosException</code> instance.
+     *
+     * @param errorCode The error code for this exception.
+     * @param cause The root cause of this <code>MachnosException</code>.
+     */
     public MachnosException(int errorCode, Throwable cause) {
         super(cause);
         this.errorCode = errorCode;
         this.variables = null;
     }
 
-
+    /**
+     * Gives the error code of this <code>MachnosException</code>.
+     * @return The error code.
+     */
     public int getErrorCode() {
         return errorCode;
     }

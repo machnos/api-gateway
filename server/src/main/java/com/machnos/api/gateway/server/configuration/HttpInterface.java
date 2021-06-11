@@ -37,18 +37,53 @@ public class HttpInterface {
      */
     private static final Logger logger = LogManager.getLogger();
 
+    /**
+     * The suffix for IPv4 addresses.
+     */
     public static final String IPV4_SUFFIX = ":ipv4";
+    /**
+     * The suffix for IPv6 addresses.
+     */
     public static final String IPV6_SUFFIX = ":ipv6";
-
+    /**
+     * The alias of the interface. By giving each interface an alias, api's can be restricted to certain interfaces based on their names.
+     */
     public String alias;
+    /**
+     * The interface to listen on.
+     */
     public String listenInterface = "127.0.0.1";
+    /**
+     * The port to listen on.
+     */
     public int listenPort = 8443;
+    /**
+     * The TLS protocol to apply.
+     */
     public String[] tlsProtocols = new String[] { "TLSv1.3" };
+    /**
+     * The allowed cipher suites.
+     */
     public String[] cipherSuites = new String[] { "TLS_AES_256_GCM_SHA384", "TLS_CHACHA20_POLY1305_SHA256", "TLS_AES_128_GCM_SHA256", "TLS_AES_128_CCM_8_SHA256", "TLS_AES_128_CCM_SHA256" };
+    /**
+     * The location of the keystore that holds the server certificates.
+     */
     public File keystoreLocation = new File(Configuration.CONFIG_DIRECTORY, "keystore.jks");
+    /**
+     * The password of the keystore.
+     */
     public String keystorePassword;
+    /**
+     * The keystore type.
+     */
     public String keystoreType = "JKS";
+    /**
+     * The password of the entry in the keystore that holds the server keypair.
+     */
     public String serverEntryPassword;
+    /**
+     * The client authentication mode. Can be required, requested or not_requested.
+     */
     public String tlsClientAuthenticationMode = "requested";
 
     /**

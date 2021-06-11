@@ -17,13 +17,58 @@
 
 package com.machnos.api.gateway.server.domain.transport;
 
+/**
+ * Class representing a request URL.
+ */
 public interface RequestURL {
 
+    /**
+     * Gives the scheme of the URL.
+     *
+     * @return The scheme.
+     */
     String getScheme();
+
+    /**
+     * Gives the hostname or ip address of the URL.
+     *
+     * @return The hostname or ip address.
+     */
     String getHost();
+
+    /**
+     * Gives the port number of the URL.
+     *
+     * @return The port number.
+     */
     int getPort();
+
+    /**
+     * Gives the path of the URL.
+     *
+     * @return The path.
+     */
     String getPath();
+
+    /**
+     * Gives the query string of the url.
+     *
+     * @return The query string.
+     */
     String getQuery();
+
+    /**
+     * Gives the value of a query parameter.
+     *
+     * @param parameterName The name query of the parameter.
+     * @return The value of the query parameter, or <code>null</code> when the parameter does not exists.
+     */
     String getQueryParameter(String parameterName);
+
+    /**
+     * Gives the fragment of the URL.
+     *
+     * @return The fragment.
+     */
     String getFragment();
 }

@@ -25,11 +25,27 @@ import io.undertow.server.handlers.resource.ResourceManager;
 import java.io.IOException;
 import java.net.URL;
 
+/**
+ * <code>ResourceManager</code> implementation that can serve content found on the classpath.
+ */
 public class InjectingClasspathResourceManager implements ResourceManager {
 
+    /**
+     * The root package to search for content.
+     */
     private final String rootPackage;
+
+    /**
+     * The name of the Machnos Api Gateway cluster.
+     */
     private final String clusterName;
 
+    /**
+     * Constructs a new <code>InjectingClasspathResourceManager</code> instance.
+     *
+     * @param rootPackage The root package to search for content.
+     * @param clusterName The name of the Machnos Api Gateway cluster.
+     */
     public InjectingClasspathResourceManager(String rootPackage, String clusterName) {
         if (rootPackage.isEmpty()) {
             this.rootPackage = "";

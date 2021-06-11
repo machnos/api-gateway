@@ -222,8 +222,8 @@ public class VariableParser {
             return transport.isHttp() ? transport.getHttpTransport().getRequestMethod() : null;
         } else if (variable.startsWith("http.request.url")) {
             return transport.isHttp() ? getRequestURLValue(variable.substring("http.request.url".length()), transport.getHttpTransport().getRequestURL()) : null;
-        } else if (variable.equals("statuscode")) {
-            return transport.isHttp() ? transport.getHttpTransport().getStatusCode() : null;
+        } else if (variable.equals("http.response.statuscode")) {
+            return transport.isHttp() ? transport.getHttpTransport().getResponseStatusCode() : null;
         } else if (variable.startsWith(SECURITY_VARIABLE_PREFIX)) {
             return getSecurityValue(variable.substring(SECURITY_VARIABLE_PREFIX_LENGTH), transport.getSecurity());
         } else if ("http.ishttp09".equals(variable)) {
@@ -232,6 +232,8 @@ public class VariableParser {
             return transport.isHttp() && transport.getHttpTransport().isHttp10();
         } else if ("http.ishttp11".equals(variable)) {
             return transport.isHttp() && transport.getHttpTransport().isHttp11();
+        } else if ("http.ishttp20".equals(variable)) {
+            return transport.isHttp() && transport.getHttpTransport().isHttp20();
         } else if ("interfacealias".equals(variable)) {
             return transport.getInterfaceAlias();
         } else if ("ishttp".equals(variable)) {

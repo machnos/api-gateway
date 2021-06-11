@@ -17,6 +17,9 @@
 
 package com.machnos.api.gateway.server.domain.transport;
 
+/**
+ * Class representing the communication with a client via the HTTP protocol.
+ */
 public interface HttpTransport extends Transport {
 
     @Override
@@ -25,13 +28,60 @@ public interface HttpTransport extends Transport {
     @Override
     default HttpTransport getHttpTransport() {return this;}
 
+    /**
+     * Determine if version 0.9 of the HTTP protocol is used as a transport mechanism.
+     *
+     * @return <code>true</code> when version 0.9 of the HTTP protocol is used <code>false</code> otheriwse.
+     */
     boolean isHttp09();
+
+    /**
+     * Determine if version 1.0 of the HTTP protocol is used as a transport mechanism.
+     *
+     * @return <code>true</code> when version 1.0 of the HTTP protocol is used <code>false</code> otheriwse.
+     */
     boolean isHttp10();
+
+    /**
+     * Determine if version 1.1 of the HTTP protocol is used as a transport mechanism.
+     *
+     * @return <code>true</code> when version 1.1 of the HTTP protocol is used <code>false</code> otheriwse.
+     */
     boolean isHttp11();
 
+    /**
+     * Determine if version 2.0 of the HTTP protocol is used as a transport mechanism.
+     *
+     * @return <code>true</code> when version 2.0 of the HTTP protocol is used <code>false</code> otheriwse.
+     */
+    boolean isHttp20();
+
+    /**
+     * Gives the request method that was used when sending the request.
+     *
+     * @return The request method.
+     */
     String getRequestMethod();
+
+    /**
+     * Gives the <code>RequestURL</code> to which the request message was sent.
+     *
+     * @return The <code>RequestURL</code> to which the request message was sent.
+     */
     RequestURL getRequestURL();
-    int getStatusCode();
-    void setStatusCode(int statusCode);
+
+    /**
+     * Gives the http status code that is, or will be send to the client.
+     *
+     * @return The http status code.
+     */
+    int getResponseStatusCode();
+
+    /**
+     * Sets the http status code that will be send to the client.
+     *
+     * @param statusCode The http status code.
+     */
+    void setResponseStatusCode(int statusCode);
 
 }

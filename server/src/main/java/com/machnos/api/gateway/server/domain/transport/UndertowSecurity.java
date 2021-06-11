@@ -25,6 +25,9 @@ import org.apache.logging.log4j.Logger;
 import javax.net.ssl.SSLPeerUnverifiedException;
 import java.util.Arrays;
 
+/**
+ * <code>Security</code> implementation that is backed by the Undertow <code>HttpServerExchange</code>.
+ */
 public class UndertowSecurity implements Security {
 
     /**
@@ -32,8 +35,16 @@ public class UndertowSecurity implements Security {
      */
     private static final Logger logger = LogManager.getLogger();
 
+    /**
+     * The Undertow <code>HttpServerExchange</code>.
+     */
     private final HttpServerExchange httpServerExchange;
 
+    /**
+     * Constructs a new <code>UndertowSecurity</code> instance.
+     *
+     * @param httpServerExchange The Undertow <code>HttpServerExchange</code> that is wrapped by this class.
+     */
     public UndertowSecurity(HttpServerExchange httpServerExchange) {
         this.httpServerExchange = httpServerExchange;
     }

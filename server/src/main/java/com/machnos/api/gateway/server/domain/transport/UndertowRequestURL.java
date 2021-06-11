@@ -19,10 +19,21 @@ package com.machnos.api.gateway.server.domain.transport;
 
 import io.undertow.server.HttpServerExchange;
 
+/**
+ * <code>RequestURL</code> implementation that is backed by the Undertow <code>HttpServerExchange</code>.
+ */
 public class UndertowRequestURL implements RequestURL {
 
+    /**
+     * The Undertow <code>HttpServerExchange</code>.
+     */
     private final HttpServerExchange httpServerExchange;
 
+    /**
+     * Constructs a new <code>UndertowRequestURL</code> instance.
+     *
+     * @param httpServerExchange The Undertow <code>HttpServerExchange</code> that is wrapped by this class.
+     */
     public UndertowRequestURL(HttpServerExchange httpServerExchange) {
         this.httpServerExchange = httpServerExchange;
     }

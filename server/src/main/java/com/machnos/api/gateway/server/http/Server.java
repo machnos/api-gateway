@@ -127,6 +127,13 @@ public class Server {
         this.server = builder.build();
     }
 
+    /**
+     * Add a listener interface to the <code>Undertow.Builder</code>.
+     *
+     * @param httpInterface The interface configuration.
+     * @param rootHandler The root handler that handles all requests.
+     * @param builder The <code>Undertow.Builder</code> to add the interface to.
+     */
     private void addListenInterface(HttpInterface httpInterface, HttpHandler rootHandler, Undertow.Builder builder) {
         if (httpInterface.keystoreLocation != null && httpInterface.tlsProtocols != null && httpInterface.tlsProtocols.length > 0) {
             if (!httpInterface.keystoreLocation.exists()) {

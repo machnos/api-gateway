@@ -29,30 +29,55 @@ import java.security.spec.ECGenParameterSpec;
 import java.security.spec.RSAKeyGenParameterSpec;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Test class for the <code>PublicKey</code> class.
  */
 public class PublicKeyTest {
 
+    /**
+     * Test getting the variables from a RSA public key.
+     */
     @Test
-    public void testRSAPublicKey() throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
+    public void testRSAPublicKey()  {
         final var algorithm = "RSA";
         final var keySize = 4096;
-        final var publicKey = createPublicKey(algorithm, new RSAKeyGenParameterSpec(keySize, RSAKeyGenParameterSpec.F0));
-        assertEquals(algorithm, publicKey.getAlgorithm());
-        assertEquals(keySize, publicKey.getKeySize());
+        try {
+            final var publicKey = createPublicKey(algorithm, new RSAKeyGenParameterSpec(keySize, RSAKeyGenParameterSpec.F0));
+            assertEquals(algorithm, publicKey.getAlgorithm());
+            assertEquals(keySize, publicKey.getKeySize());
+        } catch (NoSuchAlgorithmException | InvalidAlgorithmParameterException e) {
+            fail(e);
+        }
     }
 
+    /**
+     * Test getting the variables from an EC public key.
+     */
     @Test
-    public void testECPublicKey() throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
+    public void testECPublicKey() {
         final var algorithm = "EC";
         final var keySize = 384;
-        final var publicKey = createPublicKey(algorithm, new ECGenParameterSpec("P-" + keySize));
-        assertEquals(algorithm, publicKey.getAlgorithm());
-        assertEquals(keySize, publicKey.getKeySize());
+        try {
+            final var publicKey = createPublicKey(algorithm, new ECGenParameterSpec("P-" + keySize));
+            assertEquals(algorithm, publicKey.getAlgorithm());
+            assertEquals(keySize, publicKey.getKeySize());
+        } catch (NoSuchAlgorithmException | InvalidAlgorithmParameterException e) {
+            fail(e);
+        }
     }
 
+    /**
+     * Creates a <code>PublicKey</code>
+     *
+     * @param algorithm The name of the algorithm to use.
+     * @param algorithmParameterSpec The parameter specifications for the algorithm.
+     * @return The <code>PublicKey</code>.
+     *
+     * @throws NoSuchAlgorithmException When an unknown algorithm is used.
+     * @throws InvalidAlgorithmParameterException When an invalid parameter specification is used.
+     */
     private PublicKey createPublicKey(String algorithm, AlgorithmParameterSpec algorithmParameterSpec) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
         final var keyPairGenerator = KeyPairGenerator.getInstance(algorithm, new BouncyCastleProvider());
         keyPairGenerator.initialize(algorithmParameterSpec);

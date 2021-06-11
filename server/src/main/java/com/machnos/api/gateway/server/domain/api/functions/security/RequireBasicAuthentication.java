@@ -132,7 +132,7 @@ public class RequireBasicAuthentication extends AbstractFunction {
         final var headers = executionContext.getRequestMessage().getHeaders();
         if (!headers.contains(Headers.HTTP_AUTHORIZATION)) {
             // If no Authorization header is found, we need to send a challenge.
-            executionContext.getTransport().getHttpTransport().setStatusCode(HttpMessage.STATUS_CODE_UNAUTHORIZED);
+            executionContext.getTransport().getHttpTransport().setResponseStatusCode(HttpMessage.STATUS_CODE_UNAUTHORIZED);
             responseMessage.getHeaders().set(Headers.HTTP_WWW_AUTHENTICATE, getChallenge());
             return RESULT_NO_AUTHORIZATION_HEADER;
         }
