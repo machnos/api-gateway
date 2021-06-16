@@ -122,6 +122,15 @@ public class X500Name {
     }
 
     /**
+     * Gives the email address.
+     *
+     * @return The email address, or <code>null</code> when there is no email address.
+     */
+    public String getE() {
+        return getValue(BCStyle.E);
+    }
+
+    /**
      * Gives the user id.
      *
      * @return The user id, or <code>null</code> when there is no user id.
