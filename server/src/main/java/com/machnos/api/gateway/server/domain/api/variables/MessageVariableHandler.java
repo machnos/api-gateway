@@ -72,14 +72,13 @@ public class MessageVariableHandler extends AbstractVariableHandler<Message> {
             if (variable.endsWith(AbstractVariableHandler.SUFFIX_COLLECTION_SIZE)) {
                 final var headerName = variable.substring(PREFIX_HEADER_LENGTH, variable.length() - SUFFIX_COLLECTION_SIZE_LENGTH);
                 final var values = message.getHeaders().get(headerName);
-                if (values == null) {
-                    return 0;
-                }
-                return values.size();
+                return values == null ? 0 : values.size();
             }
-            //TODO support {.header[n]} format
-
-            // Return the header list.
+            final var matcher = AbstractVariableHandler.COLLECTION_INDEX_PATTERN.matcher(variable);
+            if (matcher.matches()) {
+                final int index = Integer.parseInt(matcher.group(2));
+                return message.getHeaders().get(matcher.group(1).substring(PREFIX_HEADER_LENGTH), index);
+            }
             return message.getHeaders().get(variable.substring(PREFIX_HEADER_LENGTH));
         } else if (IS_HTTP.equals(variable)) {
             return message.isHttp();

@@ -40,7 +40,12 @@ public class MockHeaders implements Headers {
     }
 
     @Override
-    public String getNth(String headerName, int index) {
+    public List<String> get(String headerName) {
+        return this.headers.get(headerName);
+    }
+
+    @Override
+    public String get(String headerName, int index) {
         if (this.headers.containsKey(headerName)) {
             final var values = this.headers.get(headerName);
             if (values == null || index < 0 || index >= values.size() ) {
@@ -49,11 +54,6 @@ public class MockHeaders implements Headers {
             return values.get(index);
         }
         return null;
-    }
-
-    @Override
-    public List<String> get(String headerName) {
-        return this.headers.get(headerName);
     }
 
     @Override

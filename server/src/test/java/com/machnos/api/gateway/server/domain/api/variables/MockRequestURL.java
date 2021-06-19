@@ -19,6 +19,7 @@ package com.machnos.api.gateway.server.domain.api.variables;
 
 import com.machnos.api.gateway.server.domain.transport.RequestURL;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -53,7 +54,7 @@ class MockRequestURL implements RequestURL {
     /**
      * The query parameters.
      */
-    private Map<String, String> queryParameters;
+    private final Map<String, String> queryParameters = new HashMap<>();
 
     @Override
     public String getScheme() {

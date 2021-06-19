@@ -66,7 +66,7 @@ public class UndertowHeaders implements Headers {
     }
 
     @Override
-    public String getNth(String headerName, int index) {
+    public String get(String headerName, int index) {
         List<String> values = get(headerName);
         if (values == null || index < 0 || index >= values.size()) {
             return null;

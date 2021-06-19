@@ -17,6 +17,8 @@
 
 package com.machnos.api.gateway.server.domain.api.variables;
 
+import java.util.regex.Pattern;
+
 /**
  * Abstract superclass for all <code>VariableHandler</code> implementations.
  *
@@ -40,6 +42,10 @@ public abstract class AbstractVariableHandler<T> implements VariableHandler<T> {
      * The length of the variable suffix to retrieve the size of collections.
      */
     protected static final int SUFFIX_COLLECTION_SIZE_LENGTH = SUFFIX_COLLECTION_SIZE.length();
+    /**
+     * The regex <code>Pattern</code> to find the nth element of a collection.
+     */
+    protected static final Pattern COLLECTION_INDEX_PATTERN = Pattern.compile("(.*)\\[(\\d*)]");
 
     /**
      * Determines the variable name on the child object.

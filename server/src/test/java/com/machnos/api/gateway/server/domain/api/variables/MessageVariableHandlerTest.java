@@ -131,6 +131,23 @@ public class MessageVariableHandlerTest extends AbstractVariableHandlerTest<Mess
     }
 
     /**
+     * Test getting the nth value of a header.
+     */
+    @Test
+    public void testGetHeaderValueAtIndex() {
+        final var variableHandler = getHandlerInstance();
+        final var message = getObjectToHandle();
+        final var headers = new MockHeaders();
+        message.setHeaders(headers);
+        final var values = new ArrayList<String>();
+        values.add("value1");
+        values.add("value2");
+        values.add("value3");
+        headers.set("name", values);
+        assertEquals("value2", variableHandler.getValue(MessageVariableHandler.PREFIX_HEADER + "name[1]", message));
+    }
+
+    /**
      * Test getting is http value.
      */
     @Test

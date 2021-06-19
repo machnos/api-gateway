@@ -52,7 +52,7 @@ public interface Headers {
      * @param index The index of the header value.
      * @return The nth value of a header with the given headerName, or <code>null</code> when no such header exists.
      */
-    String getNth(String headerName, int index);
+    String get(String headerName, int index);
 
     /**
      * Gives the values of a header with the given headerName.
