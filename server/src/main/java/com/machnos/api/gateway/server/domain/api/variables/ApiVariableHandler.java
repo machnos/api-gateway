@@ -36,7 +36,9 @@ public class ApiVariableHandler extends AbstractVariableHandler<Api> {
 
     @Override
     public Object getValue(String variable, Api api) {
-        if (NO_VARIABLE.equals(variable)) {
+        if (variable == null || api == null) {
+            return null;
+        } else if (NO_VARIABLE.equals(variable)) {
             return api;
         } else if (NAME.equals(variable)) {
             return api.getName();

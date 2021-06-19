@@ -64,4 +64,22 @@ public abstract class AbstractVariableHandlerTest<T extends VariableHandler<U>, 
         assertNull(variableHandler.getValue(null, handledObject));
     }
 
+    /**
+     * Test the behaviour of retrieving a variable without supplying a handled object.
+     */
+    @Test
+    public void testNullHandledObject() {
+        final var variableHandler  = getHandlerInstance();
+        assertNull(variableHandler.getValue("Non Existing", null));
+    }
+
+    /**
+     * Test the behaviour of retrieving a variable that does not exist.
+     */
+    @Test
+    public void testNotExistingVariableName() {
+        final var variableHandler  = getHandlerInstance();
+        final var handledObject = getObjectToHandle();
+        assertNull(variableHandler.getValue("Non Existing", handledObject));
+    }
 }

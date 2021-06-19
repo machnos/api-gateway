@@ -17,27 +17,35 @@
 
 package com.machnos.api.gateway.server.domain.api.variables;
 
-import com.machnos.api.gateway.server.domain.idm.Account;
+import com.machnos.api.gateway.server.domain.transport.HttpTransport;
+import com.machnos.api.gateway.server.domain.transport.Security;
+import com.machnos.api.gateway.server.domain.transport.Transport;
 
-/**
- * <code>VariableHandler</code> implementation that can handle values of an <code>Account</code> instance.
- */
-public class AccountVariableHandler extends AbstractVariableHandler<Account> {
+class MockTransport implements Transport {
 
-    /**
-     * The username variable.
-     */
-    public static final String USERNAME = "username";
 
     @Override
-    public Object getValue(String variable, Account account) {
-        if (variable == null || account == null) {
-            return null;
-        } else if (NO_VARIABLE.equals(variable)) {
-            return account;
-        } else if (USERNAME.equals(variable)) {
-            return account.getUsername();
-        }
+    public String getInterfaceAlias() {
+        return null;
+    }
+
+    @Override
+    public boolean isSecure() {
+        return false;
+    }
+
+    @Override
+    public Security getSecurity() {
+        return null;
+    }
+
+    @Override
+    public boolean isHttp() {
+        return false;
+    }
+
+    @Override
+    public HttpTransport getHttpTransport() {
         return null;
     }
 }

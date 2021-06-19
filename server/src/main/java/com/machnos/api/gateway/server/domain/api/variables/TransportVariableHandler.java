@@ -64,7 +64,9 @@ public class TransportVariableHandler extends AbstractVariableHandler<Transport>
 
     @Override
     public Object getValue(String variable, Transport transport) {
-        if (NO_VARIABLE.equals(variable)) {
+        if (variable == null || transport == null) {
+            return null;
+        } else if (NO_VARIABLE.equals(variable)) {
             return transport;
         } else if (variable.startsWith(PREFIX_HTTP)) {
             if (!transport.isHttp()) {

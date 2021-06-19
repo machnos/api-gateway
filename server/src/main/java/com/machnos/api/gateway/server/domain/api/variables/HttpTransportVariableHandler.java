@@ -64,7 +64,9 @@ public class HttpTransportVariableHandler extends AbstractVariableHandler<HttpTr
 
     @Override
     public Object getValue(String variable, HttpTransport httpTransport) {
-        if (NO_VARIABLE.equals(variable)) {
+        if (variable == null || httpTransport == null) {
+            return null;
+        } else if (NO_VARIABLE.equals(variable)) {
             return httpTransport;
         } else if (REQUEST_METHOD.equals(variable)) {
             return httpTransport.getRequestMethod();

@@ -71,7 +71,9 @@ public class X500NameVariableHandler extends AbstractVariableHandler<X500Name>{
 
     @Override
     public Object getValue(String variable, X500Name x500Name) {
-        if (NO_VARIABLE.equals(variable)) {
+        if (variable == null || x500Name == null) {
+            return null;
+        } else if (NO_VARIABLE.equals(variable)) {
             return x500Name;
         } else if (DISTINGUISHED_NAME.equals(variable)) {
             return x500Name.getDN();

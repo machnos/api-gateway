@@ -18,7 +18,6 @@
 package com.machnos.api.gateway.server.domain.api.variables;
 
 import com.machnos.api.gateway.server.domain.api.Api;
-import com.machnos.api.gateway.server.domain.api.ExecutionContext;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,8 +33,8 @@ public class ApiVariableHandlerTest extends AbstractVariableHandlerTest<ApiVaria
     }
 
     @Override
-    protected DummyApi getObjectToHandle() {
-        return new DummyApi();
+    protected MockApi getObjectToHandle() {
+        return new MockApi();
     }
 
     /**
@@ -43,10 +42,11 @@ public class ApiVariableHandlerTest extends AbstractVariableHandlerTest<ApiVaria
      */
     @Test
     public void testGetName() {
-        final var variableHanlder = getHandlerInstance();
+        final var variableHandler = getHandlerInstance();
         final var api = getObjectToHandle();
-        api.setName("DummyApiName");
-        assertEquals(api.getName(), variableHanlder.getValue(ApiVariableHandler.NAME, api));
+        final var name = "DummyApiName";
+        api.setName(name);
+        assertEquals(name, variableHandler.getValue(ApiVariableHandler.NAME, api));
     }
 
     /**
@@ -54,56 +54,11 @@ public class ApiVariableHandlerTest extends AbstractVariableHandlerTest<ApiVaria
      */
     @Test
     public void testGetContextRoot() {
-        final var variableHanlder = getHandlerInstance();
+        final var variableHandler = getHandlerInstance();
         final var api = getObjectToHandle();
-        api.setContextRoot("/api/dummy");
-        assertEquals(api.getContextRoot(), variableHanlder.getValue(ApiVariableHandler.CONTEXT_ROOT, api));
+        final var contextRoot = "/api/dummy";
+        api.setContextRoot(contextRoot);
+        assertEquals(contextRoot, variableHandler.getValue(ApiVariableHandler.CONTEXT_ROOT, api));
     }
 
-    /**
-     * Dummy <code>Api</code> implementation with setter methods for all properties.
-     */
-    private static class DummyApi implements Api {
-
-        /**
-         * The name of the <code>Api</code>.
-         */
-        private String name;
-        /**
-         * The context root of the <code>Api</code>.
-         */
-        private String contextRoot;
-
-        @Override
-        public String getName() {
-            return this.name;
-        }
-
-        /**
-         * Sets the name of the <code>Api</code>.
-         *
-         * @param name The name to set.
-         */
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String getContextRoot() {
-            return this.contextRoot;
-        }
-
-        /**
-         * Sets the context root of the <code>Api</code>.
-         *
-         * @param contextRoot The context root to set.
-         */
-        public void setContextRoot(String contextRoot) {
-            this.contextRoot = contextRoot;
-        }
-
-        @Override
-        public void handleRequest(ExecutionContext executionContext) {
-        }
-    }
 }

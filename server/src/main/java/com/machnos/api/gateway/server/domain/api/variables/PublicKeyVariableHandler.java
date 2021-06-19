@@ -35,10 +35,11 @@ public class PublicKeyVariableHandler extends AbstractVariableHandler<PublicKey>
 
     @Override
     public Object getValue(String variable, PublicKey publicKey) {
-        if (NO_VARIABLE.equals(variable)) {
+        if (variable == null || publicKey == null) {
+            return null;
+        } else if (NO_VARIABLE.equals(variable)) {
             return publicKey;
-        }
-        if (ALGORITHM.equals(variable)) {
+        } else if (ALGORITHM.equals(variable)) {
             return publicKey.getAlgorithm();
         } else if (SIZE.equals(variable)) {
             return publicKey.getKeySize();

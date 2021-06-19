@@ -90,7 +90,9 @@ public class X509CertificateVariableHandler extends AbstractVariableHandler<X509
 
     @Override
     public Object getValue(String variable, X509Certificate x509Certificate) {
-        if (NO_VARIABLE.equals(variable)) {
+        if (variable == null || x509Certificate == null) {
+            return null;
+        } else if (NO_VARIABLE.equals(variable)) {
             return x509Certificate;
         } else if (variable.startsWith(PREFIX_SUBJECT)) {
             return this.x500NameVariableHandler.getValue(determineChildObjectVariableName(variable, PREFIX_SUBJECT_LENGTH), x509Certificate.getSubject());

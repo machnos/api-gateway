@@ -59,7 +59,9 @@ public class RequestURLVariableHandler extends AbstractVariableHandler<RequestUR
 
     @Override
     public Object getValue(String variable, RequestURL requestURL) {
-        if (NO_VARIABLE.equals(variable)) {
+        if (variable == null || requestURL == null) {
+            return null;
+        } else if (NO_VARIABLE.equals(variable)) {
             return requestURL;
         } else if (SCHEME.equals(variable)) {
             return requestURL.getScheme();

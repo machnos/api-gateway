@@ -56,7 +56,9 @@ public class SecurityVariableHandler extends AbstractVariableHandler<Security> {
 
     @Override
     public Object getValue(String variable, Security security) {
-        if (NO_VARIABLE.equals(variable)) {
+        if (variable == null || security == null) {
+            return null;
+        } else if (NO_VARIABLE.equals(variable)) {
             return security;
         } else if (CIPHER_SUITE.equals(variable)) {
             return security.getCipherSuite();

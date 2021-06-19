@@ -43,7 +43,9 @@ public class MessageVariableHandler extends AbstractVariableHandler<Message> {
 
     @Override
     public Object getValue(String variable, Message message) {
-        if (NO_VARIABLE.equals(variable)) {
+        if (variable == null || message == null) {
+            return null;
+        } else if (NO_VARIABLE.equals(variable)) {
             return message;
         } else if (BODY.equals(variable)) {
             return message.getBody();
