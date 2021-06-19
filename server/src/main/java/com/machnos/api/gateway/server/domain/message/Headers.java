@@ -46,12 +46,13 @@ public interface Headers {
     boolean contains(String headerName);
 
     /**
-     * Gives the first value of a header with the given headerName.
+     * Gives the nth value of a header with the given headerName.
      *
      * @param headerName The name of the header that contains the value.
-     * @return The first value of a header with the given headerName, or <code>null</code> when no such header exists.
+     * @param index The index of the header value.
+     * @return The nth value of a header with the given headerName, or <code>null</code> when no such header exists.
      */
-    String getFirst(String headerName);
+    String getNth(String headerName, int index);
 
     /**
      * Gives the values of a header with the given headerName.
@@ -68,4 +69,26 @@ public interface Headers {
      * @param headerValue The value the header should have.
      */
     void set(String headerName, String headerValue);
+
+    /**
+     * Sets multiple header values. When a header with the given headerName already exists, it's values will be overwritten.
+     *
+     * @param headerName The name of the header values to set.
+     * @param headerValues The values the header should have.
+     */
+    void set(String headerName, List<String> headerValues);
+
+    /**
+     * Gives a list of available header names.
+     *
+     * @return A (possible empty) list of header names.
+     */
+    List<String> getHeaderNames();
+
+    /**
+     * Gives the number of entries that are stored with this <code>Headers</code> instance.
+     *
+     * @return The number of entries.
+     */
+    int getSize();
 }

@@ -20,7 +20,7 @@ package com.machnos.api.gateway.server.domain.api.variables;
 import com.machnos.api.gateway.server.domain.api.Api;
 
 /**
- * <code>VariableHandler</code> implementation that can handle values of an <code>Aou</code> instance.
+ * <code>VariableHandler</code> implementation that can handle values of an <code>Api</code> instance.
  */
 public class ApiVariableHandler extends AbstractVariableHandler<Api> {
 

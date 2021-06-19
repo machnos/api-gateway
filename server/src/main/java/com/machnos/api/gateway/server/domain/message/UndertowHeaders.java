@@ -24,6 +24,7 @@ import io.undertow.util.HttpString;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <code>Headers</code> implementation backed by the Undertow <code>HttpServerExchange</code>.
@@ -65,8 +66,12 @@ public class UndertowHeaders implements Headers {
     }
 
     @Override
-    public String getFirst(String headerName) {
-        return getHeaderMap().getFirst(headerName);
+    public String getNth(String headerName, int index) {
+        List<String> values = get(headerName);
+        if (values == null || index < 0 || index >= values.size()) {
+            return null;
+        }
+        return values.get(index);
     }
 
     @Override
@@ -88,6 +93,28 @@ public class UndertowHeaders implements Headers {
             httpString = new HttpString(headerName);
         }
         getHeaderMap().put(httpString, headerValue);
+    }
+
+    @Override
+    public void set(String headerName, List<String> headerValues) {
+        if (this.type.isRequest()) {
+            throw new MachnosException(MachnosException.OBJECT_IS_IMMUTABLE, "headers");
+        }
+        HttpString httpString = io.undertow.util.Headers.fromCache(headerName);
+        if (httpString == null) {
+            httpString = new HttpString(headerName);
+        }
+        getHeaderMap().putAll(httpString, headerValues);
+    }
+
+    @Override
+    public List<String> getHeaderNames() {
+        return getHeaderMap().getHeaderNames().stream().map(HttpString::toString).collect(Collectors.toList());
+    }
+
+    @Override
+    public int getSize() {
+        return getHeaderMap().size();
     }
 
 }

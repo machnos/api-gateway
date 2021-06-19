@@ -25,6 +25,18 @@ import com.machnos.api.gateway.server.domain.message.Message;
 public class MessageVariableHandler extends AbstractVariableHandler<Message> {
 
     /**
+     * The headers variable.
+     */
+    public static final String HEADERS = "headers";
+    /**
+     * The headers size variable.
+     */
+    public static final String HEADERS_SIZE = HEADERS + AbstractVariableHandler.SUFFIX_COLLECTION_SIZE;
+    /**
+     * The headers names variable.
+     */
+    public static final String HEADERS_NAMES = HEADERS + AbstractVariableHandler.OBJECT_DIVIDER + "names";
+    /**
      * The prefix for the header variables.
      */
     public static final String PREFIX_HEADER = "header" + AbstractVariableHandler.OBJECT_DIVIDER;
@@ -49,6 +61,12 @@ public class MessageVariableHandler extends AbstractVariableHandler<Message> {
             return message;
         } else if (BODY.equals(variable)) {
             return message.getBody();
+        } else if (HEADERS.equals(variable)) {
+            return message.getHeaders();
+        } else if (HEADERS_SIZE.equals(variable)) {
+            return message.getHeaders().getSize();
+        } else if (HEADERS_NAMES.equals(variable)) {
+            return message.getHeaders().getHeaderNames();
         } else if (variable.startsWith(PREFIX_HEADER)) {
             // Headers form a collection. First check if we need to provide the size.
             if (variable.endsWith(AbstractVariableHandler.SUFFIX_COLLECTION_SIZE)) {
