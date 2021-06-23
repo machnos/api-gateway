@@ -313,6 +313,5 @@ public class Server {
         final var cert = new JcaX509CertificateConverter()
                 .setProvider(new BouncyCastleProvider()).getCertificate(certificateBuilder.build(contentSigner));
         keyStoreWrapper.setKeyEntry(SELF_SIGNED_CERT_ALIAS, keyPair.getPrivate(), httpInterface.getServerEntryPasswordAsCharArray(), new Certificate[] {cert});
-
     }
 }
