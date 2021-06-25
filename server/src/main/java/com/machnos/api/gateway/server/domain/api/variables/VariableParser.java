@@ -41,9 +41,13 @@ public class VariableParser {
      */
     private static final int VARIABLE_SUFFIX_LENGTH = VARIABLE_SUFFIX.length();
     /**
+     * The the <code>Account</code> variables.
+     */
+    private static final String ACCOUNT = "account";
+    /**
      * The prefix of the <code>Account</code> variables.
      */
-    private static final String ACCOUNT_VARIABLE_PREFIX = "account.";
+    private static final String ACCOUNT_VARIABLE_PREFIX = ACCOUNT + ".";
     /**
      * The length of the prefix of the <code>Account</code> variables.
      */
@@ -65,17 +69,25 @@ public class VariableParser {
      */
     private static final int TRANSPORT_VARIABLE_PREFIX_LENGTH = TRANSPORT_VARIABLE_PREFIX.length();
     /**
+     * The request <code>Message</code> variables.
+     */
+    private static final String REQUEST = "request";
+    /**
      * The prefix of the request <code>Message</code> variables.
      */
-    private static final String REQUEST_VARIABLE_PREFIX = "request.";
+    private static final String REQUEST_VARIABLE_PREFIX = REQUEST + ".";
     /**
      * The length of the prefix of the request <code>Message</code> variables.
      */
     private static final int REQUEST_VARIABLE_PREFIX_LENGTH = REQUEST_VARIABLE_PREFIX.length();
     /**
+     * The response <code>Message</code> variables.
+     */
+    private static final String RESPONSE = "response";
+    /**
      * The prefix of the response <code>Message</code> variables.
      */
-    private static final String RESPONSE_VARIABLE_PREFIX = "response.";
+    private static final String RESPONSE_VARIABLE_PREFIX = RESPONSE + ".";
     /**
      * The length of the prefix of the response <code>Message</code> variables.
      */
@@ -136,15 +148,21 @@ public class VariableParser {
      * @param executionContext The <code>ExecutionContext</code> that contains all variables.
      * @return The value of the variable, or <code>null</code> when the variable does not exists.
      */
-    private Object getValue(String variableName, ExecutionContext executionContext) {
+    public Object getValue(String variableName, ExecutionContext executionContext) {
         if (variableName == null) {
             return null;
         }
         final var variable = variableName.toLowerCase();
-        if (variable.startsWith(REQUEST_VARIABLE_PREFIX)) {
+        if (variable.equals(REQUEST)) {
+            return executionContext.getRequestMessage();
+        } else if (variable.startsWith(REQUEST_VARIABLE_PREFIX)) {
             return executionContext.getRequestMessage() != null ? this.messageVariableHandler.getValue(variable.substring(REQUEST_VARIABLE_PREFIX_LENGTH), executionContext.getRequestMessage()) : null;
+        } else if (variable.equals(RESPONSE)) {
+            return executionContext.getResponseMessage();
         } else if (variable.startsWith(RESPONSE_VARIABLE_PREFIX)) {
             return executionContext.getResponseMessage() != null ? this.messageVariableHandler.getValue(variable.substring(RESPONSE_VARIABLE_PREFIX_LENGTH), executionContext.getResponseMessage()) : null;
+        } else if (variable.equals(ACCOUNT)) {
+            return executionContext.getAccount();
         } else if (variable.startsWith(ACCOUNT_VARIABLE_PREFIX)) {
             return executionContext.getAccount() != null ? this.accountVariableHandler.getValue(variable.substring(ACCOUNT_VARIABLE_PREFIX_LENGTH), executionContext.getAccount()) : null;
         } else if (variable.startsWith(TRANSPORT_VARIABLE_PREFIX)) {
