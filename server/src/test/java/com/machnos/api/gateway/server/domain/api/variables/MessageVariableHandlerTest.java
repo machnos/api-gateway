@@ -18,6 +18,8 @@
 package com.machnos.api.gateway.server.domain.api.variables;
 
 import com.machnos.api.gateway.server.domain.message.Message;
+import com.machnos.api.gateway.server.domain.message.MockHeaders;
+import com.machnos.api.gateway.server.domain.message.MockMessage;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

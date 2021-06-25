@@ -63,7 +63,7 @@ public class X500NameVariableHandler extends AbstractVariableHandler<X500Name>{
     /**
      * The email address variable.
      */
-    public static final String EMAIL = "e";
+    public static final String EMAIL_ADDRESS = "e";
     /**
      * The user id variable.
      */
@@ -93,7 +93,7 @@ public class X500NameVariableHandler extends AbstractVariableHandler<X500Name>{
             return x500Name.getStreet();
         } else if (DOMAIN_COMPONENT.equals(variable)) {
             return x500Name.getDC();
-        } else if (EMAIL.equals(variable)) {
+        } else if (EMAIL_ADDRESS.equals(variable)) {
             return x500Name.getE();
         } else if (USER_ID.equals(variable)) {
             return x500Name.getUID();

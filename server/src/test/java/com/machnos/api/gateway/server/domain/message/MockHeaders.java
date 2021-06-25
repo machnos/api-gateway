@@ -15,9 +15,7 @@
  * under the License.
  */
 
-package com.machnos.api.gateway.server.domain.api.variables;
-
-import com.machnos.api.gateway.server.domain.message.Headers;
+package com.machnos.api.gateway.server.domain.message;
 
 import java.util.ArrayList;
 import java.util.HashMap;

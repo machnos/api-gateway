@@ -15,9 +15,7 @@
  * under the License.
  */
 
-package com.machnos.api.gateway.server.domain.api.variables;
-
-import com.machnos.api.gateway.server.domain.transport.RequestURL;
+package com.machnos.api.gateway.server.domain.transport;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +23,7 @@ import java.util.Map;
 /**
  * Mock <code>RequestURL</code> implementation with setter methods for all properties.
  */
-class MockRequestURL implements RequestURL {
+public class MockRequestURL implements RequestURL {
 
     /**
      * The scheme.

@@ -17,6 +17,7 @@
 
 package com.machnos.api.gateway.server.domain.api.variables;
 
+import com.machnos.api.gateway.server.domain.transport.MockSecurity;
 import com.machnos.api.gateway.server.domain.transport.Security;
 import com.machnos.api.gateway.server.domain.transport.x509.X509Certificate;
 import org.bouncycastle.asn1.x500.X500Name;
@@ -43,6 +44,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Test class for the <code>SecurityVariableHandler</code> class.
  */
 public class SecurityVariableHandlerTest extends AbstractVariableHandlerTest<SecurityVariableHandler, Security> {
+
     @Override
     protected SecurityVariableHandler getHandlerInstance() {
         return new SecurityVariableHandler();

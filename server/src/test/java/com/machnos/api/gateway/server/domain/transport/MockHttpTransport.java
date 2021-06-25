@@ -15,15 +15,12 @@
  * under the License.
  */
 
-package com.machnos.api.gateway.server.domain.api.variables;
-
-import com.machnos.api.gateway.server.domain.transport.HttpTransport;
-import com.machnos.api.gateway.server.domain.transport.RequestURL;
+package com.machnos.api.gateway.server.domain.transport;
 
 /**
  * Mock <code>HttpTransport</code> implementation with setter methods for all properties.
  */
-class MockHttpTransport extends MockTransport implements HttpTransport {
+public class MockHttpTransport extends MockTransport implements HttpTransport {
 
     /**
      * Boolean indicating the <code>HttpTransport</code> implements version 0.9 of the http protocol.

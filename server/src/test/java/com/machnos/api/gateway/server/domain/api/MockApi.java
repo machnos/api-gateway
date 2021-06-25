@@ -15,15 +15,12 @@
  * under the License.
  */
 
-package com.machnos.api.gateway.server.domain.api.variables;
-
-import com.machnos.api.gateway.server.domain.api.Api;
-import com.machnos.api.gateway.server.domain.api.ExecutionContext;
+package com.machnos.api.gateway.server.domain.api;
 
 /**
  * Mock <code>Api</code> implementation with setter methods for all properties.
  */
-class MockApi implements Api {
+public class MockApi implements Api {
 
     /**
      * The name of the <code>Api</code>.

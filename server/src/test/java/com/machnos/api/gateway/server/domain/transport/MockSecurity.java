@@ -15,9 +15,8 @@
  * under the License.
  */
 
-package com.machnos.api.gateway.server.domain.api.variables;
+package com.machnos.api.gateway.server.domain.transport;
 
-import com.machnos.api.gateway.server.domain.transport.Security;
 import com.machnos.api.gateway.server.domain.transport.x509.X509Certificate;
 
 /**

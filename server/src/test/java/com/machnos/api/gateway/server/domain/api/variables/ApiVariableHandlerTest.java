@@ -18,6 +18,7 @@
 package com.machnos.api.gateway.server.domain.api.variables;
 
 import com.machnos.api.gateway.server.domain.api.Api;
+import com.machnos.api.gateway.server.domain.api.MockApi;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

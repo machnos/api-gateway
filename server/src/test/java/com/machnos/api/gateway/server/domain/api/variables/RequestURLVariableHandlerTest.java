@@ -17,6 +17,7 @@
 
 package com.machnos.api.gateway.server.domain.api.variables;
 
+import com.machnos.api.gateway.server.domain.transport.MockRequestURL;
 import com.machnos.api.gateway.server.domain.transport.RequestURL;
 import org.junit.jupiter.api.Test;
 

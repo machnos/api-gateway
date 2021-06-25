@@ -54,7 +54,6 @@ public abstract class AbstractVariableHandler<T> implements VariableHandler<T> {
      *
      * @param variable The variable to inspect.
      * @param fromIndex The index to start inspecting.
-     *
      * @return The variable name on the child object.
      */
     protected String determineChildObjectVariableName(String variable, int fromIndex) {
@@ -62,6 +61,6 @@ public abstract class AbstractVariableHandler<T> implements VariableHandler<T> {
         if (childVariable.length() > 0 && OBJECT_DIVIDER == childVariable.charAt(0)) {
             return childVariable.substring(1);
         }
-        return variable.substring(fromIndex);
+        return childVariable;
     }
 }

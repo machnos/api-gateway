@@ -15,10 +15,7 @@
  * under the License.
  */
 
-package com.machnos.api.gateway.server.domain.api.variables;
-
-import com.machnos.api.gateway.server.domain.message.Headers;
-import com.machnos.api.gateway.server.domain.message.Message;
+package com.machnos.api.gateway.server.domain.message;
 
 /**
  * Mock <code>Headers</code> implementation with setter methods for all properties.
