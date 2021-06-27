@@ -53,17 +53,25 @@ public class VariableParser {
      */
     private static final int ACCOUNT_VARIABLE_PREFIX_LENGTH = ACCOUNT_VARIABLE_PREFIX.length();
     /**
+     * The <code>Api</code> variables.
+     */
+    private static final String API = "api";
+    /**
      * The prefix of the <code>Api</code> variables.
      */
-    private static final String API_VARIABLE_PREFIX = "api.";
+    private static final String API_VARIABLE_PREFIX = API + ".";
     /**
      * The length of the prefix of the <code>Api</code> variables.
      */
     private static final int API_VARIABLE_PREFIX_LENGTH = API_VARIABLE_PREFIX.length();
     /**
+     * The <code>Transport</code> variables.
+     */
+    private static final String TRANSPORT = "transport";
+    /**
      * The prefix of the <code>Transport</code> variables.
      */
-    private static final String TRANSPORT_VARIABLE_PREFIX = "transport.";
+    private static final String TRANSPORT_VARIABLE_PREFIX = TRANSPORT + ".";
     /**
      * The length of the prefix of the <code>Transport</code> variables.
      */
@@ -165,8 +173,12 @@ public class VariableParser {
             return executionContext.getAccount();
         } else if (variable.startsWith(ACCOUNT_VARIABLE_PREFIX)) {
             return executionContext.getAccount() != null ? this.accountVariableHandler.getValue(variable.substring(ACCOUNT_VARIABLE_PREFIX_LENGTH), executionContext.getAccount()) : null;
+        } else if (variable.equals(TRANSPORT)) {
+            return executionContext.getTransport();
         } else if (variable.startsWith(TRANSPORT_VARIABLE_PREFIX)) {
             return executionContext.getTransport() != null ? this.transportVariableHandler.getValue(variable.substring(TRANSPORT_VARIABLE_PREFIX_LENGTH), executionContext.getTransport()) : null;
+        } else if (variable.equals(API)) {
+            return executionContext.getApi();
         } else if (variable.startsWith(API_VARIABLE_PREFIX)) {
             return executionContext.getApi() != null ? this.apiVariableHandler.getValue(variable.substring(API_VARIABLE_PREFIX_LENGTH), executionContext.getApi()) : null;
         }
