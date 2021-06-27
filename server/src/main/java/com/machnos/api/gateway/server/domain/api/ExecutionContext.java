@@ -162,7 +162,7 @@ public class ExecutionContext {
      * @param variableName The name of the variable.
      * @return The value of the variable, or <code>null</code> if no such variable exists.
      */
-    public Object getVariable(String variableName) {
+    public <I> I getVariable(String variableName) {
         return this.variableParser.getValue(variableName, this);
     }
 }

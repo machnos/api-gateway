@@ -35,15 +35,16 @@ public class ApiVariableHandler extends AbstractVariableHandler<Api> {
     public static final String CONTEXT_ROOT = "contextroot";
 
     @Override
-    public Object getValue(String variable, Api api) {
+    @SuppressWarnings("unchecked")
+    public <I> I getValue(String variable, Api api) {
         if (variable == null || api == null) {
             return null;
         } else if (NO_VARIABLE.equals(variable)) {
-            return api;
+            return (I) api;
         } else if (NAME.equals(variable)) {
-            return api.getName();
+            return (I) api.getName();
         } else if (CONTEXT_ROOT.equals(variable)) {
-            return api.getContextRoot();
+            return (I) api.getContextRoot();
         }
         return null;
     }

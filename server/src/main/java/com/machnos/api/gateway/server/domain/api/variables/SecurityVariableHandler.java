@@ -64,19 +64,20 @@ public class SecurityVariableHandler extends AbstractVariableHandler<Security> {
     private final X509CertificateVariableHandler x509CertificateVariableHandler = new X509CertificateVariableHandler();
 
     @Override
-    public Object getValue(String variable, Security security) {
+    @SuppressWarnings("unchecked")
+    public <I> I getValue(String variable, Security security) {
         if (variable == null || security == null) {
             return null;
         } else if (NO_VARIABLE.equals(variable)) {
-            return security;
+            return (I) security;
         } else if (CIPHER_SUITE.equals(variable)) {
-            return security.getCipherSuite();
+            return (I) security.getCipherSuite();
         } else if (PROTOCOL.equals(variable)) {
-            return security.getProtocol();
+            return (I) security.getProtocol();
         } else if (variable.startsWith(REMOTE_CERTIFICATE_CHAIN)) {
-            return getValueFromCertificateChain(variable, security.getRemoteCertificateChain());
+            return (I) getValueFromCertificateChain(variable, security.getRemoteCertificateChain());
         } else if (variable.startsWith(LOCAL_CERTIFICATE_CHAIN)) {
-            return getValueFromCertificateChain(variable, security.getLocalCertificateChain());
+            return (I) getValueFromCertificateChain(variable, security.getLocalCertificateChain());
         } else if (variable.startsWith(PREFIX_REMOTE_CERTIFICATE)) {
             return security.getRemoteCertificate() != null
                     ? this.x509CertificateVariableHandler.getValue(determineChildObjectVariableName(variable, PREFIX_REMOTE_CERTIFICATE_LENGTH), security.getRemoteCertificate())

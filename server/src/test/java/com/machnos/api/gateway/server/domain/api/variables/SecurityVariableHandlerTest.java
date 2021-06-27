@@ -116,7 +116,7 @@ public class SecurityVariableHandlerTest extends AbstractVariableHandlerTest<Sec
         final var security = getObjectToHandle();
         final var x509CertificateChain = new X509Certificate[] { new X509Certificate(createCertificate()), new X509Certificate(createCertificate()) };
         security.setLocalCertificateChain(x509CertificateChain);
-        assertEquals(x509CertificateChain.length, variableHandler.getValue(SecurityVariableHandler.LOCAL_CERTIFICATE_CHAIN + AbstractVariableHandler.SUFFIX_COLLECTION_SIZE, security));
+        assertEquals(x509CertificateChain.length, (Integer) variableHandler.getValue(SecurityVariableHandler.LOCAL_CERTIFICATE_CHAIN + AbstractVariableHandler.SUFFIX_COLLECTION_SIZE, security));
     }
 
     /**
@@ -170,7 +170,7 @@ public class SecurityVariableHandlerTest extends AbstractVariableHandlerTest<Sec
         final var security = getObjectToHandle();
         final var x509CertificateChain = new X509Certificate[] { new X509Certificate(createCertificate()), new X509Certificate(createCertificate()) };
         security.setRemoteCertificateChain(x509CertificateChain);
-        assertEquals(x509CertificateChain.length, variableHandler.getValue(SecurityVariableHandler.REMOTE_CERTIFICATE_CHAIN + AbstractVariableHandler.SUFFIX_COLLECTION_SIZE, security));
+        assertEquals(x509CertificateChain.length, (Integer) variableHandler.getValue(SecurityVariableHandler.REMOTE_CERTIFICATE_CHAIN + AbstractVariableHandler.SUFFIX_COLLECTION_SIZE, security));
     }
 
     /**

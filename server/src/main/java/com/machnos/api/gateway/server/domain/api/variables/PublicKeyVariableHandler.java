@@ -34,15 +34,16 @@ public class PublicKeyVariableHandler extends AbstractVariableHandler<PublicKey>
     public static final String SIZE = "size";
 
     @Override
-    public Object getValue(String variable, PublicKey publicKey) {
+    @SuppressWarnings("unchecked")
+    public <I> I getValue(String variable, PublicKey publicKey) {
         if (variable == null || publicKey == null) {
             return null;
         } else if (NO_VARIABLE.equals(variable)) {
-            return publicKey;
+            return (I) publicKey;
         } else if (ALGORITHM.equals(variable)) {
-            return publicKey.getAlgorithm();
+            return (I) publicKey.getAlgorithm();
         } else if (SIZE.equals(variable)) {
-            return publicKey.getKeySize();
+            return (I) Integer.valueOf(publicKey.getKeySize());
         }
         return null;
     }

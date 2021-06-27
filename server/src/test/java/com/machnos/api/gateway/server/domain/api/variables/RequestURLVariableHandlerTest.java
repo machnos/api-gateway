@@ -71,7 +71,7 @@ public class RequestURLVariableHandlerTest extends AbstractVariableHandlerTest<R
         final var requestURL = getObjectToHandle();
         final var port = 8443;
         requestURL.setPort(port);
-        assertEquals(port, variableHandler.getValue(RequestURLVariableHandler.PORT, requestURL));
+        assertEquals(port, (Integer) variableHandler.getValue(RequestURLVariableHandler.PORT, requestURL));
     }
 
     /**

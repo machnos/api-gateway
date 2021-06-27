@@ -31,5 +31,5 @@ public interface VariableHandler<T> {
      * @param sourceObject The <code>T</code> instance containing the values.
      * @return The value of the variable, or the given <code>T</code> instance when the variable does not exists.
      */
-    Object getValue(String variable, T sourceObject);
+    <I> I getValue(String variable, T sourceObject);
 }

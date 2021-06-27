@@ -63,25 +63,26 @@ public class HttpTransportVariableHandler extends AbstractVariableHandler<HttpTr
     private final RequestURLVariableHandler requestURLVariableHandler = new RequestURLVariableHandler();
 
     @Override
-    public Object getValue(String variable, HttpTransport httpTransport) {
+    @SuppressWarnings("unchecked")
+    public <I> I getValue(String variable, HttpTransport httpTransport) {
         if (variable == null || httpTransport == null) {
             return null;
         } else if (NO_VARIABLE.equals(variable)) {
-            return httpTransport;
+            return (I) httpTransport;
         } else if (REQUEST_METHOD.equals(variable)) {
-            return httpTransport.getRequestMethod();
+            return (I) httpTransport.getRequestMethod();
         } else if (variable.startsWith(PREFIX_REQUEST_URL)) {
             return this.requestURLVariableHandler.getValue(determineChildObjectVariableName(variable, PREFIX_REQUEST_URL_LENGTH), httpTransport.getRequestURL());
         } else if (variable.equals(RESPONSE_STATUS_CODE)) {
-            return httpTransport.getResponseStatusCode();
+            return (I) Integer.valueOf(httpTransport.getResponseStatusCode());
         } else if (IS_HTTP_09.equals(variable)) {
-            return httpTransport.isHttp09();
+            return (I) Boolean.valueOf(httpTransport.isHttp09());
         } else if (IS_HTTP_10.equals(variable)) {
-            return httpTransport.isHttp10();
+            return (I) Boolean.valueOf(httpTransport.isHttp10());
         } else if (IS_HTTP_11.equals(variable)) {
-            return httpTransport.isHttp11();
+            return (I) Boolean.valueOf(httpTransport.isHttp11());
         } else if (IS_HTTP_20.equals(variable)) {
-            return httpTransport.isHttp20();
+            return (I) Boolean.valueOf(httpTransport.isHttp20());
         }
         return null;
     }

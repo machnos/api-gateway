@@ -74,6 +74,6 @@ public class PublicKeyVariableHandlerTest extends AbstractVariableHandlerTest<Pu
     public void testGetKeySize() {
         final var variableHandler = getHandlerInstance();
         final var publicKey = getObjectToHandle();
-        assertEquals(this.keySize, variableHandler.getValue(PublicKeyVariableHandler.SIZE, publicKey));
+        assertEquals(this.keySize, (Integer) variableHandler.getValue(PublicKeyVariableHandler.SIZE, publicKey));
     }
 }

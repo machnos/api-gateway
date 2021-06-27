@@ -156,32 +156,33 @@ public class VariableParser {
      * @param executionContext The <code>ExecutionContext</code> that contains all variables.
      * @return The value of the variable, or <code>null</code> when the variable does not exists.
      */
-    public Object getValue(String variableName, ExecutionContext executionContext) {
+    @SuppressWarnings("unchecked")
+    public <I> I getValue(String variableName, ExecutionContext executionContext) {
         if (variableName == null) {
             return null;
         }
         final var variable = variableName.toLowerCase();
         if (variable.equals(REQUEST)) {
-            return executionContext.getRequestMessage();
+            return (I) executionContext.getRequestMessage();
         } else if (variable.startsWith(REQUEST_VARIABLE_PREFIX)) {
             return executionContext.getRequestMessage() != null ? this.messageVariableHandler.getValue(variable.substring(REQUEST_VARIABLE_PREFIX_LENGTH), executionContext.getRequestMessage()) : null;
         } else if (variable.equals(RESPONSE)) {
-            return executionContext.getResponseMessage();
+            return (I) executionContext.getResponseMessage();
         } else if (variable.startsWith(RESPONSE_VARIABLE_PREFIX)) {
             return executionContext.getResponseMessage() != null ? this.messageVariableHandler.getValue(variable.substring(RESPONSE_VARIABLE_PREFIX_LENGTH), executionContext.getResponseMessage()) : null;
         } else if (variable.equals(ACCOUNT)) {
-            return executionContext.getAccount();
+            return (I) executionContext.getAccount();
         } else if (variable.startsWith(ACCOUNT_VARIABLE_PREFIX)) {
             return executionContext.getAccount() != null ? this.accountVariableHandler.getValue(variable.substring(ACCOUNT_VARIABLE_PREFIX_LENGTH), executionContext.getAccount()) : null;
         } else if (variable.equals(TRANSPORT)) {
-            return executionContext.getTransport();
+            return (I) executionContext.getTransport();
         } else if (variable.startsWith(TRANSPORT_VARIABLE_PREFIX)) {
             return executionContext.getTransport() != null ? this.transportVariableHandler.getValue(variable.substring(TRANSPORT_VARIABLE_PREFIX_LENGTH), executionContext.getTransport()) : null;
         } else if (variable.equals(API)) {
-            return executionContext.getApi();
+            return (I) executionContext.getApi();
         } else if (variable.startsWith(API_VARIABLE_PREFIX)) {
             return executionContext.getApi() != null ? this.apiVariableHandler.getValue(variable.substring(API_VARIABLE_PREFIX_LENGTH), executionContext.getApi()) : null;
         }
-        return executionContext.getVariables().getVariable(variableName);
+        return (I) executionContext.getVariables().getVariable(variableName);
     }
 }

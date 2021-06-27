@@ -76,9 +76,9 @@ public class MessageVariableHandlerTest extends AbstractVariableHandlerTest<Mess
         final var message = getObjectToHandle();
         final var headers = new MockHeaders();
         message.setHeaders(headers);
-        assertEquals(0, variableHandler.getValue(MessageVariableHandler.HEADERS_SIZE, message));
+        assertEquals(0, (Integer) variableHandler.getValue(MessageVariableHandler.HEADERS_SIZE, message));
         headers.set("name", "value");
-        assertEquals(1, variableHandler.getValue(MessageVariableHandler.HEADERS_SIZE, message));
+        assertEquals(1, (Integer) variableHandler.getValue(MessageVariableHandler.HEADERS_SIZE, message));
     }
 
     /**
@@ -95,7 +95,7 @@ public class MessageVariableHandlerTest extends AbstractVariableHandlerTest<Mess
         assertEquals(0, names.size());
 
         headers.set("name", "value");
-        names = (List<String>)variableHandler.getValue(MessageVariableHandler.HEADERS_NAMES, message);
+        names = variableHandler.getValue(MessageVariableHandler.HEADERS_NAMES, message);
         assertEquals(1, names.size());
     }
 

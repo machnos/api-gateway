@@ -58,25 +58,26 @@ public class RequestURLVariableHandler extends AbstractVariableHandler<RequestUR
     public static final String QUERY = "query";
 
     @Override
-    public Object getValue(String variable, RequestURL requestURL) {
+    @SuppressWarnings("unchecked")
+    public <I> I getValue(String variable, RequestURL requestURL) {
         if (variable == null || requestURL == null) {
             return null;
         } else if (NO_VARIABLE.equals(variable)) {
-            return requestURL;
+            return (I) requestURL;
         } else if (SCHEME.equals(variable)) {
-            return requestURL.getScheme();
+            return (I) requestURL.getScheme();
         } else if (HOST.equals(variable)) {
-            return requestURL.getHost();
+            return (I) requestURL.getHost();
         } else if (PORT.equals(variable)) {
-            return requestURL.getPort();
+            return (I) Integer.valueOf(requestURL.getPort());
         } else if (PATH.equals(variable)) {
-            return requestURL.getPath();
+            return (I) requestURL.getPath();
         } else if (FRAGMENT.equals(variable)) {
-            return requestURL.getFragment();
+            return (I) requestURL.getFragment();
         } else if (QUERY.equals(variable)) {
-            return requestURL.getQuery();
+            return (I) requestURL.getQuery();
         } else if (variable.startsWith(PREFIX_QUERY_PARAMETER)) {
-            return requestURL.getQueryParameter(determineChildObjectVariableName(variable, PREFIX_QUERY_PARAMETER_LENGTH));
+            return (I) requestURL.getQueryParameter(determineChildObjectVariableName(variable, PREFIX_QUERY_PARAMETER_LENGTH));
         }
         return null;
     }

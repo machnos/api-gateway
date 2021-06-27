@@ -89,11 +89,12 @@ public class X509CertificateVariableHandler extends AbstractVariableHandler<X509
     private final PublicKeyVariableHandler publicKeyVariableHandler = new PublicKeyVariableHandler();
 
     @Override
-    public Object getValue(String variable, X509Certificate x509Certificate) {
+    @SuppressWarnings("unchecked")
+    public <I> I getValue(String variable, X509Certificate x509Certificate) {
         if (variable == null || x509Certificate == null) {
             return null;
         } else if (NO_VARIABLE.equals(variable)) {
-            return x509Certificate;
+            return (I) x509Certificate;
         } else if (variable.startsWith(PREFIX_SUBJECT)) {
             return this.x500NameVariableHandler.getValue(determineChildObjectVariableName(variable, PREFIX_SUBJECT_LENGTH), x509Certificate.getSubject());
         } else if (variable.startsWith(PREFIX_ISSUER)) {
@@ -101,19 +102,19 @@ public class X509CertificateVariableHandler extends AbstractVariableHandler<X509
         } else if (variable.startsWith(PREFIX_KEY)) {
             return this.publicKeyVariableHandler.getValue(determineChildObjectVariableName(variable, PREFIX_KEY_LENGTH), x509Certificate.getPublicKey());
         } else if (NOT_BEFORE.equals(variable)) {
-            return x509Certificate.getNotBefore();
+            return (I) x509Certificate.getNotBefore();
         } else if (NOT_AFTER.equals(variable)) {
-            return x509Certificate.getNotAfter();
+            return (I) x509Certificate.getNotAfter();
         } else if (SERIAL.equals(variable)) {
-            return new String(Hex.encode(x509Certificate.getSerialNumber().toByteArray()));
+            return (I) new String(Hex.encode(x509Certificate.getSerialNumber().toByteArray()));
         } else if (VERSION.equals(variable)) {
-            return x509Certificate.getVersionNumber();
+            return (I) Integer.valueOf(x509Certificate.getVersionNumber());
         } else if (SHA256.equals(variable)) {
-            return x509Certificate.getSHA256();
+            return (I) x509Certificate.getSHA256();
         } else if (SHA1.equals(variable)) {
-            return x509Certificate.getSHA1();
+            return (I) x509Certificate.getSHA1();
         } else if (MD5.equals(variable)) {
-            return x509Certificate.getMD5();
+            return (I) x509Certificate.getMD5();
         }
         return null;
     }

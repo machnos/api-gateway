@@ -30,13 +30,14 @@ public class AccountVariableHandler extends AbstractVariableHandler<Account> {
     public static final String USERNAME = "username";
 
     @Override
-    public Object getValue(String variable, Account account) {
+    @SuppressWarnings("unchecked")
+    public <I> I getValue(String variable, Account account) {
         if (variable == null || account == null) {
             return null;
         } else if (NO_VARIABLE.equals(variable)) {
-            return account;
+            return (I) account;
         } else if (USERNAME.equals(variable)) {
-            return account.getUsername();
+            return (I) account.getUsername();
         }
         return null;
     }

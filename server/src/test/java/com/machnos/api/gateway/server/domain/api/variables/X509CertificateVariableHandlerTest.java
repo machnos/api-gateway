@@ -131,7 +131,7 @@ public class X509CertificateVariableHandlerTest extends AbstractVariableHandlerT
     public void testGetVersion() {
         final var variableHandler = getHandlerInstance();
         final var certificate = getObjectToHandle();
-        assertEquals(certificate.getVersionNumber(), variableHandler.getValue(X509CertificateVariableHandler.VERSION, certificate));
+        assertEquals(certificate.getVersionNumber(), (Integer) variableHandler.getValue(X509CertificateVariableHandler.VERSION, certificate));
     }
 
     /**

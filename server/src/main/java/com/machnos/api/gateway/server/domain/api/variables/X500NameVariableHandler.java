@@ -70,33 +70,34 @@ public class X500NameVariableHandler extends AbstractVariableHandler<X500Name>{
     public static final String USER_ID = "uid";
 
     @Override
-    public Object getValue(String variable, X500Name x500Name) {
+    @SuppressWarnings("unchecked")
+    public <I> I getValue(String variable, X500Name x500Name) {
         if (variable == null || x500Name == null) {
             return null;
         } else if (NO_VARIABLE.equals(variable)) {
-            return x500Name;
+            return (I) x500Name;
         } else if (DISTINGUISHED_NAME.equals(variable)) {
-            return x500Name.getDN();
+            return (I) x500Name.getDN();
         } else if (COMMON_NAME.equals(variable)) {
-            return x500Name.getCN();
+            return (I) x500Name.getCN();
         } else if (COUNTRY.equals(variable)) {
-            return x500Name.getC();
+            return (I) x500Name.getC();
         } else if (ORGANIZATION.equals(variable)) {
-            return x500Name.getO();
+            return (I) x500Name.getO();
         } else if (ORGANIZATIONAL_UNIT.equals(variable)) {
-            return x500Name.getOU();
+            return (I) x500Name.getOU();
         } else if (LOCALITY.equals(variable)) {
-            return x500Name.getL();
+            return (I) x500Name.getL();
         } else if (STATE.equals(variable)) {
-            return x500Name.getST();
+            return (I) x500Name.getST();
         } else if (STREET.equals(variable)) {
-            return x500Name.getStreet();
+            return (I) x500Name.getStreet();
         } else if (DOMAIN_COMPONENT.equals(variable)) {
-            return x500Name.getDC();
+            return (I) x500Name.getDC();
         } else if (EMAIL_ADDRESS.equals(variable)) {
-            return x500Name.getE();
+            return (I) x500Name.getE();
         } else if (USER_ID.equals(variable)) {
-            return x500Name.getUID();
+            return (I) x500Name.getUID();
         }
         return null;
     }

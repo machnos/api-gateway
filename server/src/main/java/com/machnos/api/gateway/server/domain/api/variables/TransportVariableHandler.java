@@ -63,11 +63,12 @@ public class TransportVariableHandler extends AbstractVariableHandler<Transport>
     private final SecurityVariableHandler securityVariableHandler = new SecurityVariableHandler();
 
     @Override
-    public Object getValue(String variable, Transport transport) {
+    @SuppressWarnings("unchecked")
+    public <I> I getValue(String variable, Transport transport) {
         if (variable == null || transport == null) {
             return null;
         } else if (NO_VARIABLE.equals(variable)) {
-            return transport;
+            return (I) transport;
         } else if (variable.startsWith(PREFIX_HTTP)) {
             if (!transport.isHttp()) {
                 return null;
@@ -76,11 +77,11 @@ public class TransportVariableHandler extends AbstractVariableHandler<Transport>
         } else if (variable.startsWith(PREFIX_SECURITY)) {
             return this.securityVariableHandler.getValue(determineChildObjectVariableName(variable, PREFIX_SECURITY_LENGTH), transport.getSecurity());
         } else if (INTERFACE_ALIAS.equals(variable)) {
-            return transport.getInterfaceAlias();
+            return (I) transport.getInterfaceAlias();
         } else if (IS_HTTP.equals(variable)) {
-            return transport.isHttp();
+            return (I) Boolean.valueOf(transport.isHttp());
         } else if (IS_SECURE.equals(variable)) {
-            return transport.isSecure();
+            return (I) Boolean.valueOf(transport.isSecure());
         }
         return null;
     }

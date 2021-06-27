@@ -54,34 +54,35 @@ public class MessageVariableHandler extends AbstractVariableHandler<Message> {
     public static final String IS_HTTP = "ishttp";
 
     @Override
-    public Object getValue(String variable, Message message) {
+    @SuppressWarnings("unchecked")
+    public <I> I getValue(String variable, Message message) {
         if (variable == null || message == null) {
             return null;
         } else if (NO_VARIABLE.equals(variable)) {
-            return message;
+            return (I) message;
         } else if (BODY.equals(variable)) {
-            return message.getBody();
+            return (I) message.getBody();
         } else if (HEADERS.equals(variable)) {
-            return message.getHeaders();
+            return (I) message.getHeaders();
         } else if (HEADERS_SIZE.equals(variable)) {
-            return message.getHeaders().getSize();
+            return (I) Integer.valueOf(message.getHeaders().getSize());
         } else if (HEADERS_NAMES.equals(variable)) {
-            return message.getHeaders().getHeaderNames();
+            return (I) message.getHeaders().getHeaderNames();
         } else if (variable.startsWith(PREFIX_HEADER)) {
             // Headers form a collection. First check if we need to provide the size.
             if (variable.endsWith(AbstractVariableHandler.SUFFIX_COLLECTION_SIZE)) {
                 final var headerName = variable.substring(PREFIX_HEADER_LENGTH, variable.length() - SUFFIX_COLLECTION_SIZE_LENGTH);
                 final var values = message.getHeaders().get(headerName);
-                return values == null ? 0 : values.size();
+                return (I) (values == null ? Integer.valueOf(0) : Integer.valueOf(values.size()));
             }
             final var matcher = AbstractVariableHandler.COLLECTION_INDEX_PATTERN.matcher(variable);
             if (matcher.matches()) {
                 final int index = Integer.parseInt(matcher.group(2));
-                return message.getHeaders().get(matcher.group(1).substring(PREFIX_HEADER_LENGTH), index);
+                return (I) message.getHeaders().get(matcher.group(1).substring(PREFIX_HEADER_LENGTH), index);
             }
-            return message.getHeaders().get(variable.substring(PREFIX_HEADER_LENGTH));
+            return (I) message.getHeaders().get(variable.substring(PREFIX_HEADER_LENGTH));
         } else if (IS_HTTP.equals(variable)) {
-            return message.isHttp();
+            return (I) Boolean.valueOf(message.isHttp());
         }
         return null;
     }

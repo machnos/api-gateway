@@ -125,6 +125,6 @@ public class HttpTransportVariableHandlerTest extends AbstractVariableHandlerTes
         final var httpTransport = getObjectToHandle();
         final var statusCode = 200;
         httpTransport.setResponseStatusCode(statusCode);
-        assertEquals(statusCode, variableHandler.getValue(HttpTransportVariableHandler.RESPONSE_STATUS_CODE, httpTransport));
+        assertEquals(statusCode, (Integer) variableHandler.getValue(HttpTransportVariableHandler.RESPONSE_STATUS_CODE, httpTransport));
     }
 }
