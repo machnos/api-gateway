@@ -78,6 +78,9 @@ public class Server {
      */
     private static final Logger logger = LogManager.getLogger();
 
+    /**
+     * The keystore alias of the self signed server certificate.
+     */
     private static final String SELF_SIGNED_CERT_ALIAS = "machnos-api-gateway-self-signed";
 
     /**
@@ -249,10 +252,8 @@ public class Server {
     private void validateSelfSignedCert(KeyStoreWrapper keyStoreWrapper, char[] entryPassword) {
         try {
             final var entry = keyStoreWrapper.getKeyStore().getEntry(SELF_SIGNED_CERT_ALIAS, new KeyStore.PasswordProtection(entryPassword));
-            if (entry instanceof KeyStore.PrivateKeyEntry) {
-                final var pkEntry = (KeyStore.PrivateKeyEntry) entry;
-                if (pkEntry.getCertificate() != null && pkEntry.getCertificate() instanceof X509Certificate) {
-                    final var x509Cert = (X509Certificate) pkEntry.getCertificate();
+            if (entry instanceof final KeyStore.PrivateKeyEntry pkEntry) {
+                if (pkEntry.getCertificate() != null && pkEntry.getCertificate() instanceof final X509Certificate x509Cert) {
                     try {
                         x509Cert.checkValidity();
                     } catch (CertificateExpiredException | CertificateNotYetValidException e) {
