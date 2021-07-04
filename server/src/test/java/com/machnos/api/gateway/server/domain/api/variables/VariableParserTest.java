@@ -25,10 +25,28 @@ import com.machnos.api.gateway.server.domain.message.MockMessage;
 import com.machnos.api.gateway.server.domain.transport.MockRequestURL;
 import com.machnos.api.gateway.server.domain.transport.MockSecurity;
 import com.machnos.api.gateway.server.domain.transport.MockTransport;
+import com.machnos.api.gateway.server.domain.transport.x509.PublicKey;
+import com.machnos.api.gateway.server.domain.transport.x509.X500Name;
+import com.machnos.api.gateway.server.domain.transport.x509.X509Certificate;
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
+import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.operator.OperatorCreationException;
+import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import java.math.BigInteger;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.spec.RSAKeyGenParameterSpec;
+import java.sql.Date;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test class for the <code>VariableParser</code> class.
@@ -241,25 +259,107 @@ public class VariableParserTest {
         final var executionContext = new ExecutionContext(new MockTransport(), new MockMessage(), new MockMessage());
         executionContext.getVariables().startScope();
         executionContext.getVariables().setVariable(name, value);
-        assertEquals(value, new VariableParser().parseAsString("${custom.variable}", executionContext));
+        assertEquals(value, new VariableParser().parseAsString("${" + name + "}", executionContext));
     }
 
     /**
-     * Test parsing a custom object value.
+     * Test parsing a custom <code>Message</code> value.
      */
     @Test
-    public void testParseCustomObjectValue() {
+    public void testParseCustomMessageValue() {
+        final var body = "Mock Body";
+        final var message = new MockMessage();
+        message.setBody(body);
+        final var name = "custom.message";
+        final var executionContext = new ExecutionContext(new MockTransport(), new MockMessage(), new MockMessage());
+        executionContext.getVariables().startScope();
+        executionContext.getVariables().setVariable(name, message);
+        assertEquals(body, new VariableParser().parseAsString("${" + name + ".body}", executionContext));
+    }
+
+    /**
+     * Test parsing a custom <code>PublicKey</code> value.
+     */
+    @Test
+    public void testParseCustomPublicKeyValue() {
+        final var algorithm = "RSA";
+        final var name = "custom.key";
+        try {
+            final var keyPairGenerator = KeyPairGenerator.getInstance(algorithm, new BouncyCastleProvider());
+            keyPairGenerator.initialize(new RSAKeyGenParameterSpec(2048, RSAKeyGenParameterSpec.F0));
+            final var keyPair = keyPairGenerator.generateKeyPair();
+            final var subjectPublicKeyInfo = SubjectPublicKeyInfo.getInstance(keyPair.getPublic().getEncoded());
+            final var publicKey = new PublicKey(subjectPublicKeyInfo);
+            final var executionContext = new ExecutionContext(new MockTransport(), new MockMessage(), new MockMessage());
+            executionContext.getVariables().startScope();
+            executionContext.getVariables().setVariable(name, publicKey);
+            assertEquals(algorithm, new VariableParser().parseAsString("${" + name + ".algorithm}", executionContext));
+        } catch (NoSuchAlgorithmException | InvalidAlgorithmParameterException e) {
+            fail(e);
+        }
+    }
+
+    /**
+     * Test parsing a custom <code>RequestURL</code> value.
+     */
+    @Test
+    public void testParseCustomRequestURLValue() {
         final var host = "www.machnos.com";
         final var name = "custom.url";
-        final var value = new MockRequestURL()
+        final var requestURL = new MockRequestURL()
                 .setScheme("https")
                 .setHost(host)
                 .setPort(443)
                 .setPath("/");
         final var executionContext = new ExecutionContext(new MockTransport(), new MockMessage(), new MockMessage());
         executionContext.getVariables().startScope();
-        executionContext.getVariables().setVariable(name, value);
-        assertEquals(host, new VariableParser().parseAsString("${custom.url.host}", executionContext));
+        executionContext.getVariables().setVariable(name, requestURL);
+        assertEquals(host, new VariableParser().parseAsString("${" + name + ".host}", executionContext));
+    }
+
+    /**
+     * Test parsing a custom <code>X500Name</code> value.
+     */
+    @Test
+    public void testParseCustomX500NameValue() {
+        final var dn = "CN=test";
+        final var name = "custom.url";
+        final var x500Name = new X500Name(new org.bouncycastle.asn1.x500.X500Name(dn));
+        final var executionContext = new ExecutionContext(new MockTransport(), new MockMessage(), new MockMessage());
+        executionContext.getVariables().startScope();
+        executionContext.getVariables().setVariable(name, x500Name);
+        assertEquals(dn, new VariableParser().parseAsString("${" + name + ".dn}", executionContext));
+    }
+
+    /**
+     * Test parsing a custom <code>X509Certificate</code> value.
+     */
+    @Test
+    public void testParseCustomX509CertificateValue() {
+        final var issuerDN = "CN=issuerTest";
+        final var name = "custom.certificate";
+        try {
+            final var keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+            keyPairGenerator.initialize(2048);
+            final var keyPair = keyPairGenerator.generateKeyPair();
+            final var contentSigner = new JcaContentSignerBuilder("SHA256withRSA").build(keyPair.getPrivate());
+            final var certificateBuilder =
+                    new JcaX509v3CertificateBuilder(new org.bouncycastle.asn1.x500.X500Name(issuerDN),
+                            BigInteger.valueOf(System.currentTimeMillis()),
+                            Date.from(Instant.now().minus(1, ChronoUnit.MINUTES)),
+                            Date.from(Instant.now().plus(1, ChronoUnit.MINUTES)),
+                            new org.bouncycastle.asn1.x500.X500Name("CN=subject"),
+                            keyPair.getPublic());
+            final var certificate = new X509Certificate(new JcaX509CertificateConverter()
+                    .setProvider(new BouncyCastleProvider())
+                    .getCertificate(certificateBuilder.build(contentSigner)));
+            final var executionContext = new ExecutionContext(new MockTransport(), new MockMessage(), new MockMessage());
+            executionContext.getVariables().startScope();
+            executionContext.getVariables().setVariable(name, certificate);
+            assertEquals(issuerDN, new VariableParser().parseAsString("${" + name + ".issuer.dn}", executionContext));
+        } catch (CertificateException | NoSuchAlgorithmException | OperatorCreationException e) {
+            fail(e);
+        }
     }
 
     /**

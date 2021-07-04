@@ -174,9 +174,7 @@ public class X509CertificateVariableHandlerTest extends AbstractVariableHandlerT
             final var keyPairGenerator = KeyPairGenerator.getInstance("RSA");
             keyPairGenerator.initialize(2048);
             final var keyPair = keyPairGenerator.generateKeyPair();
-
             final var contentSigner = new JcaContentSignerBuilder("SHA256withRSA").build(keyPair.getPrivate());
-
             final var certificateBuilder =
                     new JcaX509v3CertificateBuilder(new org.bouncycastle.asn1.x500.X500Name(this.issuerDN),
                             this.serial,
