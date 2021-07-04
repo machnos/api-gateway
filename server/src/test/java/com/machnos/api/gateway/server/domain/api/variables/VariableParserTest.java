@@ -22,6 +22,7 @@ import com.machnos.api.gateway.server.domain.api.MockApi;
 import com.machnos.api.gateway.server.domain.idm.Account;
 import com.machnos.api.gateway.server.domain.idm.PasswordCredentials;
 import com.machnos.api.gateway.server.domain.message.MockMessage;
+import com.machnos.api.gateway.server.domain.transport.MockRequestURL;
 import com.machnos.api.gateway.server.domain.transport.MockSecurity;
 import com.machnos.api.gateway.server.domain.transport.MockTransport;
 import org.junit.jupiter.api.Test;
@@ -241,6 +242,24 @@ public class VariableParserTest {
         executionContext.getVariables().startScope();
         executionContext.getVariables().setVariable(name, value);
         assertEquals(value, new VariableParser().parseAsString("${custom.variable}", executionContext));
+    }
+
+    /**
+     * Test parsing a custom object value.
+     */
+    @Test
+    public void testParseCustomObjectValue() {
+        final var host = "www.machnos.com";
+        final var name = "custom.url";
+        final var value = new MockRequestURL()
+                .setScheme("https")
+                .setHost(host)
+                .setPort(443)
+                .setPath("/");
+        final var executionContext = new ExecutionContext(new MockTransport(), new MockMessage(), new MockMessage());
+        executionContext.getVariables().startScope();
+        executionContext.getVariables().setVariable(name, value);
+        assertEquals(host, new VariableParser().parseAsString("${custom.url.host}", executionContext));
     }
 
     /**

@@ -56,11 +56,11 @@ public class TransportVariableHandler extends AbstractVariableHandler<Transport>
     /**
      * The <code>VariableHandler</code> that can handle values for the <code>HttpTransport</code> objects.
      */
-    private final HttpTransportVariableHandler httpTransportVariableHandler = new HttpTransportVariableHandler();
+    private static final HttpTransportVariableHandler httpTransportVariableHandler = new HttpTransportVariableHandler();
     /**
      * The <code>VariableHandler</code> that can handle values for the <code>Security</code> objects.
      */
-    private final SecurityVariableHandler securityVariableHandler = new SecurityVariableHandler();
+    private static final SecurityVariableHandler securityVariableHandler = new SecurityVariableHandler();
 
     @Override
     @SuppressWarnings("unchecked")
@@ -73,9 +73,9 @@ public class TransportVariableHandler extends AbstractVariableHandler<Transport>
             if (!transport.isHttp()) {
                 return null;
             }
-            return this.httpTransportVariableHandler.getValue(determineChildObjectVariableName(variable, PREFIX_HTTP_LENGTH), transport.getHttpTransport());
+            return httpTransportVariableHandler.getValue(determineChildObjectVariableName(variable, PREFIX_HTTP_LENGTH), transport.getHttpTransport());
         } else if (variable.startsWith(PREFIX_SECURITY)) {
-            return this.securityVariableHandler.getValue(determineChildObjectVariableName(variable, PREFIX_SECURITY_LENGTH), transport.getSecurity());
+            return securityVariableHandler.getValue(determineChildObjectVariableName(variable, PREFIX_SECURITY_LENGTH), transport.getSecurity());
         } else if (INTERFACE_ALIAS.equals(variable)) {
             return (I) transport.getInterfaceAlias();
         } else if (IS_HTTP.equals(variable)) {

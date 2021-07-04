@@ -61,7 +61,7 @@ public class SecurityVariableHandler extends AbstractVariableHandler<Security> {
     /**
      * The <code>VariableHandler</code> that can handle values for the <code>X509CertificateVariableHandler</code> objects.
      */
-    private final X509CertificateVariableHandler x509CertificateVariableHandler = new X509CertificateVariableHandler();
+    private static final X509CertificateVariableHandler x509CertificateVariableHandler = new X509CertificateVariableHandler();
 
     @Override
     @SuppressWarnings("unchecked")
@@ -80,11 +80,11 @@ public class SecurityVariableHandler extends AbstractVariableHandler<Security> {
             return (I) getValueFromCertificateChain(variable, security.getLocalCertificateChain());
         } else if (variable.startsWith(PREFIX_REMOTE_CERTIFICATE)) {
             return security.getRemoteCertificate() != null
-                    ? this.x509CertificateVariableHandler.getValue(determineChildObjectVariableName(variable, PREFIX_REMOTE_CERTIFICATE_LENGTH), security.getRemoteCertificate())
+                    ? x509CertificateVariableHandler.getValue(determineChildObjectVariableName(variable, PREFIX_REMOTE_CERTIFICATE_LENGTH), security.getRemoteCertificate())
                     : null;
         } else if (variable.startsWith(PREFIX_LOCAL_CERTIFICATE)) {
             return security.getLocalCertificate() != null
-                    ? this.x509CertificateVariableHandler.getValue(determineChildObjectVariableName(variable, PREFIX_LOCAL_CERTIFICATE_LENGTH), security.getLocalCertificate())
+                    ? x509CertificateVariableHandler.getValue(determineChildObjectVariableName(variable, PREFIX_LOCAL_CERTIFICATE_LENGTH), security.getLocalCertificate())
                     : null;
         }
         return null;

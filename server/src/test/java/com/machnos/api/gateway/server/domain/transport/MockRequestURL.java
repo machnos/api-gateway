@@ -63,9 +63,11 @@ public class MockRequestURL implements RequestURL {
      * Set the scheme.
      *
      * @param scheme The scheme.
+     * @return This instance for chaining.
      */
-    public void setScheme(String scheme) {
+    public MockRequestURL setScheme(String scheme) {
         this.scheme = scheme;
+        return this;
     }
 
     @Override
@@ -77,9 +79,11 @@ public class MockRequestURL implements RequestURL {
      * Sets the host.
      *
      * @param host The host.
+     * @return This instance for chaining.
      */
-    public void setHost(String host) {
+    public MockRequestURL setHost(String host) {
         this.host = host;
+        return this;
     }
 
     @Override
@@ -91,9 +95,11 @@ public class MockRequestURL implements RequestURL {
      * Sets the port.
      *
      * @param port The port.
+     * @return This instance for chaining.
      */
-    public void setPort(int port) {
+    public MockRequestURL setPort(int port) {
         this.port = port;
+        return this;
     }
 
     @Override
@@ -105,9 +111,11 @@ public class MockRequestURL implements RequestURL {
      * Sets the path.
      *
      * @param path The path.
+     * @return This instance for chaining.
      */
-    public void setPath(String path) {
+    public MockRequestURL setPath(String path) {
         this.path = path;
+        return this;
     }
 
     @Override

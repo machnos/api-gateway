@@ -27,10 +27,6 @@ import java.util.regex.Pattern;
 public abstract class AbstractVariableHandler<T> implements VariableHandler<T> {
 
     /**
-     * The char that divides object within variable names.
-     */
-    protected static final char OBJECT_DIVIDER = '.';
-    /**
      * The variable content for retrieving the given object itself instead of a child property.
      */
     protected static final String NO_VARIABLE = "";

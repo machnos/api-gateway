@@ -25,6 +25,15 @@ package com.machnos.api.gateway.server.domain.api.variables;
 public interface VariableHandler<T> {
 
     /**
+     * The char that divides object within variable names.
+     */
+    char OBJECT_DIVIDER = '.';
+    /**
+     * The length of the object divider.
+     */
+    int OBJECT_DIVIDER_LENGTH = ("" + OBJECT_DIVIDER).length();
+
+    /**
      * Get a variable from a <code>T</code> instance.
      *
      * @param variable The name of the variable.

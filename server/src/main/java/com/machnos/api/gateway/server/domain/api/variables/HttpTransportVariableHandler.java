@@ -60,7 +60,7 @@ public class HttpTransportVariableHandler extends AbstractVariableHandler<HttpTr
     /**
      * The <code>VariableHandler</code> that can handle values for the <code>RequestURL</code> objects.
      */
-    private final RequestURLVariableHandler requestURLVariableHandler = new RequestURLVariableHandler();
+    private static final RequestURLVariableHandler requestURLVariableHandler = new RequestURLVariableHandler();
 
     @Override
     @SuppressWarnings("unchecked")
@@ -72,7 +72,7 @@ public class HttpTransportVariableHandler extends AbstractVariableHandler<HttpTr
         } else if (REQUEST_METHOD.equals(variable)) {
             return (I) httpTransport.getRequestMethod();
         } else if (variable.startsWith(PREFIX_REQUEST_URL)) {
-            return this.requestURLVariableHandler.getValue(determineChildObjectVariableName(variable, PREFIX_REQUEST_URL_LENGTH), httpTransport.getRequestURL());
+            return requestURLVariableHandler.getValue(determineChildObjectVariableName(variable, PREFIX_REQUEST_URL_LENGTH), httpTransport.getRequestURL());
         } else if (variable.equals(RESPONSE_STATUS_CODE)) {
             return (I) Integer.valueOf(httpTransport.getResponseStatusCode());
         } else if (IS_HTTP_09.equals(variable)) {

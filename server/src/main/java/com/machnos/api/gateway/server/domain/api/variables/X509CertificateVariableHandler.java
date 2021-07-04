@@ -81,12 +81,12 @@ public class X509CertificateVariableHandler extends AbstractVariableHandler<X509
     /**
      * The <code>VariableHandler</code> that can handle values for the <code>X500Name</code> objects.
      */
-    private final X500NameVariableHandler x500NameVariableHandler = new X500NameVariableHandler();
+    private static final X500NameVariableHandler x500NameVariableHandler = new X500NameVariableHandler();
 
     /**
      * The <code>VariableHandler</code> that can handle values for the <code>X500Name</code> objects.
      */
-    private final PublicKeyVariableHandler publicKeyVariableHandler = new PublicKeyVariableHandler();
+    private static final PublicKeyVariableHandler publicKeyVariableHandler = new PublicKeyVariableHandler();
 
     @Override
     @SuppressWarnings("unchecked")
@@ -96,11 +96,11 @@ public class X509CertificateVariableHandler extends AbstractVariableHandler<X509
         } else if (NO_VARIABLE.equals(variable)) {
             return (I) x509Certificate;
         } else if (variable.startsWith(PREFIX_SUBJECT)) {
-            return this.x500NameVariableHandler.getValue(determineChildObjectVariableName(variable, PREFIX_SUBJECT_LENGTH), x509Certificate.getSubject());
+            return x500NameVariableHandler.getValue(determineChildObjectVariableName(variable, PREFIX_SUBJECT_LENGTH), x509Certificate.getSubject());
         } else if (variable.startsWith(PREFIX_ISSUER)) {
-            return this.x500NameVariableHandler.getValue(determineChildObjectVariableName(variable, PREFIX_ISSUER_LENGTH), x509Certificate.getIssuer());
+            return x500NameVariableHandler.getValue(determineChildObjectVariableName(variable, PREFIX_ISSUER_LENGTH), x509Certificate.getIssuer());
         } else if (variable.startsWith(PREFIX_KEY)) {
-            return this.publicKeyVariableHandler.getValue(determineChildObjectVariableName(variable, PREFIX_KEY_LENGTH), x509Certificate.getPublicKey());
+            return publicKeyVariableHandler.getValue(determineChildObjectVariableName(variable, PREFIX_KEY_LENGTH), x509Certificate.getPublicKey());
         } else if (NOT_BEFORE.equals(variable)) {
             return (I) x509Certificate.getNotBefore();
         } else if (NOT_AFTER.equals(variable)) {
