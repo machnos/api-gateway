@@ -53,7 +53,7 @@ public class RequireBasicAuthentication extends AbstractFunction {
     /**
      * The <code>Result</code> of this <code>Function</code> in case of a missing authorization header with basic scheme.
      */
-    private static final Result RESULT_NO_AUTHORIZATION_HEADER = Result.stopApi(FUNCTION_NAME + " - Authorization header missing - 01");
+    private static final Result RESULT_NO_AUTHORIZATION_HEADER = Result.stop(FUNCTION_NAME + " - Authorization header missing - 01");
 
     /**
      * The <code>Result</code> of this <code>Function</code> in case the request is not http.

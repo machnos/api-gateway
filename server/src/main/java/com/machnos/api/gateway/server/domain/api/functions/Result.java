@@ -33,7 +33,7 @@ public class Result {
     /**
      * The status code for results that should stop execution of the <code>Api</code> immediately.
      */
-    private static final int STATUS_CODE_STOP_API = 1;
+    private static final int STATUS_CODE_STOP = 1;
 
     /**
      * The <code>Result</code> instance for successful <code>Function</code> executions.
@@ -103,7 +103,7 @@ public class Result {
      * <code>false</code> otherwise.
      */
     public boolean isStopApi() {
-        return this.statusCode == STATUS_CODE_STOP_API;
+        return this.statusCode == STATUS_CODE_STOP;
     }
 
     /**
@@ -126,12 +126,12 @@ public class Result {
     }
 
     /**
-     * Gives a <code>Result</code> with the {@link #STATUS_CODE_STOP_API} status code.
+     * Gives a <code>Result</code> with the {@link #STATUS_CODE_STOP} status code.
      *
      * @param reason The reason to stop the <code>Api</code>.
-     * @return A <code>Result</code> with the {@link #STATUS_CODE_STOP_API} status code.
+     * @return A <code>Result</code> with the {@link #STATUS_CODE_STOP} status code.
      */
-    public static Result stopApi(String reason) {
-        return new Result((STATUS_CODE_STOP_API)).setReason(reason);
+    public static Result stop(String reason) {
+        return new Result((STATUS_CODE_STOP)).setReason(reason);
     }
 }

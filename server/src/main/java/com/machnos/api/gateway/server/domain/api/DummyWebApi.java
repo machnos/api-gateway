@@ -36,7 +36,7 @@ public class DummyWebApi extends AbstractApi {
         addFunction(new SetResponseContent().setContent(
                 "<p>Hi ${account.username}!</p>"
                 + "<p>You visited this page using a '${transport.http.request.method}' method via interface '${transport.interfaceAlias}' and landed on api ${api.name}@${api.contextRoot}</p>"
-                + "<p>The authorization header: ${request.header.authorization}</p>"
+                + "<p>The authorization header: ${request.header.authorization[0]}</p>"
                 + "<p>RequestUrl: ${transport.http.request.url}</p>"
                 + "<p>RequestScheme: ${transport.http.request.url.scheme}</p>"
                 + "<p>RequestHost: ${transport.http.request.url.host}</p>"

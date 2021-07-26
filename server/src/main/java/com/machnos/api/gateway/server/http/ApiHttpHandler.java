@@ -56,7 +56,6 @@ public class ApiHttpHandler implements HttpHandler {
         final var responseMessage = new UndertowHttpMessage(exchange, UndertowHttpMessage.Type.RESPONSE);
         final var executionContext = new ExecutionContext(transport, requestMessage, responseMessage);
 
-
         // Step 1. Find api based on path.
         String requestPath = transport.getRequestURL().getPath();
         final var api = new DummyWebApi();

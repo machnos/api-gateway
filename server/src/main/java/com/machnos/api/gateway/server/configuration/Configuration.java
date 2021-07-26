@@ -64,7 +64,7 @@ public final class Configuration {
      * @return The <code>Configuration</code> instance.
      * @throws IOException When the configurationFile does not exists, cannot be read, or cannot be parsed.
      */
-    public static final Configuration load(File configurationFile) throws IOException {
+    public static Configuration load(File configurationFile) throws IOException {
         if (!configurationFile.exists() || !configurationFile.isFile() || !configurationFile.canRead()) {
             throw new FileNotFoundException(configurationFile.getAbsolutePath());
         }

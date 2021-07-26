@@ -55,6 +55,9 @@ public class AtLeastOneFunctionMustSucceed extends CompoundFunction {
             if (result.isSucceeded()) {
                 return result;
             }
+            if (result.isStopApi()) {
+                return result;
+            }
         }
         return RESULT_NO_CHILD_FUNCTION_SUCCEEDED;
     }
