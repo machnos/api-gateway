@@ -102,7 +102,7 @@ public class Result {
      * @return <code>true</code> when the <code>Result</code> represents an <code>Api</code> execution that should stop,
      * <code>false</code> otherwise.
      */
-    public boolean isStopApi() {
+    public boolean isStopped() {
         return this.statusCode == STATUS_CODE_STOP;
     }
 

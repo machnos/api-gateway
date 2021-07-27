@@ -19,7 +19,7 @@ package com.machnos.api.gateway.server.domain.api;
 
 import com.machnos.api.gateway.server.domain.api.functions.CompoundFunction;
 import com.machnos.api.gateway.server.domain.api.functions.Function;
-import com.machnos.api.gateway.server.domain.api.functions.flowlogic.AllFunctionsMustSucceed;
+import com.machnos.api.gateway.server.domain.api.functions.flowlogic.TryFunctions;
 
 /**
  * Abstract superclass for all <code>Api</code> instances.
@@ -29,7 +29,7 @@ public abstract class AbstractApi implements Api {
     /**
      * The root <code>Function</code> of the <code>Api</code>.
      */
-    private final CompoundFunction rootFunction = new AllFunctionsMustSucceed();
+    private final CompoundFunction rootFunction = new TryFunctions();
 
     /**
      * Gives the root <code>Function</code> of the api.

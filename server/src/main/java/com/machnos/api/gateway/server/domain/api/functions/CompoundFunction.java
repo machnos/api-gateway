@@ -34,6 +34,7 @@ public abstract class CompoundFunction extends AbstractFunction {
 
     /**
      * Constructs a new <code>CompoundFunction</code> instance.
+     *
      * @param name The name of the <code>Function</code>.
      */
     public CompoundFunction(String name) {
@@ -42,6 +43,7 @@ public abstract class CompoundFunction extends AbstractFunction {
 
     /**
      * Adds a child <code>Function</code>.
+     *
      * @param function The <code>Function</code> to add.
      * @return This <code>CompoundFunction</code> instance.
      */
@@ -54,6 +56,7 @@ public abstract class CompoundFunction extends AbstractFunction {
 
     /**
      * Gives the list with child <code>Function</code>s.
+     *
      * @return The list with child <code>Function</code>s.
      */
     public List<Function> getFunctions() {

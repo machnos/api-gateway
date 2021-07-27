@@ -23,7 +23,7 @@ import com.machnos.api.gateway.server.domain.api.functions.Function;
 import com.machnos.api.gateway.server.domain.api.functions.Result;
 
 /**
- * <code>CompoundFunction</code> that succeeds when all child <code>Function</code>s are successfully executed.
+ * A <code>CompoundFunction</code> that succeeds when all child <code>Function</code>s are successfully executed.
  *
  * This <code>CompoundFunction</code> stops executing child <code>Function</code>s as soon as a child <code>Function</code>
  * fails. The order in which the child <code>Function</code>s are executed is the order in which the are added to the
@@ -55,7 +55,7 @@ public class AllFunctionsMustSucceed extends CompoundFunction {
             if (childResult.isFailed()) {
                 return RESULT_CHILD_FUNCTION_FAILED;
             }
-            if (childResult.isStopApi()) {
+            if (childResult.isStopped()) {
                 return childResult;
             }
         }

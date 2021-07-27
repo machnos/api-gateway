@@ -32,7 +32,7 @@ import java.util.Base64;
  * <code>Function</code> that enforces <a href="https://datatracker.ietf.org/doc/html/rfc7617">Basic Authentication</a>
  * on an <code>Api</code>.
  *
- * The first time this <code>Function</code> is executed a challenge may be sent back. This will result in a {@link Result#isStopApi()}
+ * The first time this <code>Function</code> is executed a challenge may be sent back. This will result in a {@link Result#isStopped()}
  * <code>Result</code>. This <code>Function</code> has prepared the <code>ResponseMessage</code> with the appropriate
  * challenge in that case.
  *

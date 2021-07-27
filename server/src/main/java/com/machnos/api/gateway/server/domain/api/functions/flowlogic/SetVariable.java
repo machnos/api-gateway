@@ -22,7 +22,7 @@ import com.machnos.api.gateway.server.domain.api.functions.AbstractFunction;
 import com.machnos.api.gateway.server.domain.api.functions.Result;
 
 /**
- * <code>Function</code> that can set a variable to the <code>ExecutionContext</code>.
+ * A <code>Function</code> that can set a variable to the <code>ExecutionContext</code>.
  */
 public class SetVariable extends AbstractFunction  {
 
