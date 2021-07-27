@@ -29,17 +29,12 @@ import com.machnos.api.gateway.server.domain.api.functions.Result;
  * fails. The order in which the child <code>Function</code>s are executed is the order in which the are added to the
  * <code>CompoundFunction</code>.
  */
-public class AllFunctionsMustSucceed extends CompoundFunction {
+public class AllFunctionsMustSucceed extends CompoundFunction<AllFunctionsMustSucceed> {
 
     /**
      * The name of this <code>Function</code>.
      */
     private static final String FUNCTION_NAME = "All Functions Must Succeed";
-
-    /**
-     * The <code>Result</code> of this <code>Function</code> in case of a child failure.
-     */
-    private static final Result RESULT_CHILD_FUNCTION_FAILED = Result.fail(FUNCTION_NAME + " - Child function failed - 01");
 
     /**
      * Constructs a new <code>AllFunctionsMustSucceed</code> instance.
@@ -53,7 +48,7 @@ public class AllFunctionsMustSucceed extends CompoundFunction {
         for (Function function : getFunctions()) {
             var childResult = function.execute(executionContext);
             if (childResult.isFailed()) {
-                return RESULT_CHILD_FUNCTION_FAILED;
+                return Result.fail(FUNCTION_NAME + " - Child function failed - 01", childResult);
             }
             if (childResult.isStopped()) {
                 return childResult;

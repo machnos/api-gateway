@@ -29,7 +29,7 @@ import com.machnos.api.gateway.server.domain.api.functions.Result;
  * succeeds. The order in which the child <code>Function</code>s are executed is the order in which the are added to
  * the <code>CompoundFunction</code>.
  */
-public class AtLeastOneFunctionMustSucceed extends CompoundFunction {
+public class AtLeastOneFunctionMustSucceed extends CompoundFunction<AtLeastOneFunctionMustSucceed> {
 
     /**
      * The name of this <code>Function</code>.

@@ -51,7 +51,13 @@ public class Result {
     private String reason;
 
     /**
+     * The <code>Result</code> that causes this <code>Result</code>.
+     */
+    private Result cause;
+
+    /**
      * Constructs a new <code>Result</code> instance.
+     *
      * @param statusCode The status code for the <code>Result</code>.
      */
     public Result(int statusCode) {
@@ -60,19 +66,41 @@ public class Result {
 
     /**
      * Get the reason of the <code>Result</code>.
-     * @return The reason of the result.
+     *
+     * @return The reason of the <code>Result</code>.
      */
     public String getReason() {
         return this.reason;
     }
 
     /**
-     * Set the reason of a result.
+     * Set the reason of this <code>Result</code>.
+     *
      * @param reason The reason.
      * @return This <code>Result</code> instance.
      */
     private Result setReason(String reason) {
         this.reason = reason;
+        return this;
+    }
+
+    /**
+     * Gets the cause of the <code>Result</code>.
+     *
+     * @return The cause of the <code>Result</code>.
+     */
+    public Result getCause() {
+        return this.cause;
+    }
+
+    /**
+     * Sets the cause of this <code>Result</code>.
+     *
+     * @param cause The cause.
+     * @return This <code>Result</code> instance.
+     */
+    public Result setCause(Result cause) {
+        this.cause = cause;
         return this;
     }
 
@@ -122,7 +150,18 @@ public class Result {
      * @return A <code>Result</code> with the {@link #STATUS_CODE_FAILED} status code.
      */
     public static Result fail(String reason) {
-        return new Result(STATUS_CODE_FAILED).setReason(reason);
+        return fail(reason, null);
+    }
+
+    /**
+     * Gives a <code>Result</code> with the {@link #STATUS_CODE_FAILED} status code.
+     *
+     * @param reason The reason of the failure.
+     * @param cause The cause of the failure.
+     * @return A <code>Result</code> with the {@link #STATUS_CODE_FAILED} status code.
+     */
+    public static Result fail(String reason, Result cause) {
+        return new Result(STATUS_CODE_FAILED).setReason(reason).setCause(cause);
     }
 
     /**

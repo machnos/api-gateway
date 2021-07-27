@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Superclass for all <code>Function</code> instances that contain one or more child <code>Function</code>s.
  */
-public abstract class CompoundFunction extends AbstractFunction {
+public abstract class CompoundFunction<T extends CompoundFunction<T>> extends AbstractFunction {
 
     /**
      * The list of child <code>Function</code>s.
@@ -47,11 +47,12 @@ public abstract class CompoundFunction extends AbstractFunction {
      * @param function The <code>Function</code> to add.
      * @return This <code>CompoundFunction</code> instance.
      */
-    public CompoundFunction addFunction(Function function) {
+    @SuppressWarnings("unchecked")
+    public T addFunction(Function function) {
         if (function != null) {
             this.functions.add(function);
         }
-        return this;
+        return (T) this;
     }
 
     /**

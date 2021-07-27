@@ -32,7 +32,7 @@ import java.util.List;
  * If any of the child <code>Function</code>s fails the error functions are executed. If any of the error
  * <code>Functions</code>s fails the <code>TryFunctions</code> will also fail.
  */
-public class TryFunctions extends CompoundFunction {
+public class TryFunctions extends CompoundFunction<TryFunctions> {
 
     /**
      * The name of this <code>Function</code>.
@@ -100,7 +100,7 @@ public class TryFunctions extends CompoundFunction {
         for (Function function : getErrorFunctions()) {
             var childResult = function.execute(executionContext);
             if (childResult.isFailed() || childResult.isStopped()) {
-                return childResult;
+                return Result.fail(FUNCTION_NAME + " - Error function failed - 01", childResult);
             }
         }
         return Result.succeed();
