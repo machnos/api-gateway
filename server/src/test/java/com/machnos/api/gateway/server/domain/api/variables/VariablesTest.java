@@ -71,4 +71,14 @@ public class VariablesTest {
         assertEquals(variables.getVariable(varNameLevel1), "value1Changed");
         assertNull(variables.getVariable(varNameLevel2));
     }
+
+    /**
+     * Test setting and getting a variable without a name. This should do nothing.
+     */
+    @Test
+    public void testGetSetVariableWithNullName() {
+        final var variables = new Variables();
+        variables.setVariable(null, new Object());
+        assertNull(variables.getVariable(null));
+    }
 }
