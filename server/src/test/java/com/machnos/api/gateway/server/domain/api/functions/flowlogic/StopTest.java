@@ -15,35 +15,22 @@
  * under the License.
  */
 
-package com.machnos.api.gateway.server.domain.api.functions;
+package com.machnos.api.gateway.server.domain.api.functions.flowlogic;
 
 import com.machnos.api.gateway.server.domain.api.ExecutionContext;
-import com.machnos.api.gateway.server.domain.api.functions.flowlogic.Stop;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
 /**
- * Abstract superclass for all test classes that test extensions of the <code>CompoundFunction</code> class.
+ * Test class for the <code>Stop</code> class.
  */
-public abstract class AbstractCompoundFunctionTest<T extends CompoundFunction<T>> {
+public class StopTest {
 
-    /**
-     * Gives an instance of the class to test.
-     *
-      * @return The class to test.
-     */
-    protected abstract T getInstance();
-
-    /**
-     * Test stopping the execution of the function.
-     */
     @Test
     public void testStop() {
-        var compoundFunction = getInstance().addFunction(new Stop());
-        var result = compoundFunction.execute(new ExecutionContext(null, null, null));
+        final var function = new Stop();
+        var result = function.execute(new ExecutionContext(null, null, null));
         assertTrue(result.isStopped());
     }
-
 }

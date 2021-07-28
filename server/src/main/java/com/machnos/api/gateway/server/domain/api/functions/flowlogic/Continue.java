@@ -22,24 +22,24 @@ import com.machnos.api.gateway.server.domain.api.functions.AbstractFunction;
 import com.machnos.api.gateway.server.domain.api.functions.Result;
 
 /**
- * A <code>Function</code> that does nothing more that returning a failed result.
+ * A <code>Function</code> that does nothing more that returning a success result.
  */
-public class Fail extends AbstractFunction {
+public class Continue extends AbstractFunction {
 
     /**
      * The name of this <code>Function</code>.
      */
-    private static final String FUNCTION_NAME = "Fail";
+    private static final String FUNCTION_NAME = "Continue";
 
     /**
      * The <code>Result</code> of this <code>Function</code>.
      */
-    private static final Result RESULT = Result.fail(FUNCTION_NAME + " - Fail function executed - 01");
+    private static final Result RESULT = Result.succeed();
 
     /**
-     * Constructs a new <code>Fail</code> instance.
+     * Constructs a new <code>Continue</code> instance.
      */
-    public Fail() {
+    public Continue() {
         super(FUNCTION_NAME);
     }
 

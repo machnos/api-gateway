@@ -22,7 +22,7 @@ import com.machnos.api.gateway.server.domain.api.functions.AbstractFunction;
 import com.machnos.api.gateway.server.domain.api.functions.Result;
 
 /**
- * A <code>Function</code> that does noting more that returning a stop result.
+ * A <code>Function</code> that does nothing more that returning a stop result.
  */
 public class Stop extends AbstractFunction {
 

@@ -55,10 +55,12 @@ public class SetVariable extends AbstractFunction  {
 
     @Override
     public Result doExecute(ExecutionContext executionContext) {
-        if (getName() == null) {
+        if (getVariableName() == null) {
             return RESULT_NAME_NOT_SET;
         }
-        executionContext.getVariables().setVariable(getVariableName(), getVariableValue() instanceof String ? executionContext.parseVariableAsString((String) getVariableValue()) : getVariableValue());
+        executionContext.getVariables().setVariable(
+                executionContext.parseVariableAsString(getVariableName()),
+                getVariableValue() instanceof String ? executionContext.parseVariableAsString((String) getVariableValue()) : getVariableValue());
         return Result.succeed();
     }
 

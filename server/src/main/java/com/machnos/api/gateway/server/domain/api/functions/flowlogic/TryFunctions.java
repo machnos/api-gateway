@@ -99,8 +99,10 @@ public class TryFunctions extends CompoundFunction<TryFunctions> {
     private Result executeError(ExecutionContext executionContext) {
         for (Function function : getErrorFunctions()) {
             var childResult = function.execute(executionContext);
-            if (childResult.isFailed() || childResult.isStopped()) {
+            if (childResult.isFailed()) {
                 return Result.fail(FUNCTION_NAME + " - Error function failed - 01", childResult);
+            } else if (childResult.isStopped()) {
+                return childResult;
             }
         }
         return Result.succeed();

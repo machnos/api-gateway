@@ -55,13 +55,17 @@ public class Variables {
      * @param variableValue The value of the variable.
      */
     public void setVariable(String variableName, Object variableValue) {
+        if (variableName == null) {
+            return;
+        }
+        final var variable = variableName.toLowerCase();
         for (Map<String, Object> variables : this.variableScopes) {
-            if (variables.containsKey(variableName)) {
-                variables.put(variableName, variableValue);
+            if (variables.containsKey(variable)) {
+                variables.put(variable, variableValue);
                 return;
             }
         }
-        this.variableScopes.peekFirst().put(variableName, variableValue);
+        this.variableScopes.peekFirst().put(variable, variableValue);
     }
 
     /**
@@ -71,9 +75,13 @@ public class Variables {
      * @return The value, or <code>null</code> whe no variable with the given name exists.
      */
     public Object getVariable(String variableName) {
+        if (variableName == null) {
+            return null;
+        }
+        final var variable = variableName.toLowerCase();
         for (Map<String, Object> variables : this.variableScopes) {
-            if (variables.containsKey(variableName)) {
-                return variables.get(variableName);
+            if (variables.containsKey(variable)) {
+                return variables.get(variable);
             }
         }
         return null;
