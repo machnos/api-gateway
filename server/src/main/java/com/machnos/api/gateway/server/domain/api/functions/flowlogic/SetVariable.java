@@ -34,7 +34,7 @@ public class SetVariable extends AbstractFunction  {
     /**
      * The <code>Result</code> of this <code>Function</code> in case of a child failure.
      */
-    private static final Result RESULT_NAME_NOT_SET = Result.fail(FUNCTION_NAME + " - Variable name not set - 01");
+    private static final Result RESULT_NAME_NOT_SET = Result.fail(FUNCTION_NAME, "Variable name not set", "01");
 
     /**
      * The name of the variable.

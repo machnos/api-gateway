@@ -46,9 +46,19 @@ public class Result {
     private final int statusCode;
 
     /**
+     * The function that returns the result.
+     */
+    private String function;
+
+    /**
      * The reason for the result.
      */
     private String reason;
+
+    /**
+     * A code that can be related to the reason of the result.
+     */
+    private String reasonCode;
 
     /**
      * The <code>Result</code> that causes this <code>Result</code>.
@@ -62,6 +72,26 @@ public class Result {
      */
     public Result(int statusCode) {
         this.statusCode = statusCode;
+    }
+
+    /**
+     * Gets the function that returned the <code>Result</code>.
+     *
+     * @return The name of the function that returned the <code>Result</code>.
+     */
+    public String getFunction() {
+        return this.function;
+    }
+
+    /**
+     * Sets the function that returned the <code>Result</code>.
+     *
+     * @param function The name of the function that returned the <code>Result</code>.
+     * @return This <code>Result</code> instance.
+     */
+    private Result setFunction(String function) {
+        this.function = function;
+        return this;
     }
 
     /**
@@ -81,6 +111,26 @@ public class Result {
      */
     private Result setReason(String reason) {
         this.reason = reason;
+        return this;
+    }
+
+    /**
+     * Get the reason code of the <code>Result</code>.
+     *
+     * @return The reason code of the <code>Result</code>.
+     */
+    public String getReasonCode() {
+        return this.reasonCode;
+    }
+
+    /**
+     * Set the reason code of this <code>Result</code>.
+     *
+     * @param reasonCode The reason code.
+     * @return This <code>Result</code> instance.
+     */
+    private Result setReasonCode(String reasonCode) {
+        this.reasonCode = reasonCode;
         return this;
     }
 
@@ -146,31 +196,44 @@ public class Result {
     /**
      * Gives a <code>Result</code> with the {@link #STATUS_CODE_FAILED} status code.
      *
+     * @param function The name of the function that returns the <code>Result</code>.
      * @param reason The reason of the failure.
+     * @param reasonCode The code for the reason.
      * @return A <code>Result</code> with the {@link #STATUS_CODE_FAILED} status code.
      */
-    public static Result fail(String reason) {
-        return fail(reason, null);
+    public static Result fail(String function, String reason, String reasonCode) {
+        return fail(function, reason, reasonCode, null);
     }
 
     /**
      * Gives a <code>Result</code> with the {@link #STATUS_CODE_FAILED} status code.
      *
+     * @param function The name of the function that returns the <code>Result</code>.
      * @param reason The reason of the failure.
+     * @param reasonCode The code for the reason.
      * @param cause The cause of the failure.
      * @return A <code>Result</code> with the {@link #STATUS_CODE_FAILED} status code.
      */
-    public static Result fail(String reason, Result cause) {
-        return new Result(STATUS_CODE_FAILED).setReason(reason).setCause(cause);
+    public static Result fail(String function, String reason, String reasonCode, Result cause) {
+        return new Result(STATUS_CODE_FAILED)
+                .setFunction(function)
+                .setReason(reason)
+                .setReasonCode(reasonCode)
+                .setCause(cause);
     }
 
     /**
      * Gives a <code>Result</code> with the {@link #STATUS_CODE_STOP} status code.
      *
-     * @param reason The reason to stop the <code>Api</code>.
+     * @param function The name of the function that returns the <code>Result</code>.
+     * @param reason The reason of the failure.
+     * @param reasonCode The code for the reason.
      * @return A <code>Result</code> with the {@link #STATUS_CODE_STOP} status code.
      */
-    public static Result stop(String reason) {
-        return new Result((STATUS_CODE_STOP)).setReason(reason);
+    public static Result stop(String function, String reason, String reasonCode) {
+        return new Result((STATUS_CODE_STOP))
+                .setFunction(function)
+                .setReason(reason)
+                .setReasonCode(reasonCode);
     }
 }

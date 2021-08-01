@@ -42,14 +42,14 @@ public class RequireTransportSecurity extends AbstractFunction {
     private static final String FUNCTION_NAME = "Require Transport Security";
 
     /**
-     * The <code>Result</code> of this <code>Function</code> in case of an insecure transport.
+     * The <code>Result</code> of this <code>Function</code> in case of insecure transport.
      */
-    private static final Result RESULT_TRANSPORT_NOT_SECURE = Result.fail(FUNCTION_NAME + " - Transport not secure - 01");
+    private static final Result RESULT_TRANSPORT_NOT_SECURE = Result.fail(FUNCTION_NAME, "Transport not secure", "01");
 
     /**
      * The <code>Result</code> of this <code>Function</code> in case of a missing remote certificate.
      */
-    private static final Result RESULT_REMOTE_CERTIFICATE_MISSING = Result.fail(FUNCTION_NAME + " - Remote certificate missing - 02");
+    private static final Result RESULT_REMOTE_CERTIFICATE_MISSING = Result.fail(FUNCTION_NAME, "Remote certificate missing", "02");
 
     /**
      * Boolean indicating a client certificate is required on the <code>Transport</code>.

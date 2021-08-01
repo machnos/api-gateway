@@ -39,7 +39,7 @@ public class AtLeastOneFunctionMustSucceed extends CompoundFunction<AtLeastOneFu
     /**
      * The <code>Result</code> of this <code>Function</code> in case of a child failure.
      */
-    private static final Result RESULT_NO_CHILD_FUNCTION_SUCCEEDED = Result.fail(FUNCTION_NAME + " - No child function succeeded - 01");
+    private static final Result RESULT_NO_CHILD_FUNCTION_SUCCEEDED = Result.fail(FUNCTION_NAME, "No child function succeeded", "01");
 
     /**
      * Constructs a new <code>AtLeastOneFunctionMustSucceed</code> instance.

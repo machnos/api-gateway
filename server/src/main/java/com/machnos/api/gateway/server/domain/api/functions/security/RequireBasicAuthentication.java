@@ -53,22 +53,22 @@ public class RequireBasicAuthentication extends AbstractFunction {
     /**
      * The <code>Result</code> of this <code>Function</code> in case of a missing authorization header with basic scheme.
      */
-    private static final Result RESULT_NO_AUTHORIZATION_HEADER = Result.stop(FUNCTION_NAME + " - Authorization header missing - 01");
+    private static final Result RESULT_NO_AUTHORIZATION_HEADER = Result.stop(FUNCTION_NAME, "Authorization header missing", "01");
 
     /**
      * The <code>Result</code> of this <code>Function</code> in case the request is not http.
      */
-    private static final Result RESULT_MESSAGE_NOT_HTTP = Result.fail(FUNCTION_NAME + " - Request message is not http - 02");
+    private static final Result RESULT_MESSAGE_NOT_HTTP = Result.fail(FUNCTION_NAME, "Request message is not http", "02");
 
     /**
      * The <code>Result</code> of this <code>Function</code> in case the request is not http.
      */
-    private static final Result RESULT_INVALID_CHALLENGE = Result.fail(FUNCTION_NAME + " - Invalid challenge received - 03");
+    private static final Result RESULT_INVALID_CHALLENGE = Result.fail(FUNCTION_NAME, "Invalid challenge received", "03");
 
     /**
      * The <code>Result</code> of this <code>Function</code> in case of a missing authorization header with basic scheme.
      */
-    private static final Result RESULT_NO_AUTHORIZATION_HEADER_WITH_BASIC_SCHEME = Result.fail(FUNCTION_NAME + " - No authorization header with basic scheme - 04");
+    private static final Result RESULT_NO_AUTHORIZATION_HEADER_WITH_BASIC_SCHEME = Result.fail(FUNCTION_NAME, "No authorization header with basic scheme", "04");
 
     /**
      * The default realm name used when no realm has been provided.

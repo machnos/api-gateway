@@ -34,7 +34,7 @@ public class Stop extends AbstractFunction {
     /**
      * The <code>Result</code> of this <code>Function</code>.
      */
-    private static final Result RESULT = Result.stop(FUNCTION_NAME + " - Stop function executed - 01");
+    private static final Result RESULT = Result.stop(FUNCTION_NAME, "Stop function executed", "01");
 
     /**
      * Constructs a new <code>Stop</code> instance.

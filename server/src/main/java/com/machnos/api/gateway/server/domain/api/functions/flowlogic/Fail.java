@@ -34,7 +34,7 @@ public class Fail extends AbstractFunction {
     /**
      * The <code>Result</code> of this <code>Function</code>.
      */
-    private static final Result RESULT = Result.fail(FUNCTION_NAME + " - Fail function executed - 01");
+    private static final Result RESULT = Result.fail(FUNCTION_NAME, "Fail function executed", "01");
 
     /**
      * Constructs a new <code>Fail</code> instance.

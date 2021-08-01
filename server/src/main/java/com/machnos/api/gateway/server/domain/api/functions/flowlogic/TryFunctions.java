@@ -100,7 +100,7 @@ public class TryFunctions extends CompoundFunction<TryFunctions> {
         for (Function function : getErrorFunctions()) {
             var childResult = function.execute(executionContext);
             if (childResult.isFailed()) {
-                return Result.fail(FUNCTION_NAME + " - Error function failed - 01", childResult);
+                return Result.fail(FUNCTION_NAME, "Error function failed", "01", childResult);
             } else if (childResult.isStopped()) {
                 return childResult;
             }

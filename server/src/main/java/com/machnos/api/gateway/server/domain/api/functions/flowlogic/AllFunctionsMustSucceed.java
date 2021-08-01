@@ -48,7 +48,7 @@ public class AllFunctionsMustSucceed extends CompoundFunction<AllFunctionsMustSu
         for (Function function : getFunctions()) {
             var childResult = function.execute(executionContext);
             if (childResult.isFailed()) {
-                return Result.fail(FUNCTION_NAME + " - Child function failed - 01", childResult);
+                return Result.fail(FUNCTION_NAME, "Child function failed","01", childResult);
             }
             if (childResult.isStopped()) {
                 return childResult;
