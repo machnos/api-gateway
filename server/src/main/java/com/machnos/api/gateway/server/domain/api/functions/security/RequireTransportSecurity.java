@@ -24,7 +24,7 @@ import com.machnos.api.gateway.server.domain.idm.Account;
 import com.machnos.api.gateway.server.domain.idm.X509CertificateCredentials;
 
 /**
- * <code>Function</code> that enforces a secure transport to an <code>Api</code>.
+ * <code>Function</code> that enforces secure transport to an <code>Api</code>.
  *
  * If the {@link #isRemoteCertificateRequired()} returns <code>true</code> the client must send a client certificate
  * during the TLS handshake (a.k.a. mutual TLS) otherwise this <code>Function</code> will fail. The information of the
@@ -72,8 +72,10 @@ public class RequireTransportSecurity extends AbstractFunction {
         if (isRemoteCertificateRequired() && remoteCertificate == null) {
             return RESULT_REMOTE_CERTIFICATE_MISSING;
         }
-        final var account = new Account(remoteCertificate.getSubject().getCN(), new X509CertificateCredentials(remoteCertificate));
-        executionContext.setAccount(account);
+        if (remoteCertificate != null) {
+            final var account = new Account(remoteCertificate.getSubject().getCN(), new X509CertificateCredentials(remoteCertificate));
+            executionContext.setAccount(account);
+        }
         return Result.succeed();
     }
 
