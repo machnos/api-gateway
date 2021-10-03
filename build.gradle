@@ -45,8 +45,8 @@ allprojects {
 
     plugins.withType(JavaPlugin).whenPluginAdded {
         compileJava {
-            sourceCompatibility = '16'
-            targetCompatibility = '16'
+            sourceCompatibility = '17'
+            targetCompatibility = '17'
             options.encoding = 'UTF-8'
             options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
             doFirst {
